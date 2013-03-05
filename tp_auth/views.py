@@ -14,7 +14,6 @@ from traceparent.utils import blanks_prune
 
 from .models import User
 
-
 # Bienvenue Email
 # Retour JSON
 
@@ -124,18 +123,6 @@ class UserFilterView(ListAPIView):
     serializer_class = UserSerializer
     model = User
     filter_class = UserFilter
-
-    def get_queryset(self):
-
-        qs = super(UserFilterView, self).get_queryset()
-        fields = set(self.filter_class._meta.fields)
-
-        q_fields = set(map(lambda x: x[0],
-            filter(lambda x: x[1] != '', self.request.QUERY_PARAMS.items())))
-
-        if len(fields) == len(fields - q_fields): return qs.none()
-
-        return qs
 
 class UserRetrieveView(RetrieveAPIView):
 

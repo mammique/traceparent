@@ -5,6 +5,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django_extensions.db.fields import UUIDField
 
 
+# https://docs.djangoproject.com/en/1.5/topics/auth/customizing/#a-full-example
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None):
@@ -31,7 +32,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
 
     uuid            = UUIDField(auto=True, primary_key=True)
-    id              = UUIDField() # It appears that Django needs an 'id' on the 'User' model.
+    id              = UUIDField() # It appears that Django needs an 'id' on the `User` model.
     creator         = models.ForeignKey('self', null=True)
     name            = models.CharField(max_length=64, blank=True)
     USERNAME_FIELD  = 'email'
@@ -53,7 +54,7 @@ class User(AbstractUser):
         if self.name:
             
             if self.email: return "%s <%s>" % (self.name, self.pk)
-            else: return "%s {%s}" % (self.name, self.pk)
+            else: return "%s *%s*" % (self.name, self.pk) # Mark symbolic `Users` with '*'.
 
         else: return '<%s>' % self.pk
 
