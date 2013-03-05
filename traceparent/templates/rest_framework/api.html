@@ -3,7 +3,11 @@
 {% load url from future %}
 {% load rest_framework %}
 
+{% block title %}{{ settings.PROJECT_NAME }}{% endblock %}
+
 {% block bootstrap_theme %}
-<link rel="stylesheet" href="{% static "style/bootstrap-cosmo.css" %}" type="text/css">
+<link rel="stylesheet" href="{% if settings.debug %}{% static "style/bootstrap-cosmo.css" %}{% else %}{% static "style/bootstrap-cosmo.min.css" %}{% endif %}" type="text/css">
 <link rel="stylesheet" href="{% static "style/style.css" %}" type="text/css">
 {% endblock %}
+
+{% block branding %}<a href="{{ settings.PROJECT_URL }}">{{ settings.PROJECT_NAME }}</a> <span class="version">{{ settings.PROJECT_VERSION }}{% if settings.PROJECT_VERSION_REVISION %} <span class="revision">{{ settings.PROJECT_VERSION_REVISION }}</span>{% endif %}</span>{% endblock %}

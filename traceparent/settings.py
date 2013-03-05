@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 # Django settings for traceparent project.
-import os
+import os, commands
 
-PROJECT_FSPATH  = os.path.dirname(os.path.abspath(__file__))
-PROJECT_NAME    = 'Traceparent'
-PROJECT_VERSION = '0.1-alpha'
+PROJECT_FSPATH           = os.path.dirname(os.path.abspath(__file__))
+PROJECT_NAME             = 'Traceparent'
+PROJECT_URL              = 'http://traceparent.com/'
+PROJECT_VERSION          = '0.1-alpha'
+PROJECT_VERSION_REVISION = '???'
+
+try: PROJECT_VERSION_REVISION = commands.getstatusoutput('git reflog')[1].split(' ')[0]
+except: pass
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -116,6 +121,20 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+)
+
+# https://github.com/django/django/blob/384c180e414a982a6cc5ccabc675bcfb4fd80988/django/conf/global_settings.py#L204
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'traceparent.contexts.settings',
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+#    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+
 )
 
 AUTH_USER_MODEL = 'tp_auth.User'

@@ -12,3 +12,18 @@
 ul.breadcrumb {
     margin: 75px 0 0 0 !important;
 }
+
+.version::before {
+    padding-left: 1em;
+}
+
+.version .revision::before {
+    content: "(rev";
+    opacity: 0.6;
+    padding-right: 0.25em;
+}
+
+.version .revision::after {
+    content: ")";
+    opacity: 0.6;
+}
