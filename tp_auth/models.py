@@ -40,6 +40,8 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    #def symbolic(self): return self.email == ''
+
     def save(self, *args, **kwargs):
 
         # 'username' must be unique and 'id' must be provided, let's mirror them with 'uuid'.

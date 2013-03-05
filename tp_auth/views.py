@@ -9,13 +9,13 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.fields import CharField, EmailField#, BooleanField
 #from rest_framework.relations import HyperlinkedRelatedField
+from rest_framework import status
 
 from traceparent.utils import blanks_prune
 
 from .models import User
 
 # Bienvenue Email
-# Retour JSON
 
 class UserCreateSerializer(serializers.ModelSerializer):
 
@@ -23,6 +23,17 @@ class UserCreateSerializer(serializers.ModelSerializer):
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)
     email = EmailField(required=False) # FIXME: help_text
 #    created_by_me = BooleanField(default=False)
+
+    class Meta:
+
+        model = User
+        fields = ('name', 'email', 'password',)
+
+    def __init__(self, *args, **kwargs):
+
+        self.request = kwargs['context']['request']
+
+        return super(UserCreateSerializer, self).__init__(*args, **kwargs)
 
     def validate_email(self, attrs, source):
 
@@ -68,24 +79,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def __init__(self, *args, **kwargs):
-
-        self.request = kwargs['context']['request']
-
-        return super(UserCreateSerializer, self).__init__(*args, **kwargs)
-
-    class Meta:
-
-        model = User
-        fields = ('name', 'email', 'password',)
-
-    #def get_fields(self, *args, **kwargs):
-
-    #    print self.request.method
-    #    f = super(UserSerializer, self).get_fields(*args, **kwargs)
-    #    print f
-    #    return f
-
 
 class UserCreateView(CreateAPIView):
 
@@ -93,6 +86,15 @@ class UserCreateView(CreateAPIView):
     model = User
 
     def get(self, request, format=None): return Response(None)
+
+    def create(self, request, *args, **kwargs):
+
+        r = super(UserCreateView, self).create(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_201_CREATED:
+            return Response(UserSerializer(self.object).data, status=status.HTTP_201_CREATED)
+
+        return r
 
 
 class UserFilter(django_filters.FilterSet):
@@ -124,8 +126,8 @@ class UserFilterView(ListAPIView):
     model = User
     filter_class = UserFilter
 
+
 class UserRetrieveView(RetrieveAPIView):
 
     serializer_class = UserSerializer
     model = User
-
