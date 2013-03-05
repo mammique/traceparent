@@ -3,11 +3,12 @@ import django_filters
 from django.contrib.auth.hashers import make_password, UNUSABLE_PASSWORD
 from django.forms import widgets
 
-from rest_framework.generics import ListCreateAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework import serializers
 #from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.fields import CharField, EmailField#, BooleanField
+#from rest_framework.relations import HyperlinkedRelatedField
 
 from traceparent.utils import blanks_prune
 
@@ -30,6 +31,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
         if value and User.objects.filter(email__iexact=value).count():
             raise serializers.ValidationError("Email not available.")
+
+        return attrs
+
+    def validate_password(self, attrs, source):
+
+        attrs[source] = make_password(attrs[source])
+
+        return attrs
+
+    def validate_name(self, attrs, source):
+
+        attrs[source] = blanks_prune(attrs[source])
 
         return attrs
 
@@ -56,18 +69,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def validate_password(self, attrs, source):
-
-        attrs[source] = make_password(attrs[source])
-
-        return attrs
-
-    def validate_name(self, attrs, source):
-
-        attrs[source] = blanks_prune(attrs[source])
-
-        return attrs
-
     def __init__(self, *args, **kwargs):
 
         self.request = kwargs['context']['request']
@@ -79,12 +80,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('name', 'email', 'password',)
 
-#    def get_fields(self, *args, **kwargs):
+    #def get_fields(self, *args, **kwargs):
 
-##        print self.request.user
-#        f = super(UserSerializer, self).get_fields(*args, **kwargs)
-#        print f
-#        return f
+    #    print self.request.method
+    #    f = super(UserSerializer, self).get_fields(*args, **kwargs)
+    #    print f
+    #    return f
 
 
 class UserCreateView(CreateAPIView):
@@ -105,18 +106,39 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
 
         model = User
+        fields = ('uuid', 'name', 'email', 'creator',)
 
 
 class UserSerializer(serializers.ModelSerializer):
 
+    #url = HyperlinkedRelatedField(view_name='tp_auth_user_retrieve') #many=, read_only=True,
+
     class Meta:
 
         model = User
-        fields = ('uuid', 'name',)
+        fields = ('uuid', 'name',) # 'url',)
 
 
-class UserView(ListCreateAPIView):
+class UserFilterView(ListAPIView):
 
     serializer_class = UserSerializer
     model = User
     filter_class = UserFilter
+
+    def get_queryset(self):
+
+        qs = super(UserFilterView, self).get_queryset()
+        fields = set(self.filter_class._meta.fields)
+
+        q_fields = set(map(lambda x: x[0],
+            filter(lambda x: x[1] != '', self.request.QUERY_PARAMS.items())))
+
+        if len(fields) == len(fields - q_fields): return qs.none()
+
+        return qs
+
+class UserRetrieveView(RetrieveAPIView):
+
+    serializer_class = UserSerializer
+    model = User
+

@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from .views import UserView, UserCreateView
+from .views import UserRetrieveView, UserFilterView, UserCreateView
 
 
 class AuthView(APIView):
@@ -14,7 +14,7 @@ class AuthView(APIView):
 
         return Response(
                         {
-                         'filter': reverse('tp_auth_user', request=self.request),
+                         'filter': reverse('tp_auth_user_filter', request=self.request),
                          'create': reverse('tp_auth_user_create', request=self.request),
                          'manage': '',
 #                         'login':  reverse('login', request=self.request),
@@ -27,8 +27,11 @@ class AuthView(APIView):
 
 urlpatterns = patterns('',
     url(r'^$', AuthView.as_view(), name='tp_auth'),
-    url(r'^user/$', UserView.as_view(), name='tp_auth_user'),
+    url(r'^user/$', UserFilterView.as_view(), name='tp_auth_user_filter'),
+    url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+        UserRetrieveView.as_view(), name='tp_auth_user_retrieve'),
     url(r'^user/create/$', UserCreateView.as_view(), name='tp_auth_user_create'),
+
 #    url(r'^token/', 'rest_framework.authtoken.views.obtain_auth_token')
 #    url(r'^logout/$', 'django.contrib.auth:logout',),
     #url(r'^auth', include('rest_framework.urls', namespace='rest_framework'))

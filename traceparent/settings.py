@@ -2,6 +2,10 @@
 # Django settings for traceparent project.
 import os
 
+PROJECT_FSPATH  = os.path.dirname(os.path.abspath(__file__))
+PROJECT_NAME    = 'Traceparent'
+PROJECT_VERSION = '0.1-alpha'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -20,6 +24,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
+#        'STORAGE_ENGINE': 'MyISAM', # For MySQL.
     }
 }
 
@@ -82,7 +87,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '@6k_*lj+5p)hqq(tcj_pdf4+iy4o7q0$^b0q8rkqb4nxa38&mq'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -113,6 +118,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+AUTH_USER_MODEL = 'tp_auth.User'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,14 +127,21 @@ INSTALLED_APPS = (
 #    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    'rest_framework',
-    'django_extensions',
-    'south',
-    'auth',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+
+    # Traceparent deps:
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_extensions',
+    'south',
+
+    # Traceparent apps:
+    'tp_auth',
+    'tp_value',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -159,13 +173,23 @@ LOGGING = {
     }
 }
 
-VALUE_QUANTITY_MAX_DIGITS              = 64 # 128
-VALUE_QUANTITY_DECIMAL_PLACES          = 30 # 64
-#VALUE_QUANTITY_DECIMAL_PLACES_QUANTIZE = Decimal(10) ** -VALUE_QUANTITY_DECIMAL_PLACES
-VALUE_QUANTITY_DECIMAL_MODEL_ATTRS     = {
-                                          'max_digits': VALUE_QUANTITY_MAX_DIGITS,
-                                          'decimal_places': VALUE_QUANTITY_DECIMAL_PLACES
-                                         }
+REST_FRAMEWORK = {
+    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
+    'PAGINATE_BY': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+TP_VALUE_QUANTITY_MAX_DIGITS              = 64 # 128
+TP_VALUE_QUANTITY_DECIMAL_PLACES          = 30 # 64
+#TP_VALUE_QUANTITY_DECIMAL_PLACES_QUANTIZE = Decimal(10) ** -VALUE_QUANTITY_DECIMAL_PLACES
+TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS     = {
+        'max_digits': TP_VALUE_QUANTITY_MAX_DIGITS,
+        'decimal_places': TP_VALUE_QUANTITY_DECIMAL_PLACES
+    }
 
 try:
     from settings_local import *
