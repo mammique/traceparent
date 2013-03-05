@@ -40,7 +40,7 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    #def symbolic(self): return self.email == ''
+    def placeholder(self): return self.email == ''
 
     def save(self, *args, **kwargs):
 

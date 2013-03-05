@@ -27,7 +27,7 @@ class AuthView(APIView):
 
 urlpatterns = patterns('',
     url(r'^$', AuthView.as_view(), name='tp_auth'),
-    url(r'^user/$', UserFilterView.as_view(), name='tp_auth_user_filter'),
+    url(r'^user/filter/$', UserFilterView.as_view(), name='tp_auth_user_filter'),
     url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
         UserRetrieveView.as_view(), name='tp_auth_user_retrieve'),
     url(r'^user/create/$', UserCreateView.as_view(), name='tp_auth_user_create'),

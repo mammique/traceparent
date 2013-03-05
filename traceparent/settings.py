@@ -64,7 +64,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = 'static/' # os.path.join(os.path.dirname(PROJECT_FSPATH), 'static'),
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -174,7 +174,6 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
-#    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
     'FILTER_BACKEND': 'traceparent.filters.NoneDjangoFilterBackend',
     'PAGINATE_BY': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': (

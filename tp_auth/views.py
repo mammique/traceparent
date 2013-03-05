@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework import serializers
 #from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.fields import CharField, EmailField#, BooleanField
+from rest_framework.fields import CharField, EmailField #, BooleanField
 #from rest_framework.relations import HyperlinkedRelatedField
 from rest_framework import status
 
@@ -19,9 +19,9 @@ from .models import User
 
 class UserCreateSerializer(serializers.ModelSerializer):
 
-    request = None
+    request  = None
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)
-    email = EmailField(required=False) # FIXME: help_text
+    email    = EmailField(required=False) # FIXME: help_text
 #    created_by_me = BooleanField(default=False)
 
     class Meta:
@@ -31,6 +31,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
 
+        # FIXME? http://django-rest-framework.org/api-guide/serializers.html#including-extra-context
         self.request = kwargs['context']['request']
 
         return super(UserCreateSerializer, self).__init__(*args, **kwargs)
@@ -83,7 +84,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserCreateView(CreateAPIView):
 
     serializer_class = UserCreateSerializer
-    model = User
+    model            = User
 
     def get(self, request, format=None): return Response(None)
 
@@ -110,24 +111,31 @@ class UserFilter(django_filters.FilterSet):
         fields = ('uuid', 'name', 'email', 'creator',)
 
 
+class NotBlankBooleanField(serializers.Field):
+
+    def field_to_native(self, obj, field_name):
+        return getattr(obj, 'email', None) == ''
+
+
 class UserSerializer(serializers.ModelSerializer):
 
-    #url = HyperlinkedRelatedField(view_name='tp_auth_user_retrieve') #many=, read_only=True,
+    symbolic = NotBlankBooleanField()
+    #url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
 
         model = User
-        fields = ('uuid', 'name',) # 'url',)
+        fields = ('uuid', 'name', 'symbolic',) #, 'url',)
 
 
 class UserFilterView(ListAPIView):
 
     serializer_class = UserSerializer
-    model = User
-    filter_class = UserFilter
+    model            = User
+    filter_class     = UserFilter
 
 
 class UserRetrieveView(RetrieveAPIView):
 
     serializer_class = UserSerializer
-    model = User
+    model            = User

@@ -4,6 +4,7 @@
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import serializers
 
+from tp_auth.views import UserSerializer
 
 from .models import Unit, Quantity
 
@@ -25,6 +26,9 @@ class UnitView(ListCreateAPIView):
 
 
 class QuantitySerializer(serializers.ModelSerializer):
+
+    creator = UserSerializer()
+    user    = UserSerializer()
 
 #    previous = serializers.RelatedField(many=True)
 #    previous = serializers.HyperlinkedRelatedField(many=True, read_only=False)
