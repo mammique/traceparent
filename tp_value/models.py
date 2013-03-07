@@ -10,13 +10,14 @@ from traceparent import settings
 
 
 class Unit(models.Model):
-    # FIXME: remove primary_key to use id internally?
+
     uuid           = UUIDField(auto=True, primary_key=True)
     creator        = models.ForeignKey(User)
     name           = models.CharField(max_length=128)
     slug           = models.SlugField(max_length=128)
     symbol         = models.CharField(max_length=8)
     decimal_places = models.PositiveIntegerField(default=2, null=True, blank=True)
+    #datetime       = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self): return u'%s (%s)' % (self.name, self.symbol)
 
@@ -37,8 +38,9 @@ class Quantity(models.Model):
     unit     = models.ForeignKey(Unit)
     quantity = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     user     = models.ForeignKey(User, null=True, blank=True, related_name='quantities')
+    #creation_datetime = models.DateTimeField(auto_now_add=True)
     datetime = models.DateTimeField(auto_now_add=True)
-    previous = models.ManyToManyField('self', null=True, blank=True,
+    prev     = models.ManyToManyField('self', null=True, blank=True,
                                       symmetrical=False, related_name='next')
     status   = models.SlugField(default='symbolic', max_length=64,
                                      choices=value_status_choices)

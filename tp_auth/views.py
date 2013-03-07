@@ -22,9 +22,19 @@ from traceparent.mixins import RequestSerializerMixin
 
 from .models import User, LoginToken
 
-# Bienvenue Email
 
-class UserAlterSerializerBase(RequestSerializerMixin, serializers.ModelSerializer):
+class NotBlankBooleanField(serializers.Field):
+
+    def field_to_native(self, obj, field_name):
+        return getattr(obj, field_name, None) == ''
+
+
+class UserSerializerBase(serializers.ModelSerializer):
+
+    symbolic = NotBlankBooleanField()
+
+
+class UserAlterSerializerBase(RequestSerializerMixin, UserSerializerBase):
 
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)
     email    = EmailField(required=False) # FIXME: help_text
@@ -32,7 +42,8 @@ class UserAlterSerializerBase(RequestSerializerMixin, serializers.ModelSerialize
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'email', 'password', 'date_joined', 'is_active',)
+        fields = ('uuid', 'name', 'email', 'password', 'symbolic', \
+            'date_joined', 'is_active',)
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
     @property
@@ -116,7 +127,7 @@ class UserCreateView(CreateAPIView):
                 else: creator = None
 
                 subject = "[%s] Welcome!" % settings.PROJECT_NAME
-                if creator: subject += ' (via %s)' % creator
+                if creator: subject += ' (via %s)' % creator # FIXME: replace by profile URL.
 
                 body = """Welcome to %(pname)s.%(creator)s\n\n--\n%(purl)s""" % \
                     {'pname': settings.PROJECT_NAME,
@@ -154,7 +165,8 @@ class UserManageView(RetrieveUpdateAPIView):
         r = super(UserManageView, self).update(request, *args, **kwargs)
 
         if r.status_code == status.HTTP_201_CREATED:
-            return Response(UserSerializer(self.object).data, status=status.HTTP_201_CREATED)
+            return Response(self.get_serializer(user).data, status=status.HTTP_201_CREATED)
+             # return Response(UserRoFullSerializer(self.object).data, status=status.HTTP_201_CREATED)
 
         return r
 
@@ -172,15 +184,8 @@ class UserFilter(django_filters.FilterSet):
         fields = ('uuid', 'name', 'email', 'creator',)
 
 
-class NotBlankBooleanField(serializers.Field):
+class UserRoLightSerializer(UserSerializerBase):
 
-    def field_to_native(self, obj, field_name):
-        return getattr(obj, 'email', None) == ''
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    symbolic = NotBlankBooleanField()
     #url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
@@ -189,16 +194,24 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('uuid', 'name', 'symbolic',) #, 'url',)
 
 
+class UserRoFullSerializer(UserRoLightSerializer):
+
+    class Meta:
+
+        model = User
+        fields = ('uuid', 'name', 'symbolic', 'date_joined', 'is_active',)
+
+
 class UserFilterView(ListAPIView):
 
-    serializer_class = UserSerializer
+    serializer_class = UserRoLightSerializer
     model            = User
     filter_class     = UserFilter
 
 
 class UserRetrieveView(RetrieveAPIView):
 
-    serializer_class = UserSerializer
+    serializer_class = UserRoFullSerializer
     model            = User
 
 
@@ -226,18 +239,28 @@ class UserLoginView(CreateAPIView):
     serializer_class = UserLoginSerializer
 
     def get(self, request, format=None, redirect_field_name=REDIRECT_FIELD_NAME):
-       
-        try:
 
-            token = LoginToken.objects.get(pk=request.REQUEST.get('login_token'))
-            token.user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(self.request, token.user)
-            token.delete()
+        token_hash = request.REQUEST.get('login_token', None)
 
-            redirect = request.REQUEST.get(redirect_field_name, None)
-            if redirect: return HttpResponseRedirect(redirect)
+        if token_hash:
 
-        except: pass
+            try:
+
+                token = LoginToken.objects.get(pk=request.REQUEST.get('login_token', None))
+                token.user.backend = 'django.contrib.auth.backends.ModelBackend'
+                login(self.request, token.user)
+                token.delete()
+
+                redirect = request.REQUEST.get(redirect_field_name, None)
+                if redirect: return HttpResponseRedirect(redirect)
+
+            except:
+
+                # FIXME: Don't assume that the user got its token from password reset.
+                return Response(
+                    {'detail': "Invalid token, please reset your password again at: %s" % \
+                        reverse('tp_auth_password_reset', request=self.request)},
+                    status=status.HTTP_400_BAD_REQUEST)
 
         return Response(None)
 

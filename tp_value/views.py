@@ -8,26 +8,25 @@ from rest_framework.response import Response
 
 from traceparent.mixins import RequestSerializerMixin
 
-from tp_auth.views import UserSerializer
+from tp_auth.views import UserRoLightSerializer
 
 from .models import Unit, Quantity
 
 
 class UnitFilter(django_filters.FilterSet):
 
-    uuid    = django_filters.CharFilter(lookup_type='exact')
     name    = django_filters.CharFilter(lookup_type='icontains')
     creator = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:
 
         model = Unit
-        fields = ('uuid', 'name', 'creator',)
+        fields = ('name', 'creator',)
 
 
 class UnitSerializer(serializers.ModelSerializer):
 
-    creator = UserSerializer()
+    creator = UserRoLightSerializer()
 
     class Meta:
 
@@ -74,11 +73,27 @@ class UnitFilterView(ListAPIView):
 ##        fields = ['category', 'in_stock', 'min_price', 'max_price']
 
 
+def t(a): print '>', a
+
+class QuantityFilter(django_filters.FilterSet):
+
+    name     = django_filters.CharFilter(lookup_type='icontains')
+    user     = django_filters.CharFilter(lookup_type='exact')
+    unit     = django_filters.CharFilter(lookup_type='exact')
+#    creator  = django_filters.CharFilter(lookup_type='exact')
+    prev     = django_filters.CharFilter(lookup_type='exact')
+    next     = django_filters.CharFilter(lookup_type='exact')
+
+    class Meta:
+
+        model = Quantity
+        fields = ('name', 'user', 'unit', 'prev', 'next',)
+
 
 class QuantitySerializer(serializers.ModelSerializer):
 
-    creator = UserSerializer()
-    user    = UserSerializer()
+    creator = UserRoLightSerializer()
+    user    = UserRoLightSerializer()
 
 #    previous = serializers.RelatedField(many=True)
 #    previous = serializers.HyperlinkedRelatedField(many=True, read_only=False)
@@ -87,13 +102,13 @@ class QuantitySerializer(serializers.ModelSerializer):
 
         model = Quantity
         exclude = ('creator',)
-#        fields = ('album_name', 'artist', 'tracks')
+        fields = ('unit', 'quantity', 'user', 'status', 'prev',)
 
 
 class QuantityFilterView(ListAPIView):
 
     serializer_class = QuantitySerializer
-    #filter_class     = QuantityFilter
+    filter_class     = QuantityFilter
     model            = Quantity
 
 
@@ -101,5 +116,6 @@ class QuantityCreateView(CreateAPIView):
 
     def get(self, request, format=None): return Response(None)
 
-    serializer_class = QuantitySerializer
-    model            = Quantity
+    serializer_class   = QuantitySerializer
+    model              = Quantity
+    permission_classes = (IsAuthenticated,)
