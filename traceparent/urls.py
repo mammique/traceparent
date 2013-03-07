@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -12,6 +13,8 @@ from rest_framework.reverse import reverse
 
 class RootAPIView(APIView):
 
+    def get_name(self): return settings.PROJECT_NAME
+    
     def get(self, request):
 
         return Response({

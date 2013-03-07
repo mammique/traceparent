@@ -196,7 +196,7 @@ REST_FRAMEWORK = {
     'FILTER_BACKEND': 'traceparent.filters.NoneDjangoFilterBackend',
     'PAGINATE_BY': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+#        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
