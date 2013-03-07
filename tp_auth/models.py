@@ -4,6 +4,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractUser
 
 from django_extensions.db.fields import UUIDField
 
+from rest_framework.authtoken.models import Token
+
 
 # https://docs.djangoproject.com/en/1.5/topics/auth/customizing/#a-full-example
 class UserManager(BaseUserManager):
@@ -64,3 +66,27 @@ class User(AbstractUser):
 
 # Monkey patch 'username' to match 'uuid' length.
 User._meta.get_field("username").max_length = 36
+
+
+# https://github.com/tomchristie/django-rest-framework/blob/17000129e35b10c9d08497a669fd72f8233f065a/rest_framework/authtoken/models.py#L1
+import uuid
+import hmac
+from hashlib import sha1
+
+class LoginToken(models.Model):
+
+    key = models.CharField(max_length=40, primary_key=True)
+    user = models.OneToOneField(User, related_name='auth_login_token')
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super(LoginToken, self).save(*args, **kwargs)
+
+    def generate_key(self):
+        unique = uuid.uuid4()
+        return hmac.new(unique.bytes, digestmod=sha1).hexdigest()
+
+    def __unicode__(self):
+        return self.key

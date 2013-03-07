@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 from traceparent.utils import ordered_dict
 
 from .views import UserRetrieveView, UserFilterView, UserCreateView, \
-    UserManageView, UserLoginView, UserLogoutView, TokenView
+    UserManageView, UserLoginView, UserLogoutView, TokenView, PasswordResetView
 
 
 class AuthView(APIView):
@@ -19,6 +19,7 @@ class AuthView(APIView):
                 'user_filter': reverse('tp_auth_user_filter', request=self.request),
                 'user_create': reverse('tp_auth_user_create', request=self.request),
                 'user_manage': reverse('tp_auth_user_manage', request=self.request),
+                'password_reset': reverse('tp_auth_password_reset', request=self.request),
                 'login': reverse('tp_auth_login', request=self.request),
                 'logout': reverse('tp_auth_logout', request=self.request),
                 'token': reverse('tp_auth_token', request=self.request),
@@ -36,7 +37,5 @@ urlpatterns = patterns('',
     url(r'^login/$', UserLoginView.as_view(), name='tp_auth_login'),
     url(r'^logout/$', UserLogoutView.as_view(), name='tp_auth_logout'),
     url(r'^token/', TokenView.as_view(), name='tp_auth_token'),
+     url(r'^password_reset/', PasswordResetView.as_view(), name='tp_auth_password_reset'),
 )
-
-
-

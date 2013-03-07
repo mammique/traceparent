@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
-import django_filters
+import django_filters, urllib
 from django.contrib.auth.hashers import make_password, UNUSABLE_PASSWORD
 from django.forms import widgets
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
+from django.conf import settings
+from django.http import HttpResponseRedirect
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, \
     RetrieveAPIView, CreateAPIView
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-#from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from rest_framework.fields import CharField, EmailField #, BooleanField
-#from rest_framework.relations import HyperlinkedRelatedField
+from rest_framework.fields import CharField, EmailField, BooleanField
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.settings import api_settings
+from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
 from traceparent.mixins import RequestSerializerMixin
 
-from .models import User
+from .models import User, LoginToken
 
 # Bienvenue Email
 
@@ -102,10 +102,32 @@ class UserCreateView(CreateAPIView):
 
         r = super(UserCreateView, self).create(request, *args, **kwargs)
 
-        if r.status_code == status.HTTP_201_CREATED:
-            return Response(UserManageSerializer(self.object).data,
-                status=status.HTTP_201_CREATED)
+        user = self.object
 
+        if r.status_code == status.HTTP_201_CREATED:
+
+            if user.email:
+
+                if user.creator:
+
+                    if not user.creator.name: creator = user.creator.email
+                    else: creator = '%s <%s>' % (user.creator.name, user.creator.email)
+
+                else: creator = None
+
+                subject = "[%s] Welcome!" % settings.PROJECT_NAME
+                if creator: subject += ' (via %s)' % creator
+
+                body = """Welcome to %(pname)s.%(creator)s\n\n--\n%(purl)s""" % \
+                    {'pname': settings.PROJECT_NAME,
+                     'creator': "\n\nYour account has been created by %s." % \
+                          creator if creator else '',
+                     'purl': settings.PROJECT_URL}
+
+                user.email_user(subject, body)
+
+            return Response(self.get_serializer(user).data, status=status.HTTP_201_CREATED)
+            
         return r
 
 
@@ -203,16 +225,33 @@ class UserLoginView(CreateAPIView):
 
     serializer_class = UserLoginSerializer
 
-    def get(self, request, format=None): return Response(None)
+    def get(self, request, format=None, redirect_field_name=REDIRECT_FIELD_NAME):
+       
+        try:
 
-    def create(self, request, *args, **kwargs):
+            token = LoginToken.objects.get(pk=request.REQUEST.get('login_token'))
+            token.user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(self.request, token.user)
+            token.delete()
+
+            redirect = request.REQUEST.get(redirect_field_name, None)
+            if redirect: return HttpResponseRedirect(redirect)
+
+        except: pass
+
+        return Response(None)
+
+    def post(self, request, redirect_field_name=REDIRECT_FIELD_NAME, *args, **kwargs):
 
         serializer = self.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             
             login(self.request, serializer.object)
- 
+
+            redirect = request.REQUEST.get(redirect_field_name, None)
+            if redirect: return HttpResponseRedirect(redirect)
+
             return Response({'detail': 'Log in successful'})
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -220,21 +259,85 @@ class UserLoginView(CreateAPIView):
 
 class UserLogoutView(APIView):
 
-    def get(self, request, format=None):
+    def get(self, request, format=None, redirect_field_name=REDIRECT_FIELD_NAME):
 
         logout(request)
+
+        redirect = request.REQUEST.get(redirect_field_name, None)
+        if redirect: return HttpResponseRedirect(redirect)
 
         return Response({'detail': 'Log out successful'})
 
 
-class TokenView(APIView):
+class TokenSerializer(serializers.Serializer):
+
+    generate_new = BooleanField(required=True)
+
+
+class TokenView(CreateAPIView):
 
     permission_classes = (IsAuthenticated,)
+    serializer_class =TokenSerializer
 
-    def get(self, request, format=None): return Response(None)
-
-    def post(self, request):
+    def get(self, request, format=None):
 
         token, created = Token.objects.get_or_create(user=request.user)
 
         return Response({'token': token.key})
+
+    def post(self, request, format=None):
+
+        s = self.get_serializer(data=request.DATA)
+
+        if s.is_valid():
+
+            if s.data['generate_new']: Token.objects.filter(user=request.user).delete()
+
+            return self.get(request, format=format)
+
+        return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetSerializer(serializers.Serializer):
+
+    email = EmailField(required=True)
+
+
+class PasswordResetView(CreateAPIView):
+
+    serializer_class = PasswordResetSerializer
+
+    def get(self, request, format=None): return Response(None)
+
+    def create(self, request, format=None):
+
+        s = self.get_serializer(data=request.DATA)
+
+        if s.is_valid():
+
+            email = s.data['email']
+
+            try:
+
+                user = User.objects.get(email=email)
+
+                LoginToken.objects.filter(user=request.user).delete()
+                token, created = LoginToken.objects.get_or_create(user=user)
+
+                body = """You have requested to reset your password on %s.\n\n""" \
+                       """To do so, please visit the following address: """ \
+                       """%s?login_token=%s&next=%s\n\n--\n%s""" % \
+                           (settings.PROJECT_NAME,
+                            reverse('tp_auth_login', request=self.request),
+                            token.pk, urllib.quote(reverse('tp_auth_user_manage')),
+                            settings.PROJECT_URL)
+
+                user.email_user("[%s] Password reset" % settings.PROJECT_NAME, body)
+
+            except: pass
+
+        #token, created = Token.objects.get_or_create(user=request.user)
+
+            return Response({'detail': 'Password reset information has been sent to %s.' % \
+                email})
+
+        return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
