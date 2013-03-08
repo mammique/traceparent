@@ -5,42 +5,52 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from .views import UnitFilterView, UnitCreateView, QuantityFilterView, QuantityCreateView
+from traceparent.utils import ordered_dict
+
+from .views import UnitFilterView, UnitCreateView, UnitRetrieveUpdateView, \
+    QuantityFilterView, QuantityCreateView
 
 
 class ValueView(APIView):
 
     def get(self, request):
 
-        return Response(
-                        {
-                         'unit': reverse('tp_value_unit', request=self.request),
-                         'quantity': reverse('tp_value_quantity', request=self.request),
-                        }
-                       )
+        data = ordered_dict(
+            {
+             'unit': reverse('tp_value_unit', request=self.request),
+             'quantity': reverse('tp_value_quantity', request=self.request),
+            }
+        )
+        
+        return Response(data)
+
 
 class UnitView(APIView):
 
     def get(self, request):
 
-        return Response(
-                        {
-                         'create': reverse('tp_value_unit_create', request=self.request),
-                         'filter': reverse('tp_value_unit_filter', request=self.request),
-                        }
-                       )
+        data = ordered_dict(
+            {
+             'create': reverse('tp_value_unit_create', request=self.request),
+             'filter': reverse('tp_value_unit_filter', request=self.request),
+            }
+        )
+
+        return Response(data)
 
         
 class QuantityView(APIView):
 
     def get(self, request):
 
-        return Response(
-                        {
-                         'create': reverse('tp_value_quantity_create', request=self.request),
-                         'filter': reverse('tp_value_quantity_filter', request=self.request),
-                        }
-                       )
+        data = ordered_dict(
+            {
+             'create': reverse('tp_value_quantity_create', request=self.request),
+             'filter': reverse('tp_value_quantity_filter', request=self.request),
+            }
+        )
+
+        return Response(data)
 
 
 urlpatterns = patterns('',
@@ -52,6 +62,8 @@ urlpatterns = patterns('',
     url(r'^unit/$', UnitView.as_view(), name='tp_value_unit'),
     url(r'^unit/filter/$', UnitFilterView.as_view(), name='tp_value_unit_filter'),
     url(r'^unit/create/$', UnitCreateView.as_view(), name='tp_value_unit_create'),
+    url(r'^unit/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+        UnitRetrieveUpdateView.as_view(), name='tp_value_unit_retrieve'),
 
     # Quantity
     url(r'^quantity/$', QuantityView.as_view(), name='tp_value_quantity'),

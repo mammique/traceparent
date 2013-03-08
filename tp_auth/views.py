@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
-from traceparent.mixins import RequestSerializerMixin
+#from traceparent.mixins import RequestSerializerMixin
 
 from .models import User, LoginToken
 
@@ -26,15 +26,16 @@ from .models import User, LoginToken
 class NotBlankBooleanField(serializers.Field):
 
     def field_to_native(self, obj, field_name):
-        return getattr(obj, field_name, None) == ''
+        return getattr(obj, self.source, None) == ''
 
 
 class UserSerializerBase(serializers.ModelSerializer):
 
-    symbolic = NotBlankBooleanField()
+    url      = serializers.HyperlinkedIdentityField(view_name='tp_auth_user_retrieve')
+    symbolic = NotBlankBooleanField(source='email')
 
 
-class UserAlterSerializerBase(RequestSerializerMixin, UserSerializerBase):
+class UserAlterSerializerBase(UserSerializerBase):
 
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)
     email    = EmailField(required=False) # FIXME: help_text
@@ -42,7 +43,7 @@ class UserAlterSerializerBase(RequestSerializerMixin, UserSerializerBase):
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'email', 'password', 'symbolic', \
+        fields = ('uuid', 'name', 'url', 'email', 'password', 'symbolic', \
             'date_joined', 'is_active',)
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
@@ -85,8 +86,8 @@ class UserCreateSerializer(UserAlterSerializerBase):
 
     def validate(self, attrs):
 
-        attrs['creator'] = self.request.user \
-            if self.request.user.is_authenticated() else None
+        attrs['creator'] = self.context['request'].user \
+            if self.context['request'].user.is_authenticated() else None
 
         if not attrs['email']:
 
@@ -186,12 +187,10 @@ class UserFilter(django_filters.FilterSet):
 
 class UserRoLightSerializer(UserSerializerBase):
 
-    #url = serializers.CharField(source='get_absolute_url', read_only=True)
-
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'symbolic',) #, 'url',)
+        fields = ('uuid', 'name', 'symbolic', 'url',)
 
 
 class UserRoFullSerializer(UserRoLightSerializer):
@@ -199,7 +198,7 @@ class UserRoFullSerializer(UserRoLightSerializer):
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'symbolic', 'date_joined', 'is_active',)
+        fields = ('uuid', 'name', 'symbolic', 'url', 'date_joined', 'is_active',)
 
 
 class UserFilterView(ListAPIView):
@@ -215,7 +214,7 @@ class UserRetrieveView(RetrieveAPIView):
     model            = User
 
 
-class UserLoginSerializer(RequestSerializerMixin, serializers.Serializer):
+class UserLoginSerializer(serializers.Serializer):
 
     _user    = None
     email    = EmailField(required=True)

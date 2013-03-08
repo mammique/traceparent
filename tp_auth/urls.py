@@ -28,14 +28,20 @@ class AuthView(APIView):
         return Response(ordered_dict(data))
 
 urlpatterns = patterns('',
+
+    # Root
     url(r'^$', AuthView.as_view(), name='tp_auth'),
+
+    # User
     url(r'^user/filter/$', UserFilterView.as_view(), name='tp_auth_user_filter'),
-    url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
-        UserRetrieveView.as_view(), name='tp_auth_user_retrieve'),
     url(r'^user/create/$', UserCreateView.as_view(), name='tp_auth_user_create'),
     url(r'^user/manage/$', UserManageView.as_view(), name='tp_auth_user_manage'),
+    url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+        UserRetrieveView.as_view(), name='tp_auth_user_retrieve'),
+
+    # Misc
     url(r'^login/$', UserLoginView.as_view(), name='tp_auth_login'),
     url(r'^logout/$', UserLogoutView.as_view(), name='tp_auth_logout'),
     url(r'^token/', TokenView.as_view(), name='tp_auth_token'),
-     url(r'^password_reset/', PasswordResetView.as_view(), name='tp_auth_password_reset'),
+    url(r'^password_reset/', PasswordResetView.as_view(), name='tp_auth_password_reset'),
 )

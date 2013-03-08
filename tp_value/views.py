@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import django_filters
 
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from traceparent.mixins import RequestSerializerMixin
+#from traceparent.mixins import RequestSerializerMixin
 
 from tp_auth.views import UserRoLightSerializer
 
@@ -26,19 +26,20 @@ class UnitFilter(django_filters.FilterSet):
 
 class UnitSerializer(serializers.ModelSerializer):
 
+    url     = serializers.HyperlinkedIdentityField(view_name='tp_value_unit_retrieve') 
     creator = UserRoLightSerializer()
 
     class Meta:
 
         model = Unit
-        fields = ('uuid', 'creator', 'name', 'slug', 'symbol', 'decimal_places',)
+        fields = ('uuid', 'url', 'creator', 'name', 'slug', 'symbol', 'decimal_places',)
 
 
-class UnitCreateSerializer(RequestSerializerMixin, serializers.ModelSerializer):
+class UnitCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
-        attrs['creator'] = self.request.user
+        attrs['creator'] = self.context['request'].user
 
         return attrs
 
@@ -51,6 +52,15 @@ class UnitCreateSerializer(RequestSerializerMixin, serializers.ModelSerializer):
 class UnitCreateView(CreateAPIView):
 
     def get(self, request, format=None): return Response(None)
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UnitCreateSerializer
+    model = Unit
+
+
+class UnitRetrieveUpdateView(RetrieveUpdateAPIView):
+
+    #def get(self, request, format=None): return Response(None)
 
     permission_classes = (IsAuthenticated,)
     serializer_class = UnitCreateSerializer
@@ -73,8 +83,6 @@ class UnitFilterView(ListAPIView):
 ##        fields = ['category', 'in_stock', 'min_price', 'max_price']
 
 
-def t(a): print '>', a
-
 class QuantityFilter(django_filters.FilterSet):
 
     name     = django_filters.CharFilter(lookup_type='icontains')
@@ -92,8 +100,9 @@ class QuantityFilter(django_filters.FilterSet):
 
 class QuantitySerializer(serializers.ModelSerializer):
 
-    creator = UserRoLightSerializer()
-    user    = UserRoLightSerializer()
+#    creator = UserRoLightSerializer()
+    #user = UserRoLightSerializer()
+    #unit = UnitSerializer()
 
 #    previous = serializers.RelatedField(many=True)
 #    previous = serializers.HyperlinkedRelatedField(many=True, read_only=False)
@@ -102,7 +111,7 @@ class QuantitySerializer(serializers.ModelSerializer):
 
         model = Quantity
         exclude = ('creator',)
-        fields = ('unit', 'quantity', 'user', 'status', 'prev',)
+        fields = ('uuid', 'unit', 'quantity', 'user', 'status', 'datetime', 'prev',)
 
 
 class QuantityFilterView(ListAPIView):
@@ -112,10 +121,19 @@ class QuantityFilterView(ListAPIView):
     model            = Quantity
 
 
+class QuantityCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Quantity
+        exclude = ('creator',)
+        fields = ('unit', 'quantity', 'user', 'status',)
+
+
 class QuantityCreateView(CreateAPIView):
 
     def get(self, request, format=None): return Response(None)
 
-    serializer_class   = QuantitySerializer
+    serializer_class   = QuantityCreateSerializer
     model              = Quantity
     permission_classes = (IsAuthenticated,)

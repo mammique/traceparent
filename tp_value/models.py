@@ -40,7 +40,7 @@ class Quantity(models.Model):
     user     = models.ForeignKey(User, null=True, blank=True, related_name='quantities')
     #creation_datetime = models.DateTimeField(auto_now_add=True)
     datetime = models.DateTimeField(auto_now_add=True)
-    prev     = models.ManyToManyField('self', null=True, blank=True,
+    prev     = models.ManyToManyField('self', null=True,
                                       symmetrical=False, related_name='next')
     status   = models.SlugField(default='symbolic', max_length=64,
                                      choices=value_status_choices)
