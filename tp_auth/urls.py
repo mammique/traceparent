@@ -27,6 +27,7 @@ class AuthView(APIView):
 
         return Response(ordered_dict(data))
 
+
 urlpatterns = patterns('',
 
     # Root

@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from traceparent.utils import ordered_dict
+
 
 class RootAPIView(APIView):
 
@@ -17,10 +19,14 @@ class RootAPIView(APIView):
     
     def get(self, request):
 
-        return Response({
-                         'auth': reverse('tp_auth', request=request),
-                         'value': reverse('tp_value', request=request)
-                        })
+        data = ordered_dict(
+            {
+             'auth': reverse('tp_auth', request=request),
+             'value': reverse('tp_value', request=request)
+            }
+        )
+        
+        return Response(data)
 
 
 urlpatterns = patterns('',

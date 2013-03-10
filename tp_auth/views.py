@@ -35,6 +35,48 @@ class UserSerializerBase(serializers.ModelSerializer):
     symbolic = NotBlankBooleanField(source='email')
 
 
+class UserRoLightSerializer(UserSerializerBase):
+
+    class Meta:
+
+        model = User
+        fields = ['uuid', 'name', 'symbolic', 'url',]
+
+
+class UserRoFullSerializer(UserRoLightSerializer):
+
+    class Meta:
+
+        model = User
+        fields = UserRoLightSerializer.Meta.fields + ['date_joined', 'is_active',]
+
+
+class UserFilter(django_filters.FilterSet):
+
+    uuid    = django_filters.CharFilter(lookup_type='exact')
+    name    = django_filters.CharFilter(lookup_type='icontains')
+    email   = django_filters.CharFilter(lookup_type='iexact')
+    creator = django_filters.CharFilter(lookup_type='exact')
+
+    class Meta:
+
+        model = User
+        fields = ('uuid', 'name', 'email', 'creator',)
+
+
+class UserFilterView(ListAPIView):
+
+    serializer_class = UserRoLightSerializer
+    model            = User
+    filter_class     = UserFilter
+
+
+class UserRetrieveView(RetrieveAPIView):
+
+    serializer_class = UserRoFullSerializer
+    model            = User
+
+
 class UserAlterSerializerBase(UserSerializerBase):
 
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)
@@ -43,8 +85,7 @@ class UserAlterSerializerBase(UserSerializerBase):
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'url', 'email', 'password', 'symbolic', \
-            'date_joined', 'is_active',)
+        fields = UserRoFullSerializer.Meta.fields + ['password',]
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
     @property
@@ -170,48 +211,6 @@ class UserManageView(RetrieveUpdateAPIView):
              # return Response(UserRoFullSerializer(self.object).data, status=status.HTTP_201_CREATED)
 
         return r
-
-
-class UserFilter(django_filters.FilterSet):
-
-    uuid    = django_filters.CharFilter(lookup_type='exact')
-    name    = django_filters.CharFilter(lookup_type='icontains')
-    email   = django_filters.CharFilter(lookup_type='iexact')
-    creator = django_filters.CharFilter(lookup_type='exact')
-
-    class Meta:
-
-        model = User
-        fields = ('uuid', 'name', 'email', 'creator',)
-
-
-class UserRoLightSerializer(UserSerializerBase):
-
-    class Meta:
-
-        model = User
-        fields = ('uuid', 'name', 'symbolic', 'url',)
-
-
-class UserRoFullSerializer(UserRoLightSerializer):
-
-    class Meta:
-
-        model = User
-        fields = ('uuid', 'name', 'symbolic', 'url', 'date_joined', 'is_active',)
-
-
-class UserFilterView(ListAPIView):
-
-    serializer_class = UserRoLightSerializer
-    model            = User
-    filter_class     = UserFilter
-
-
-class UserRetrieveView(RetrieveAPIView):
-
-    serializer_class = UserRoFullSerializer
-    model            = User
 
 
 class UserLoginSerializer(serializers.Serializer):

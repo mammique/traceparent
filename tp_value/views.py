@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import django_filters
+from django.forms import widgets
+from django.http import QueryDict
 
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import relations
+from rest_framework.reverse import reverse
 
-#from traceparent.mixins import RequestSerializerMixin
-
-from tp_auth.views import UserRoLightSerializer
+#from tp_auth.views import UserRoLightSerializer
 
 from .models import Unit, Quantity
 
@@ -24,10 +26,11 @@ class UnitFilter(django_filters.FilterSet):
         fields = ('name', 'creator',)
 
 
+#class UnitSerializer(serializers.HyperlinkedModelSerializer):#ModelSerializer):
 class UnitSerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_unit_retrieve') 
-    creator = UserRoLightSerializer()
+    creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
 
     class Meta:
 
@@ -58,12 +61,12 @@ class UnitCreateView(CreateAPIView):
     model = Unit
 
 
-class UnitRetrieveUpdateView(RetrieveUpdateAPIView):
+class UnitRetrieveView(RetrieveAPIView):
 
     #def get(self, request, format=None): return Response(None)
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = UnitCreateSerializer
+    serializer_class = UnitSerializer
     model = Unit
 
 
@@ -72,15 +75,6 @@ class UnitFilterView(ListAPIView):
     serializer_class = UnitSerializer
     filter_class     = UnitFilter
     model            = Unit
-
-
-#class QuantityFilter(django_filters.FilterSet):
-#    creator__name= django_filters.CharFilter(lookup_type='creator__name__icontains')
-##    max_price = django_filters.NumberFilter(lookup_type='lte')
-#    class Meta:
-#        model = Quantity
-#        fields = ('name',)
-##        fields = ['category', 'in_stock', 'min_price', 'max_price']
 
 
 class QuantityFilter(django_filters.FilterSet):
@@ -98,20 +92,47 @@ class QuantityFilter(django_filters.FilterSet):
         fields = ('name', 'user', 'unit', 'prev', 'next',)
 
 
+class HyperlinkedFilterField(serializers.Field):
+
+    def __init__(self, *args, **kwargs):
+
+        self.view_name     = kwargs.pop('view_name')
+        self.format        = kwargs.pop('format', None)
+        self.lookup_params = kwargs.pop('lookup_params')
+
+        return super(HyperlinkedFilterField, self).__init__(*args, **kwargs)
+
+    def field_to_native(self, o, *args, **kwargs):
+
+        view_name = self.view_name
+        request   = self.context.get('request', None)
+        format    = self.format or self.context.get('format', None)
+
+        query = QueryDict('', mutable=True)
+        for key, field in self.lookup_params.items():
+            query[key] = getattr(o, field)
+
+        return '%s?%s' % (reverse(view_name, request=request, format=format),
+                    query.urlencode())
+
+
 class QuantitySerializer(serializers.ModelSerializer):
 
-#    creator = UserRoLightSerializer()
-    #user = UserRoLightSerializer()
-    #unit = UnitSerializer()
+    url     = serializers.HyperlinkedIdentityField(view_name='tp_value_quantity_retrieve') 
+    creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    user    = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    prev    = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
+                  lookup_params={'next': 'pk'})
+    next    = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
+                  lookup_params={'prev': 'pk'})
 
-#    previous = serializers.RelatedField(many=True)
-#    previous = serializers.HyperlinkedRelatedField(many=True, read_only=False)
 
     class Meta:
 
         model = Quantity
-        exclude = ('creator',)
-        fields = ('uuid', 'unit', 'quantity', 'user', 'status', 'datetime', 'prev',)
+        #exclude = ('creator',)
+        fields = ('uuid', 'unit', 'quantity', 'creator', 'user', \
+            'status', 'datetime', 'prev', 'next',)
 
 
 class QuantityFilterView(ListAPIView):
@@ -123,16 +144,63 @@ class QuantityFilterView(ListAPIView):
 
 class QuantityCreateSerializer(serializers.ModelSerializer):
 
+    prev = relations.PrimaryKeyRelatedField(required=False, # default='qsdfqsdfsqOOO',
+               widget=widgets.TextInput(attrs={'disabled': True}))
+
+    #def get_pk_field(self, model_field):
+
+    #    f = super(QuantityCreateSerializer, self).get_pk_field(model_field)
+    #    print f, model_field #dir(f)
+    #    return f
+
+    #def get_field(self, model_field):
+
+    #    f = super(QuantityCreateSerializer, self).get_field(model_field)
+    #    print model_field.get_default(), f
+    #    return f
+
+#    @property
+#    def data(self):
+
+#        d = super(UserManageSerializer, self).data
+#        print d
+#        d['prev'] = '32a53a46-7689-11e2-914f-78929c525f0e'
+#        return d
+
+#    def __init__(self, *args, **kwargs):
+
+##        print args, kwargs
+#        return super(QuantityCreateSerializer, self).__init__(*args, **kwargs)
+
     class Meta:
 
         model = Quantity
         exclude = ('creator',)
-        fields = ('unit', 'quantity', 'user', 'status',)
+        fields = ('unit', 'quantity', 'user', 'prev', 'status',)
 
 
 class QuantityCreateView(CreateAPIView):
 
+    #def get_serializer_context(self, *args, **kwargs):
+
+    #    c = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
+    #    print c
+    #    return c
+
+    #def get_serializer(self, *args, **kwargs):
+
+    #    kwargs['data'] = {'prev': '32a53a46-7689-11e2-914f-78929c525f0e'}
+    #    s = super(QuantityCreateView, self).get_serializer(*args, **kwargs)
+    #    print args, kwargs
+    #    s._data= kwargs['data']
+    #    #s.init_data = {'prev': '32a53a46-7689-11e2-914f-78929c525f0e'}
+    #    return s
+
     def get(self, request, format=None): return Response(None)
+
+    #def get_object(self):
+    #    print 'mlkjmlk'
+    #    return
 
     serializer_class   = QuantityCreateSerializer
     model              = Quantity

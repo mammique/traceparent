@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse
 
 from traceparent.utils import ordered_dict
 
-from .views import UnitFilterView, UnitCreateView, UnitRetrieveUpdateView, \
+from .views import UnitFilterView, UnitCreateView, UnitRetrieveView, \
     QuantityFilterView, QuantityCreateView
 
 
@@ -63,10 +63,12 @@ urlpatterns = patterns('',
     url(r'^unit/filter/$', UnitFilterView.as_view(), name='tp_value_unit_filter'),
     url(r'^unit/create/$', UnitCreateView.as_view(), name='tp_value_unit_create'),
     url(r'^unit/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
-        UnitRetrieveUpdateView.as_view(), name='tp_value_unit_retrieve'),
+        UnitRetrieveView.as_view(), name='tp_value_unit_retrieve'),
 
     # Quantity
     url(r'^quantity/$', QuantityView.as_view(), name='tp_value_quantity'),
     url(r'^quantity/filter/$', QuantityFilterView.as_view(), name='tp_value_quantity_filter'),
     url(r'^quantity/create/$', QuantityCreateView.as_view(), name='tp_value_quantity_create'),
+    #url(r'^quantity/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+    #    QuantityRetrieveView.as_view(), name='tp_value_quantity_retrieve'),
 )

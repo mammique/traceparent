@@ -44,7 +44,6 @@ class Quantity(models.Model):
                                       symmetrical=False, related_name='next')
     status   = models.SlugField(default='symbolic', max_length=64,
                                      choices=value_status_choices)
-#    balanced      = models.BooleanField()
 
     def __unicode__(self):
         
