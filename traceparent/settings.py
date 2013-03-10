@@ -200,6 +200,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'traceparent.renderers.BrowsableAPIRenderer',
+    ),
 }
 
 TP_VALUE_QUANTITY_MAX_DIGITS              = 64 # 128

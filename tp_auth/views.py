@@ -18,7 +18,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
-#from traceparent.mixins import RequestSerializerMixin
 
 from .models import User, LoginToken
 
@@ -55,7 +54,7 @@ class UserFilter(django_filters.FilterSet):
 
     uuid    = django_filters.CharFilter(lookup_type='exact')
     name    = django_filters.CharFilter(lookup_type='icontains')
-    email   = django_filters.CharFilter(lookup_type='iexact')
+    email   = django_filters.CharFilter(lookup_type='icontains')
     creator = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:

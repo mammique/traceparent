@@ -147,31 +147,6 @@ class QuantityCreateSerializer(serializers.ModelSerializer):
     prev = relations.PrimaryKeyRelatedField(required=False, # default='qsdfqsdfsqOOO',
                widget=widgets.TextInput(attrs={'disabled': True}))
 
-    #def get_pk_field(self, model_field):
-
-    #    f = super(QuantityCreateSerializer, self).get_pk_field(model_field)
-    #    print f, model_field #dir(f)
-    #    return f
-
-    #def get_field(self, model_field):
-
-    #    f = super(QuantityCreateSerializer, self).get_field(model_field)
-    #    print model_field.get_default(), f
-    #    return f
-
-#    @property
-#    def data(self):
-
-#        d = super(UserManageSerializer, self).data
-#        print d
-#        d['prev'] = '32a53a46-7689-11e2-914f-78929c525f0e'
-#        return d
-
-#    def __init__(self, *args, **kwargs):
-
-##        print args, kwargs
-#        return super(QuantityCreateSerializer, self).__init__(*args, **kwargs)
-
     class Meta:
 
         model = Quantity
@@ -181,26 +156,16 @@ class QuantityCreateSerializer(serializers.ModelSerializer):
 
 class QuantityCreateView(CreateAPIView):
 
-    #def get_serializer_context(self, *args, **kwargs):
+    def get_serializer_context(self, *args, **kwargs):
 
-    #    c = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
-    #    print c
-    #    return c
+        c    = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
+        prev = self.request.GET.get('prev')
 
-    #def get_serializer(self, *args, **kwargs):
+        if prev: c.update({'form_initial': {'prev': prev}})
 
-    #    kwargs['data'] = {'prev': '32a53a46-7689-11e2-914f-78929c525f0e'}
-    #    s = super(QuantityCreateView, self).get_serializer(*args, **kwargs)
-    #    print args, kwargs
-    #    s._data= kwargs['data']
-    #    #s.init_data = {'prev': '32a53a46-7689-11e2-914f-78929c525f0e'}
-    #    return s
+        return c
 
     def get(self, request, format=None): return Response(None)
-
-    #def get_object(self):
-    #    print 'mlkjmlk'
-    #    return
 
     serializer_class   = QuantityCreateSerializer
     model              = Quantity
