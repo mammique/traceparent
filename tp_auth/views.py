@@ -154,9 +154,9 @@ class UserCreateView(CreateAPIView):
 
         r = super(UserCreateView, self).create(request, *args, **kwargs)
 
-        user = self.object
-
         if r.status_code == status.HTTP_201_CREATED:
+
+            user = self.object
 
             if user.email:
 

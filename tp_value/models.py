@@ -2,6 +2,7 @@
 import decimal
 
 from django.db import models
+
 from tp_auth.models import User
 
 from django_extensions.db.fields import UUIDField
@@ -21,14 +22,14 @@ class Unit(models.Model):
 
     def __unicode__(self): return u'%s (%s)' % (self.name, self.symbol)
 
-value_status_choices = (
-                        ('symbolic',  u'symbolic'),
+value_status_choices = models.fields.BLANK_CHOICE_DASH + [
+                        #('symbolic',  u'symbolic'),
                         ('pending',   u'pending'),
                         ('present',   u'present'),
                         ('passed',    u'passed'),
                         ('rejected',  u'rejected'),
                         ('cancelled', u'cancelled'),
-                       )
+                       ]
 
 class Quantity(models.Model):
 
@@ -42,14 +43,14 @@ class Quantity(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     prev     = models.ManyToManyField('self', null=True,
                                       symmetrical=False, related_name='next')
-    status   = models.SlugField(default='symbolic', max_length=64,
+    status   = models.SlugField(null=True, blank=True, default=None, max_length=64,
                                      choices=value_status_choices)
 
     def __unicode__(self):
-        
-        return u'%s%s %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
+        # FIXME: Symbolic < / * 
+        return u'%s%s <%s> %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
                              -self.unit.decimal_places),
-                             self.unit.symbol, self.user)
+                             self.unit.symbol, self.pk, self.user)
 
     def save(self, *args, **kwargs):
 

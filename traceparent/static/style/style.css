@@ -1,21 +1,13 @@
 .container,
 .navbar-static-top .container,
 .navbar-fixed-top .container,
-.navbar-fixed-bottom .container {
-    width: 1170px;
-}
+.navbar-fixed-bottom .container { width: 1170px; }
 
-.breadcrumb > li > .divider {
-    color: #888;
-}
+.breadcrumb > li > .divider { color: #888; }
 
-ul.breadcrumb {
-    margin: 75px 0 0 0 !important;
-}
+ul.breadcrumb { margin: 75px 0 0 0 !important; }
 
-.version::before {
-    padding-left: 1em;
-}
+.version::before { padding-left: 1em; }
 
 .version .revision::before {
     content: "(rev";
@@ -26,4 +18,16 @@ ul.breadcrumb {
 .version .revision::after {
     content: ")";
     opacity: 0.6;
+}
+
+.description { margin-bottom: 20px; }
+.description:empty { display: none; }
+
+#object-form .uneditable-input {
+    width: 90%;
+    color: gray;
+}
+
+#object-form .uneditable-input {
+    cursor: pointer !important;
 }
