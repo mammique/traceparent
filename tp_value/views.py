@@ -245,7 +245,13 @@ class QuantityCreateView(QuantityDescMixin, CreateAPIView):
 
         if r.status_code == status.HTTP_201_CREATED:
 
-            o = self.object
-            return Response(QuantitySerializer(o).data, status=status.HTTP_201_CREATED) # FIXME: request!
+            return Response(
+                       QuantitySerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format': self.format_kwarg,
+                               'view': self}).data,
+                       status=status.HTTP_201_CREATED)
             
         return r

@@ -84,7 +84,7 @@ class UserAlterSerializerBase(UserSerializerBase):
     class Meta:
 
         model = User
-        fields = UserRoFullSerializer.Meta.fields + ['password',]
+        fields = UserRoFullSerializer.Meta.fields + ['email', 'password',]
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
     @property
