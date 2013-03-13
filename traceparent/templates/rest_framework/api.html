@@ -21,7 +21,7 @@
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'tp_auth_user_manage' %}">Manage</a></li>
+                <li><a href="{% url 'tp_auth_user_update' user.pk %}">Manage</a></li>
                 <li><a href="{% url 'tp_auth_logout' %}">Log out</a></li>
             </ul>
         </li>

@@ -4,7 +4,7 @@ from django.forms import widgets
 from django.http import QueryDict
 from django.utils.safestring import mark_safe
 
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -175,10 +175,6 @@ class QuantityFilterView(ListAPIView):
 
 class QuantityPrevInput(widgets.MultipleHiddenInput):
 
-    #def __init__(self, *args, **kwargs):
-
-    #    return super(QuantityPrevInput, self).__init__(*args, **kwargs)
-
     def render(self, name, value, attrs=None):
 
         r = super(QuantityPrevInput, self).render(name, value, attrs=None)
@@ -227,9 +223,9 @@ class QuantityCreateView(QuantityDescMixin, CreateAPIView):
         prev = self.request.GET.get('prev')
 
         if prev:
-            
+
             try:
-                
+
                 prev = self.model.objects.get(pk=prev)
                 c.update({'form_initial': {'prev': (prev.pk,), 'unit': prev.unit.pk}})
 
@@ -255,3 +251,9 @@ class QuantityCreateView(QuantityDescMixin, CreateAPIView):
                        status=status.HTTP_201_CREATED)
             
         return r
+
+
+class QuantityUpdateView(QuantityDescMixin, UpdateAPIView):
+
+    serializer_class   = QuantityCreateSerializer
+    model              = Quantity

@@ -19,6 +19,7 @@ from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
 
+from permissions import IsCreatorOrUser
 from .models import User, LoginToken
 
 
@@ -54,7 +55,7 @@ class UserFilter(django_filters.FilterSet):
 
     uuid    = django_filters.CharFilter(lookup_type='exact')
     name    = django_filters.CharFilter(lookup_type='icontains')
-    email   = django_filters.CharFilter(lookup_type='icontains')
+    email   = django_filters.CharFilter(lookup_type='iexact')
     creator = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:
@@ -183,31 +184,22 @@ class UserCreateView(CreateAPIView):
         return r
 
 
-class UserManageSerializer(UserAlterSerializerBase):
+class UserUpdateSerializer(UserAlterSerializerBase):
 
     email = EmailField(required=True)
 
-class UserManageView(RetrieveUpdateAPIView):
+class UserUpdateView(RetrieveUpdateAPIView):
 
-    serializer_class   = UserManageSerializer
+    serializer_class   = UserUpdateSerializer
     model              = User
-    permission_classes = (IsAuthenticated,)
-
-    # https://github.com/tomchristie/django-rest-framework/blob/f5a0275547ad264c8a9b9aa2a45cc461723a4f11/rest_framework/generics.py#L129
-    def get_object(self, queryset=None):
-
-        obj = self.request.user
-        self.check_object_permissions(self.request, obj)
-
-        return obj
+    permission_classes = (IsAuthenticated, IsCreatorOrUser)
 
     def update(self, request, *args, **kwargs):
 
-        r = super(UserManageView, self).update(request, *args, **kwargs)
+        r = super(UserUpdateView, self).update(request, *args, **kwargs)
 
-        if r.status_code == status.HTTP_201_CREATED:
-            return Response(self.get_serializer(user).data, status=status.HTTP_201_CREATED)
-             # return Response(UserRoFullSerializer(self.object).data, status=status.HTTP_201_CREATED)
+        if r.status_code == status.HTTP_200_OK:
+            return Response(self.get_serializer(self.object).data, status=status.HTTP_200_OK)
 
         return r
 
@@ -228,7 +220,6 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
     def restore_object(self, attrs, instance=None): return self._user
-
 
 
 class UserLoginView(CreateAPIView):
@@ -348,12 +339,13 @@ class PasswordResetView(CreateAPIView):
                        """%s?login_token=%s&next=%s\n\n--\n%s""" % \
                            (settings.PROJECT_NAME,
                             reverse('tp_auth_login', request=self.request),
-                            token.pk, urllib.quote(reverse('tp_auth_user_manage')),
+                            token.pk, urllib.quote(reverse('tp_auth_user_update',
+                                                           (user.pk,))),
                             settings.PROJECT_URL)
 
                 user.email_user("[%s] Password reset" % settings.PROJECT_NAME, body)
 
-            except: pass
+            except 1: pass
 
         #token, created = Token.objects.get_or_create(user=request.user)
 

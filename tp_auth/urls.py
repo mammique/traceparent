@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 from traceparent.utils import ordered_dict
 
 from .views import UserRetrieveView, UserFilterView, UserCreateView, \
-    UserManageView, UserLoginView, UserLogoutView, TokenView, PasswordResetView
+    UserUpdateView, UserLoginView, UserLogoutView, TokenView, PasswordResetView
 
 
 class AuthView(APIView):
@@ -18,7 +18,6 @@ class AuthView(APIView):
         data = {
                 'user_filter': reverse('tp_auth_user_filter', request=self.request),
                 'user_create': reverse('tp_auth_user_create', request=self.request),
-                'user_manage': reverse('tp_auth_user_manage', request=self.request),
                 'password_reset': reverse('tp_auth_password_reset', request=self.request),
                 'login': reverse('tp_auth_login', request=self.request),
                 'logout': reverse('tp_auth_logout', request=self.request),
@@ -36,9 +35,10 @@ urlpatterns = patterns('',
     # User
     url(r'^user/filter/$', UserFilterView.as_view(), name='tp_auth_user_filter'),
     url(r'^user/create/$', UserCreateView.as_view(), name='tp_auth_user_create'),
-    url(r'^user/manage/$', UserManageView.as_view(), name='tp_auth_user_manage'),
     url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
         UserRetrieveView.as_view(), name='tp_auth_user_retrieve'),
+    url(r'^user/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
+        UserUpdateView.as_view(), name='tp_auth_user_update'),
 
     # Misc
     url(r'^login/$', UserLoginView.as_view(), name='tp_auth_login'),
