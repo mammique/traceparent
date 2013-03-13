@@ -4,8 +4,6 @@ from django.contrib.auth.models import BaseUserManager, AbstractUser
 
 from django_extensions.db.fields import UUIDField
 
-from rest_framework.authtoken.models import Token
-
 
 # https://docs.djangoproject.com/en/1.5/topics/auth/customizing/#a-full-example
 class UserManager(BaseUserManager):

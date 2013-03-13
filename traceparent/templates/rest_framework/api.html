@@ -21,12 +21,12 @@
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'tp_auth_user_update' user.pk %}">Manage</a></li>
+                <li><a href="{% url 'tp_auth_user_update' user.pk %}">Update</a></li>
                 <li><a href="{% url 'tp_auth_logout' %}">Log out</a></li>
             </ul>
         </li>
     {% else %}
-        <li><a href="{% url 'tp_auth_login' %}">Log in</a></li>
+    <li><a href="{% url 'tp_auth_login' %}{# ?next={{ request.META.PATH_INFO }} #}">Log in</a></li>
         <li><a href="{% url 'tp_auth_user_create' %}">Create account</a></li>
     {% endif %}
 {% endblock %}

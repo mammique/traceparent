@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, \
-    RetrieveAPIView, CreateAPIView
+     RetrieveAPIView, CreateAPIView
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -18,8 +18,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
+from traceparent.mixins import DescActionMixin
 
-from permissions import IsCreatorOrUser
+from .permissions import IsCreatorOrUser
 from .models import User, LoginToken
 
 
@@ -71,10 +72,11 @@ class UserFilterView(ListAPIView):
     filter_class     = UserFilter
 
 
-class UserRetrieveView(RetrieveAPIView):
+class UserRetrieveView(DescActionMixin, RetrieveAPIView):
 
     serializer_class = UserRoFullSerializer
     model            = User
+    description_actions = (('Update', lambda x: reverse('tp_auth_user_update', (x.pk,))),)
 
 
 class UserAlterSerializerBase(UserSerializerBase):
@@ -193,15 +195,6 @@ class UserUpdateView(RetrieveUpdateAPIView):
     serializer_class   = UserUpdateSerializer
     model              = User
     permission_classes = (IsAuthenticated, IsCreatorOrUser)
-
-    def update(self, request, *args, **kwargs):
-
-        r = super(UserUpdateView, self).update(request, *args, **kwargs)
-
-        if r.status_code == status.HTTP_200_OK:
-            return Response(self.get_serializer(self.object).data, status=status.HTTP_200_OK)
-
-        return r
 
 
 class UserLoginSerializer(serializers.Serializer):

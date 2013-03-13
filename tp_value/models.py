@@ -23,7 +23,6 @@ class Unit(models.Model):
     def __unicode__(self): return u'%s (%s)' % (self.name, self.symbol)
 
 value_status_choices = models.fields.BLANK_CHOICE_DASH + [
-                        #('symbolic',  u'symbolic'),
                         ('pending',   u'pending'),
                         ('present',   u'present'),
                         ('passed',    u'passed'),
@@ -33,24 +32,28 @@ value_status_choices = models.fields.BLANK_CHOICE_DASH + [
 
 class Quantity(models.Model):
 
-    uuid     = UUIDField(auto=True, primary_key=True)
-    creator  = models.ForeignKey(User, null=True, blank=True,
-                                 related_name="quantities_created")
-    unit     = models.ForeignKey(Unit)
-    quantity = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
-    user     = models.ForeignKey(User, null=True, blank=True, related_name='quantities')
-    #creation_datetime = models.DateTimeField(auto_now_add=True)
-    datetime = models.DateTimeField(auto_now_add=True)
-    prev     = models.ManyToManyField('self', null=True,
-                                      symmetrical=False, related_name='next')
-    status   = models.SlugField(null=True, blank=True, default=None, max_length=64,
-                                     choices=value_status_choices)
+    uuid              = UUIDField(auto=True, primary_key=True)
+    creator           = models.ForeignKey(User, # null=True, blank=True,
+                            related_name="quantities_created")
+    unit              = models.ForeignKey(Unit)
+    quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    user              = models.ForeignKey(User, # null=True, blank=True,
+                            related_name='quantities')
+    creation_datetime = models.DateTimeField(auto_now_add=True)
+    datetime          = models.DateTimeField(auto_now_add=True)
+    prev              = models.ManyToManyField('self', null=True,
+                            symmetrical=False, related_name='next')
+    status            = models.SlugField(null=True, blank=True, default=None, max_length=64,
+                            choices=value_status_choices)
 
     def __unicode__(self):
-        # FIXME: Symbolic < / * 
-        return u'%s%s <%s> %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
+
+        pk = "<%s>" if self.status != None else "*%s*"
+        pk = pk % self.pk
+
+        return u'%s%s %s %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
                              -self.unit.decimal_places),
-                             self.unit.symbol, self.pk, self.user)
+                             self.unit.symbol, pk, self.user)
 
     def save(self, *args, **kwargs):
 

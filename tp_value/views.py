@@ -4,7 +4,8 @@ from django.forms import widgets
 from django.http import QueryDict
 from django.utils.safestring import mark_safe
 
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, \
+     RetrieveAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,6 +13,9 @@ from rest_framework import relations
 from rest_framework.reverse import reverse
 from rest_framework import status
 
+from traceparent.mixins import DescActionMixin
+
+from tp_auth.permissions import IsCreatorOrUser
 #from tp_auth.views import UserRoLightSerializer
 
 from .models import Unit, Quantity
@@ -141,29 +145,15 @@ class QuantitySerializer(serializers.ModelSerializer):
             'status', 'datetime', 'prev', 'next',)
 
 
-class QuantityDescMixin(object):
+class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
 
-    def get_description(self, *args, **kwargs):
-
-        desc = super(QuantityDescMixin, self).get_description(*args, **kwargs)
-
-        if kwargs['html']:
-            
-            desc += """<div class="btn-group">""" \
-                    """<a class="btn btn-primary dropdown-toggle" """ \
-                    """data-toggle="dropdown" href="#">""" \
-                    """Action <span class="caret"></span></a><ul class="dropdown-menu">""" \
-                    """<li><a href="%s?prev=%s">Add next</a></li></ul></div>""" % \
-                        (reverse('tp_value_quantity_create'), self.object.pk)
-            desc = mark_safe(desc)
-
-        return desc
-
-
-class QuantityRetrieveView(QuantityDescMixin, RetrieveAPIView):
-
-    serializer_class   = QuantitySerializer
-    model              = Quantity
+    serializer_class    = QuantitySerializer
+    model               = Quantity
+    description_actions = (('Add next', lambda x: '%s?prev=%s' % \
+                               (reverse('tp_value_quantity_create'), x.pk)),
+                           ('Update', lambda x: reverse('tp_value_quantity_update',
+                               (x.pk,))),
+                          )
 
 
 class QuantityFilterView(ListAPIView):
@@ -187,7 +177,8 @@ class QuantityPrevInput(widgets.MultipleHiddenInput):
                    (r, reverse('tp_value_quantity_retrieve', (q.pk,)), q))
 
 
-class QuantityCreateSerializer(serializers.ModelSerializer):
+class QuantityAlterSerializer(serializers.ModelSerializer):
+#class QuantityAlterSerializer(QuantitySerializer):#serializers.ModelSerializer):
 
     prev = relations.ManyPrimaryKeyRelatedField(required=False,
                widget=QuantityPrevInput)
@@ -200,20 +191,40 @@ class QuantityCreateSerializer(serializers.ModelSerializer):
 
     def validate_status(self, attrs, source):
 
-        if attrs[source] == '': attrs[source] = None
+        if  attrs[source] == '': attrs[source] = None
+
+        stat    = attrs[source]
+        prev    = attrs['prev']
+        request = self.context.get('request')
+
+        if self.object and self.object.creator == request.user and \
+               self.object.user != request.user and self.object.status in ('rejected',):
+
+            raise serializers.ValidationError("""The creator of a quantity """ \
+                      """cannot modify it if its status is set to 'rejected'.""")
+
+        if stat != None and (not self.object or self.object.status == None):
+
+            for q in prev:
+
+                if not request.user in (q.creator, q.user,):
+
+                    raise serializers.ValidationError("You cannot set a status as you """ \
+                               """are not owner nor user of the previous quantity <%s>.""" % \
+                                   q.pk)
 
         return attrs
 
     def validate(self, attrs):
 
-        attrs['creator'] = self.context['request'].user
+        if not self.object: attrs['creator'] = self.context['request'].user
 
         return attrs
 
 
-class QuantityCreateView(QuantityDescMixin, CreateAPIView):
+class QuantityCreateView(CreateAPIView):
 
-    serializer_class   = QuantityCreateSerializer
+    serializer_class   = QuantityAlterSerializer
     model              = Quantity
     permission_classes = (IsAuthenticated,)
 
@@ -253,7 +264,51 @@ class QuantityCreateView(QuantityDescMixin, CreateAPIView):
         return r
 
 
-class QuantityUpdateView(QuantityDescMixin, UpdateAPIView):
+class QuantityUpdateSerializer(QuantityAlterSerializer):
 
-    serializer_class   = QuantityCreateSerializer
-    model              = Quantity
+    class Meta:
+
+        model = Quantity
+        exclude = ('creator',)
+        fields = ('unit', 'quantity', 'prev', 'status',)
+        read_only_fields = ('user',)
+
+
+#class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
+class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
+
+    serializer_class    = QuantityUpdateSerializer
+    model               = Quantity
+    permission_classes  = (IsAuthenticated, IsCreatorOrUser,)
+    description_actions = (('Add next', lambda x: '%s?prev=%s' % \
+                               (reverse('tp_value_quantity_create'), x.pk)),)
+
+    def get(self, request, format=None, *args, **kwargs):
+
+        super(QuantityUpdateView, self).get(request, format=None, *args, **kwargs)
+
+        return Response({'FIXME':
+            'https://github.com/tomchristie/django-rest-framework/issues/731'})
+
+    def update(self, request, *args, **kwargs):
+
+        r = super(QuantityUpdateView, self).update(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_200_OK:
+
+            return Response(
+                       QuantitySerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format': self.format_kwarg,
+                               'view': self}).data,
+                       status=status.HTTP_200_OK)
+            
+        return r
+
+    
+    #def get_serializer(self, *args, **kwargs):
+
+    #    print args, kwargs
+    #    return super(QuantityUpdateView, self).get_serializer(*args, **kwargs)

@@ -71,6 +71,7 @@ urlpatterns = patterns('',
     url(r'^quantity/create/$', QuantityCreateView.as_view(), name='tp_value_quantity_create'),
     url(r'^quantity/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
         QuantityRetrieveView.as_view(), name='tp_value_quantity_retrieve'),
+    # FIXME: breadscrumbs fails on positioning 'update' in the tree.
     url(r'^quantity/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
         QuantityUpdateView.as_view(), name='tp_value_quantity_update'),
 )
