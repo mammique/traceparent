@@ -197,16 +197,12 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
         prev    = attrs['prev']
         request = self.context.get('request')
 
-        if self.object and self.object.creator == request.user and \
-               self.object.user != request.user and self.object.status in ('rejected',):
-
-            raise serializers.ValidationError("""The creator of a quantity """ \
-                      """cannot modify it if its status is set to 'rejected'.""")
-
+        # FIXME: forbid non-null statuses to become null?
         if stat != None and (not self.object or self.object.status == None):
 
             for q in prev:
 
+                # FIXME: call `IsCreatorOrUser` instead?
                 if not request.user in (q.creator, q.user,):
 
                     raise serializers.ValidationError("You cannot set a status as you """ \
@@ -217,7 +213,16 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
+        request = self.context.get('request')
+
         if not self.object: attrs['creator'] = self.context['request'].user
+
+        # FIXME: move this to the permission level?
+        elif self.object.creator == request.user and \
+               self.object.user != request.user and self.object.status in ('rejected',):
+
+            raise serializers.ValidationError("""The creator of a quantity """ \
+                      """cannot modify it if its status is set to 'rejected'.""")
 
         return attrs
 
