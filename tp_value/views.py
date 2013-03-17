@@ -65,13 +65,15 @@ class UnitCreateView(CreateAPIView):
     model = Unit
 
 
-class UnitRetrieveView(RetrieveAPIView):
+class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
 
     #def get(self, request, format=None): return Response(None)
 
     permission_classes = (IsAuthenticated,)
     serializer_class = UnitSerializer
     model = Unit
+    description_actions = (('Add metadata', lambda x: '%s?assigned_units=%s' % \
+                               (reverse('tp_metadata_snippet_create'), x.pk)),)
 
 
 class UnitFilterView(ListAPIView):
@@ -123,6 +125,8 @@ class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
     model               = Quantity
     description_actions = (('Add next', lambda x: '%s?prev=%s' % \
                                (reverse('tp_value_quantity_create'), x.pk)),
+                           ('Add metadata', lambda x: '%s?assigned_quantities=%s' % \
+                               (reverse('tp_metadata_snippet_create'), x.pk)),
                            ('Update', lambda x: reverse('tp_value_quantity_update',
                                (x.pk,))),
                           )
@@ -238,13 +242,17 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
         read_only_fields = ('user',)
 
 
-class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
+class QuantityUpdateView(RetrieveUpdateAPIView):
+# class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
 
     serializer_class    = QuantityUpdateSerializer
     model               = Quantity
     permission_classes  = (IsAuthenticated, IsCreatorOrUser,)
-    description_actions = (('Add next', lambda x: '%s?prev=%s' % \
-                               (reverse('tp_value_quantity_create'), x.pk)),)
+    #description_actions = (('Add next', lambda x: '%s?prev=%s' % \
+    #                           (reverse('tp_value_quantity_create'), x.pk)),
+    #                       ('Add metadata', lambda x: '%s?assigned_quantities=%s' % \
+    #                           (reverse('tp_metadata_snippet_create'), x.pk)),
+    #                       )
 
     def get(self, request, format=None, *args, **kwargs):
 

@@ -12,8 +12,8 @@ visibility_choices = [
                       ('private', u'private'),
                      ]
 
-mimetype_choices   = models.fields.BLANK_CHOICE_DASH + [
-                      ('text/plain',  u'text/plain'),
+mimetype_choices   = [
+                      ('text/plain', u'text/plain'),
                       ('application/json', u'application/json'),
                      ]
 

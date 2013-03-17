@@ -8,22 +8,12 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Quantity.creation_datetime'
-        db.add_column(u'tp_value_quantity', 'creation_datetime',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, default=datetime.datetime(2013, 3, 13, 0, 0), blank=True),
-                      keep_default=False)
-
-
-        # Changing field 'Quantity.user'
-        db.alter_column(u'tp_value_quantity', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(default='', to=orm['tp_auth.User']))
+        # Changing field 'Unit.decimal_places'
+        db.alter_column(u'tp_value_unit', 'decimal_places', self.gf('django.db.models.fields.PositiveIntegerField')())
 
     def backwards(self, orm):
-        # Deleting field 'Quantity.creation_datetime'
-        db.delete_column(u'tp_value_quantity', 'creation_datetime')
-
-
-        # Changing field 'Quantity.user'
-        db.alter_column(u'tp_value_quantity', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['tp_auth.User']))
+        # Changing field 'Unit.decimal_places'
+        db.alter_column(u'tp_value_unit', 'decimal_places', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
 
     models = {
         u'auth.group': {
@@ -67,8 +57,7 @@ class Migration(SchemaMigration):
         },
         u'tp_value.quantity': {
             'Meta': {'ordering': "['-datetime']", 'object_name': 'Quantity'},
-            'creation_datetime': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'creator': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'quantities_created'", 'null': 'True', 'to': u"orm['tp_auth.User']"}),
+            'creator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'quantities_created'", 'to': u"orm['tp_auth.User']"}),
             'datetime': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'prev': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'next'", 'null': 'True', 'to': u"orm['tp_value.Quantity']"}),
             'quantity': ('django.db.models.fields.DecimalField', [], {'max_digits': '64', 'decimal_places': '30'}),
@@ -80,7 +69,7 @@ class Migration(SchemaMigration):
         u'tp_value.unit': {
             'Meta': {'object_name': 'Unit'},
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tp_auth.User']"}),
-            'decimal_places': ('django.db.models.fields.PositiveIntegerField', [], {'default': '2', 'null': 'True', 'blank': 'True'}),
+            'decimal_places': ('django.db.models.fields.PositiveIntegerField', [], {'default': '2'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'symbol': ('django.db.models.fields.CharField', [], {'max_length': '8'}),

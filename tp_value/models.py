@@ -18,10 +18,12 @@ class Unit(models.Model):
     name           = models.CharField(max_length=128)
     slug           = models.SlugField(max_length=128)
     symbol         = models.CharField(max_length=8)
-    decimal_places = models.PositiveIntegerField(default=2, null=True, blank=True) # FIXME: non-null.
+    decimal_places = models.PositiveIntegerField(default=2) # FIXME: non-null.
     #datetime       = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self): return u'%s (%s)' % (self.name, self.symbol)
+    def __unicode__(self):
+        return u'%s (%s) <%s> %s' % \
+            (self.name, self.symbol, self.pk, self.creator) # FIXME: creator/user
 
 
 value_status_choices = models.fields.BLANK_CHOICE_DASH + [

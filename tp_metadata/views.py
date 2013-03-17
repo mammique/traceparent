@@ -41,16 +41,40 @@ class SnippetFilter(django_filters.FilterSet):
                      'assigned_users', 'assigned_units', 'assigned_quantities',)
 
 
+class SnippetContentField(serializers.HyperlinkedIdentityField):
+
+    def field_to_native(self, o, *args, **kwargs):
+
+        try:
+            if self.context.get('request').GET.get('content') == 'embed':
+                return o.content
+        except: pass
+
+        return super(SnippetContentField, self).field_to_native(o, *args, **kwargs)
+
+
 class SnippetSerializer(serializers.ModelSerializer):
 
-    url  = serializers.HyperlinkedIdentityField(view_name='tp_metadata_snippet_retrieve') 
-    user = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    url     = serializers.HyperlinkedIdentityField(view_name='tp_metadata_snippet_retrieve') 
+    user    = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    content = SnippetContentField(view_name='tp_metadata_snippet_content')
 
     class Meta:
 
         model = Snippet
-        fields = ('uuid', 'url', 'user', 'visibility', 'mimetype', 'slug', 'type',
+        fields = ('uuid', 'url', 'user', 'visibility', 'mimetype', 'slug', 'type', 'content',
                   'datetime', 'assigned_users', 'assigned_units', 'assigned_quantities',)
+
+    @property
+    def data(self):
+
+        data = super(SnippetSerializer, self).data
+
+        for f in ('assigned_users', 'assigned_units', 'assigned_quantities',):
+
+            if f in data and not data[f]: del data[f]
+
+        return data
 
 
 class SnippetFilterView(ListAPIView):
@@ -60,6 +84,7 @@ class SnippetFilterView(ListAPIView):
     model            = Snippet
 
 
+# FIXME: not DRY at all, merge with MultipleLockedInput.
 from tp_value.models import Unit, Quantity
 from tp_auth.models import User
 
@@ -85,6 +110,7 @@ class SnippetCreateSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    # FIXME: at least one assigned object.
     def validate(self, attrs):
 
         attrs['creator'] = self.context['request'].user
