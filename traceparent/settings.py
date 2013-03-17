@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     # Traceparent apps:
     'tp_auth',
     'tp_value',
+    'tp_metadata',
 )
 
 # A sample logging configuration. The only tangible logging

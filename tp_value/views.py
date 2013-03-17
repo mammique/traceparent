@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 import django_filters
-from django.forms import widgets
-from django.http import QueryDict
-from django.utils.safestring import mark_safe
 
-from rest_framework.generics import CreateAPIView, UpdateAPIView, \
-     RetrieveAPIView, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, \
+         RetrieveUpdateAPIView, ListAPIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,6 +11,8 @@ from rest_framework.reverse import reverse
 from rest_framework import status
 
 from traceparent.mixins import DescActionMixin
+from traceparent.fields import HyperlinkedFilterField
+from traceparent.widgets import MultipleLockedInput
 
 from tp_auth.permissions import IsCreatorOrUser
 #from tp_auth.views import UserRoLightSerializer
@@ -45,16 +44,16 @@ class UnitSerializer(serializers.ModelSerializer):
 
 class UnitCreateSerializer(serializers.ModelSerializer):
 
+    class Meta:
+
+        model = Unit
+        fields = ('uuid', 'name', 'slug', 'symbol', 'decimal_places',)
+
     def validate(self, attrs):
 
         attrs['creator'] = self.context['request'].user
 
         return attrs
-
-    class Meta:
-
-        model = Unit
-        fields = ('uuid', 'name', 'slug', 'symbol', 'decimal_places',)
 
 
 class UnitCreateView(CreateAPIView):
@@ -97,33 +96,6 @@ class QuantityFilter(django_filters.FilterSet):
         fields = ('name', 'user', 'unit', 'prev', 'next',)
 
 
-class HyperlinkedFilterField(serializers.Field):
-
-    def __init__(self, *args, **kwargs):
-
-        self.view_name     = kwargs.pop('view_name')
-        self.format        = kwargs.pop('format', None)
-        self.lookup_params = kwargs.pop('lookup_params')
-        self.lookup_test   = kwargs.pop('lookup_test', None)
-
-        return super(HyperlinkedFilterField, self).__init__(*args, **kwargs)
-
-    def field_to_native(self, o, *args, **kwargs):
-
-        if self.lookup_test and not self.lookup_test(o): return None
-
-        view_name = self.view_name
-        request   = self.context.get('request', None)
-        format    = self.format or self.context.get('format', None)
-
-        query = QueryDict('', mutable=True)
-        for key, field in self.lookup_params.items():
-            query[key] = getattr(o, field)
-
-        return '%s?%s' % (reverse(view_name, request=request, format=format),
-                    query.urlencode())
-
-
 class QuantitySerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_quantity_retrieve') 
@@ -163,25 +135,11 @@ class QuantityFilterView(ListAPIView):
     model            = Quantity
 
 
-class QuantityPrevInput(widgets.MultipleHiddenInput):
-
-    def render(self, name, value, attrs=None):
-
-        r = super(QuantityPrevInput, self).render(name, value, attrs=None)
-
-        if not value: return r
-
-        q = Quantity.objects.get(pk=value[0])
-
-        return mark_safe('%s<a href="%s" class="uneditable-input">%s</a>' % \
-                   (r, reverse('tp_value_quantity_retrieve', (q.pk,)), q))
-
-
 class QuantityAlterSerializer(serializers.ModelSerializer):
 #class QuantityAlterSerializer(QuantitySerializer):#serializers.ModelSerializer):
 
     prev = relations.ManyPrimaryKeyRelatedField(required=False,
-               widget=QuantityPrevInput)
+               widget=MultipleLockedInput(model=Quantity))
 
     class Meta:
 
@@ -236,8 +194,9 @@ class QuantityCreateView(CreateAPIView):
     def get_serializer_context(self, *args, **kwargs):
 
         c    = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
-        prev = self.request.GET.get('prev')
 
+        # FIXME: not DRY at all, merge with MultipleLockedInput.        
+        prev = self.request.GET.get('prev')
         if prev:
 
             try:
@@ -279,7 +238,6 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
         read_only_fields = ('user',)
 
 
-#class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
 class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
 
     serializer_class    = QuantityUpdateSerializer
@@ -309,7 +267,7 @@ class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
                                'format': self.format_kwarg,
                                'view': self}).data,
                        status=status.HTTP_200_OK)
-            
+
         return r
 
     

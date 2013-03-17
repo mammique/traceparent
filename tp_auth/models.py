@@ -35,12 +35,13 @@ class User(AbstractUser):
     id              = UUIDField() # It appears that Django needs an 'id' on the `User` model.
     creator         = models.ForeignKey('self', null=True)
     name            = models.CharField(max_length=64, blank=True)
+
     USERNAME_FIELD  = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
 
-    def placeholder(self): return self.email == ''
+    #def placeholder(self): return self.email == ''
 
     def save(self, *args, **kwargs):
 

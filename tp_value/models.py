@@ -3,24 +3,26 @@ import decimal
 
 from django.db import models
 
-from tp_auth.models import User
-
 from django_extensions.db.fields import UUIDField
 
 from traceparent import settings
+
+from tp_auth.models import User
 
 
 class Unit(models.Model):
 
     uuid           = UUIDField(auto=True, primary_key=True)
     creator        = models.ForeignKey(User)
+    # FIXME: user
     name           = models.CharField(max_length=128)
     slug           = models.SlugField(max_length=128)
     symbol         = models.CharField(max_length=8)
-    decimal_places = models.PositiveIntegerField(default=2, null=True, blank=True)
+    decimal_places = models.PositiveIntegerField(default=2, null=True, blank=True) # FIXME: non-null.
     #datetime       = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self): return u'%s (%s)' % (self.name, self.symbol)
+
 
 value_status_choices = models.fields.BLANK_CHOICE_DASH + [
                         ('pending',   u'pending'),
@@ -30,16 +32,17 @@ value_status_choices = models.fields.BLANK_CHOICE_DASH + [
                         ('cancelled', u'cancelled'),
                        ]
 
+
 class Quantity(models.Model):
 
     uuid              = UUIDField(auto=True, primary_key=True)
     creator           = models.ForeignKey(User, # null=True, blank=True,
                             related_name="quantities_created")
-    unit              = models.ForeignKey(Unit)
-    quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     user              = models.ForeignKey(User, # null=True, blank=True,
                             related_name='quantities')
-    creation_datetime = models.DateTimeField(auto_now_add=True)
+    unit              = models.ForeignKey(Unit)
+    quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    #creation_datetime = models.DateTimeField(auto_now_add=True)
     datetime          = models.DateTimeField(auto_now_add=True)
     prev              = models.ManyToManyField('self', null=True,
                             symmetrical=False, related_name='next')
