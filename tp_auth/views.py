@@ -41,7 +41,7 @@ class UserRoLightSerializer(UserSerializerBase):
 
     class Meta:
 
-        model = User
+        model  = User
         fields = ['uuid', 'name', 'symbolic', 'url',]
 
 
@@ -55,7 +55,7 @@ class UserRoFullSerializer(UserRoLightSerializer):
 
     class Meta:
 
-        model = User
+        model  = UserRoLightSerializer.Meta.model
         fields = UserRoLightSerializer.Meta.fields + \
                      ['date_joined', 'is_active', 'assigned_metadata_snippets',]
 

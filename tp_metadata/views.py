@@ -53,11 +53,20 @@ class SnippetContentField(serializers.HyperlinkedIdentityField):
         return super(SnippetContentField, self).field_to_native(o, *args, **kwargs)
 
 
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetRoLightSerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_metadata_snippet_retrieve') 
     user    = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
     content = SnippetContentField(view_name='tp_metadata_snippet_content')
+
+    class Meta:
+
+        model  = Snippet
+        fields = ['uuid', 'url', 'user', 'visibility', 'mimetype', 'slug', 'type',
+                  'content', 'datetime',]
+
+
+class SnippetRoFullSerializer(SnippetRoLightSerializer):
 
     assigned_users = HyperlinkedFilterField(view_name='tp_auth_user_filter',
                   lookup_params={'assigned_metadata_snippets': 'pk'},
@@ -69,22 +78,22 @@ class SnippetSerializer(serializers.ModelSerializer):
                   lookup_params={'assigned_metadata_snippets': 'pk'},
                   lookup_test=lambda o: o.assigned_quantities.all().count() != 0)
 
-    assigned_retrieve = {
-                         'assigned_users': 'tp_auth_user_retrieve',
-                         'assigned_units': 'tp_value_unit_retrieve',
-                         'assigned_quantities': 'tp_value_quantity_retrieve',
-                        }
+    #assigned_retrieve = {
+    #                     'assigned_users': 'tp_auth_user_retrieve',
+    #                     'assigned_units': 'tp_value_unit_retrieve',
+    #                     'assigned_quantities': 'tp_value_quantity_retrieve',
+    #                    }
 
     class Meta:
 
-        model = Snippet
-        fields = ('uuid', 'url', 'user', 'visibility', 'mimetype', 'slug', 'type', 'content',
-                  'datetime', 'assigned_users', 'assigned_units', 'assigned_quantities',)
+        model  = SnippetRoLightSerializer.Meta.model
+        fields = SnippetRoLightSerializer.Meta.fields + \
+                     ['assigned_users', 'assigned_units', 'assigned_quantities',]
 
     def to_native(self, obj):
 
-        ret     = super(SnippetSerializer, self).to_native(obj)
-        request = self.context.get('request')
+        ret     = super(SnippetRoFullSerializer, self).to_native(obj)
+        #request = self.context.get('request')
         
         for k, v in ret.items():
 
@@ -95,39 +104,39 @@ class SnippetSerializer(serializers.ModelSerializer):
                 del ret[k]
                 continue
 
-            if 'assigned_intersect' in request.GET:
+            #if 'assigned_intersect' in request.GET:
 
-                uuids = request.GET.getlist(k)
+            #    uuids = request.GET.getlist(k)
 
-                if not uuids:
+            #    if not uuids:
 
-                    del ret[k]
-                    continue
+            #        del ret[k]
+            #        continue
 
-                retrieves = []
+            #    retrieves = []
 
-                for uuid in uuids:
+            #    for uuid in uuids:
 
-                    # if uuid in v:
-                    # FIXME: Presence should be checked in the query
-                    # (works like this as long as uuid QSL request are 'AND').
+            #        # if uuid in v:
+            #        # FIXME: Presence should be checked in the query
+            #        # (works like this as long as uuid QSL request are 'AND').
 
-                        retrieves.append(reverse(self.assigned_retrieve[k],
-                                                 (uuid,), request=request))
+            #            retrieves.append(reverse(self.assigned_retrieve[k],
+            #                                     (uuid,), request=request))
 
-                if retrieves: ret[k] = retrieves
+            #    if retrieves: ret[k] = retrieves
 
-                else: 
+            #    else: 
 
-                    del ret[k]
-                    continue
+            #        del ret[k]
+            #        continue
 
         return ret
 
 
 class SnippetFilterView(ListAPIView):
 
-    serializer_class = SnippetSerializer
+    serializer_class = SnippetRoLightSerializer
     filter_class     = SnippetFilter
     model            = Snippet
 
@@ -231,7 +240,7 @@ class SnippetUpdateView(RetrieveUpdateAPIView):
 class SnippetRetrieveView(RetrieveDestroyAPIView):
 
     model            = Snippet
-    serializer_class = SnippetSerializer
+    serializer_class = SnippetRoFullSerializer
 # FIXME: permissions
     #content_object   = None
     #pk_url_kwarg     = 'snippet_pk'

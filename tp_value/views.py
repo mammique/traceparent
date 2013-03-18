@@ -25,32 +25,36 @@ class UnitFilter(django_filters.FilterSet):
     name    = django_filters.CharFilter(lookup_type='icontains')
     creator = django_filters.CharFilter(lookup_type='exact')
 
-    # Metadata
-    assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
-
     class Meta:
 
         model = Unit
-        fields = ('name', 'creator', 'assigned_metadata_snippets',)
+        fields = ('name', 'creator',)
 
 
-class UnitSerializer(serializers.ModelSerializer):
+class UnitRoLightSerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_unit_retrieve') 
     creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
 
-    # FIXME: remove from ListView
+    class Meta:
+
+        model  = Unit
+        fields = ['uuid', 'url', 'creator', 'name', 'slug', 'symbol', 'decimal_places',]
+
+
+class UnitRoFullSerializer(UnitRoLightSerializer):
+
     assigned_metadata_snippets = \
         HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_units': 'pk'},
                   lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
-                  querystring_params={'assigned_intersect': ''},)
+                  # querystring_params={'assigned_intersect': ''},
+        )
 
     class Meta:
 
-        model = Unit
-        fields = ('uuid', 'url', 'creator', 'name', 'slug', 'symbol', 'decimal_places',
-                  'assigned_metadata_snippets',)
+        model  = UnitRoLightSerializer.Meta.model
+        fields = UnitRoLightSerializer.Meta.fields + ['assigned_metadata_snippets',]
 
 
 class UnitCreateSerializer(serializers.ModelSerializer):
@@ -82,7 +86,7 @@ class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
     #def get(self, request, format=None): return Response(None)
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = UnitSerializer
+    serializer_class = UnitRoFullSerializer
     model = Unit
     description_actions = (('Add metadata', lambda x: '%s?assigned_units=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),)
@@ -90,7 +94,7 @@ class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
 
 class UnitFilterView(ListAPIView):
 
-    serializer_class = UnitSerializer
+    serializer_class = UnitRoLightSerializer
     filter_class     = UnitFilter
     model            = Unit
 
@@ -103,7 +107,7 @@ class QuantityFilter(django_filters.FilterSet):
 #    creator  = django_filters.CharFilter(lookup_type='exact')
     prev     = django_filters.CharFilter(lookup_type='exact')
     next     = django_filters.CharFilter(lookup_type='exact')
-
+    
     # Metadata
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
 
@@ -113,7 +117,7 @@ class QuantityFilter(django_filters.FilterSet):
         fields = ('name', 'user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
 
 
-class QuantitySerializer(serializers.ModelSerializer):
+class QuantityRoLightSerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_quantity_retrieve') 
     creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
@@ -126,24 +130,33 @@ class QuantitySerializer(serializers.ModelSerializer):
                   lookup_params={'prev': 'pk'},
                   lookup_test=lambda o: o.next.all().count() != 0)
 
-    # FIXME: remove from ListView
+    class Meta:
+
+        model   = Quantity
+        exclude = ('creator',)
+        fields  = ['uuid', 'url', 'unit', 'quantity', 'creator', 'user', \
+                   'status', 'datetime', 'prev', 'next',]
+
+
+class QuantityRoFullSerializer(QuantityRoLightSerializer):
+
     assigned_metadata_snippets = \
         HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_quantities': 'pk'},
                   lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
-                  querystring_params={'assigned_intersect': ''},)
+                  # querystring_params={'assigned_intersect': ''},
+        )
 
     class Meta:
 
-        model = Quantity
-        exclude = ('creator',)
-        fields = ('uuid', 'url', 'unit', 'quantity', 'creator', 'user', \
-            'status', 'datetime', 'prev', 'next', 'assigned_metadata_snippets')
+        model   = QuantityRoLightSerializer.Meta.model
+        exclude = QuantityRoLightSerializer.Meta.exclude
+        fields  = QuantityRoLightSerializer.Meta.fields + ['assigned_metadata_snippets']
 
 
 class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
 
-    serializer_class    = QuantitySerializer
+    serializer_class    = QuantityRoFullSerializer
     model               = Quantity
     description_actions = (
                            ('Add next', lambda x: '%s?prev=%s' % \
@@ -157,13 +170,13 @@ class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
 
 class QuantityFilterView(ListAPIView):
 
-    serializer_class = QuantitySerializer
+    serializer_class = QuantityRoLightSerializer
     filter_class     = QuantityFilter
     model            = Quantity
 
 
 class QuantityAlterSerializer(serializers.ModelSerializer):
-#class QuantityAlterSerializer(QuantitySerializer):#serializers.ModelSerializer):
+#class QuantityAlterSerializer(QuantityRoFullSerializer):#serializers.ModelSerializer):
 
     prev = relations.ManyPrimaryKeyRelatedField(required=False,
                widget=MultipleLockedInput(model=Quantity))
@@ -245,7 +258,7 @@ class QuantityCreateView(CreateAPIView):
         if r.status_code == status.HTTP_201_CREATED:
 
             return Response(
-                       QuantitySerializer(
+                       QuantityRoFullSerializer(
                            self.object,
                            context={
                                'request': self.request,
@@ -292,7 +305,7 @@ class QuantityUpdateView(RetrieveUpdateAPIView):
         if r.status_code == status.HTTP_200_OK:
 
             return Response(
-                       QuantitySerializer(
+                       QuantityRoFullSerializer(
                            self.object,
                            context={
                                'request': self.request,
