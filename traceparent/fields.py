@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http import QueryDict
+from django.db import models
 
 from rest_framework import serializers
 from rest_framework.reverse import reverse
@@ -32,4 +33,9 @@ class HyperlinkedFilterField(serializers.Field):
                     query.urlencode())
 
 
-
+# http://stackoverflow.com/a/7059464
+class SlugBlankToNoneField(models.SlugField):
+    def get_prep_value(self, value):
+        if value == '':
+            return None  
+        return value

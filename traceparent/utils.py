@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from collections import OrderedDict
+from collections import OrderedDict # FIXME: use django.utils.datastructures.SortedDict?
 
 
 re_blank            = re.compile('[\t\n\r\f\v ]+')

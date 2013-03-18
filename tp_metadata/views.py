@@ -12,6 +12,7 @@ from rest_framework.fields import CharField
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import relations
+from rest_framework.reverse import reverse
 
 from traceparent.fields import HyperlinkedFilterField
 from traceparent.widgets import MultipleLockedInput
@@ -38,17 +39,14 @@ class SnippetFilter(django_filters.FilterSet):
 
         model = Snippet
         fields = ('creator', 'user', 'mimetype', 'slug', 'type',
-                     'assigned_users', 'assigned_units', 'assigned_quantities',)
+                  'assigned_users', 'assigned_units', 'assigned_quantities',)
 
 
 class SnippetContentField(serializers.HyperlinkedIdentityField):
 
     def field_to_native(self, o, *args, **kwargs):
 
-        try:
-            if self.context.get('request').GET.get('content') == 'embed':
-                return o.content
-        except: pass
+        if 'content_nested' in self.context.get('request').GET: return o.content
 
         return super(SnippetContentField, self).field_to_native(o, *args, **kwargs)
 
@@ -59,22 +57,70 @@ class SnippetSerializer(serializers.ModelSerializer):
     user    = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
     content = SnippetContentField(view_name='tp_metadata_snippet_content')
 
+    assigned_users = HyperlinkedFilterField(view_name='tp_auth_user_filter',
+                  lookup_params={'assigned_metadata_snippets': 'pk'},
+                  lookup_test=lambda o: o.assigned_users.all().count() != 0)
+    assigned_units = HyperlinkedFilterField(view_name='tp_value_unit_filter',
+                  lookup_params={'assigned_metadata_snippets': 'pk'},
+                  lookup_test=lambda o: o.assigned_units.all().count() != 0)
+    assigned_quantities = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
+                  lookup_params={'assigned_metadata_snippets': 'pk'},
+                  lookup_test=lambda o: o.assigned_quantities.all().count() != 0)
+
+    assigned_retrieve = {
+                         'assigned_users': 'tp_auth_user_retrieve',
+                         'assigned_units': 'tp_value_unit_retrieve',
+                         'assigned_quantities': 'tp_value_quantity_retrieve',
+                        }
+
     class Meta:
 
         model = Snippet
         fields = ('uuid', 'url', 'user', 'visibility', 'mimetype', 'slug', 'type', 'content',
                   'datetime', 'assigned_users', 'assigned_units', 'assigned_quantities',)
 
-    @property
-    def data(self):
+    def to_native(self, obj):
 
-        data = super(SnippetSerializer, self).data
+        ret     = super(SnippetSerializer, self).to_native(obj)
+        request = self.context.get('request')
+        
+        for k, v in ret.items():
 
-        for f in ('assigned_users', 'assigned_units', 'assigned_quantities',):
+            if not k.startswith('assigned_'): continue
 
-            if f in data and not data[f]: del data[f]
+            if not v:
+                    
+                del ret[k]
+                continue
 
-        return data
+            if 'query_intersect' in request.GET:
+
+                uuids = request.GET.getlist(k)
+
+                if not uuids:
+
+                    del ret[k]
+                    continue
+
+                retrieves = []
+
+                for uuid in uuids:
+
+                    # if uuid in v:
+                    # FIXME: Presence should be checked in the query
+                    # (works like this as long as uuid QSL request are 'AND').
+
+                        retrieves.append(reverse(self.assigned_retrieve[k],
+                                                 (uuid,), request=request))
+
+                if retrieves: ret[k] = retrieves
+
+                else: 
+
+                    del ret[k]
+                    continue
+
+        return ret
 
 
 class SnippetFilterView(ListAPIView):
@@ -104,15 +150,10 @@ class SnippetCreateSerializer(serializers.ModelSerializer):
         fields = ('user', 'visibility', 'mimetype', 'slug', 'type', 'content',
                   'assigned_users', 'assigned_units', 'assigned_quantities',)
 
-    def validate_type(self, attrs, source):
-
-        if  attrs[source] == '': attrs[source] = None
-
-        return attrs
-
     # FIXME: at least one assigned object.
     def validate(self, attrs):
 
+        # FIXME: move to view's pre_save()?
         attrs['creator'] = self.context['request'].user
         #raise serializers.ValidationError("Symbolic users cannot have a password.")
 

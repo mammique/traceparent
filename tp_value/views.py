@@ -36,10 +36,16 @@ class UnitSerializer(serializers.ModelSerializer):
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_unit_retrieve') 
     creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
 
+    # FIXME: remove from ListView
+    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+                  lookup_params={'assigned_units': 'pk'},
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+
     class Meta:
 
         model = Unit
-        fields = ('uuid', 'url', 'creator', 'name', 'slug', 'symbol', 'decimal_places',)
+        fields = ('uuid', 'url', 'creator', 'name', 'slug', 'symbol', 'decimal_places',
+                  'assigned_metadata_snippets',)
 
 
 class UnitCreateSerializer(serializers.ModelSerializer):
@@ -51,6 +57,7 @@ class UnitCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
+        # FIXME: move to view's pre_save()?
         attrs['creator'] = self.context['request'].user
 
         return attrs
@@ -111,19 +118,25 @@ class QuantitySerializer(serializers.ModelSerializer):
                   lookup_params={'prev': 'pk'},
                   lookup_test=lambda o: o.next.all().count() != 0)
 
+    # FIXME: remove from ListView
+    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+                  lookup_params={'assigned_quantities': 'pk'},
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+
     class Meta:
 
         model = Quantity
         exclude = ('creator',)
         fields = ('uuid', 'url', 'unit', 'quantity', 'creator', 'user', \
-            'status', 'datetime', 'prev', 'next',)
+            'status', 'datetime', 'prev', 'next', 'assigned_metadata_snippets')
 
 
 class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
 
     serializer_class    = QuantitySerializer
     model               = Quantity
-    description_actions = (('Add next', lambda x: '%s?prev=%s' % \
+    description_actions = (
+                           ('Add next', lambda x: '%s?prev=%s' % \
                                (reverse('tp_value_quantity_create'), x.pk)),
                            ('Add metadata', lambda x: '%s?assigned_quantities=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
@@ -153,7 +166,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
     def validate_status(self, attrs, source):
 
-        if  attrs[source] == '': attrs[source] = None
+        if attrs[source] == '': attrs[source] = None
 
         stat    = attrs[source]
         prev    = attrs['prev']
@@ -177,6 +190,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
 
+        # FIXME: move to view's pre_save()?
         if not self.object: attrs['creator'] = self.context['request'].user
 
         # FIXME: move this to the permission level?

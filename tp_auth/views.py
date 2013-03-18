@@ -19,6 +19,7 @@ from rest_framework.reverse import reverse
 
 from traceparent.utils import blanks_prune
 from traceparent.mixins import DescActionMixin
+from traceparent.fields import HyperlinkedFilterField
 
 from .permissions import IsCreatorOrUser
 from .models import User, LoginToken
@@ -46,10 +47,15 @@ class UserRoLightSerializer(UserSerializerBase):
 
 class UserRoFullSerializer(UserRoLightSerializer):
 
+    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+                  lookup_params={'assigned_users': 'pk'},
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+
     class Meta:
 
         model = User
-        fields = UserRoLightSerializer.Meta.fields + ['date_joined', 'is_active',]
+        fields = UserRoLightSerializer.Meta.fields + \
+                     ['date_joined', 'is_active', 'assigned_metadata_snippets',]
 
 
 class UserFilter(django_filters.FilterSet):
@@ -94,6 +100,7 @@ class UserAlterSerializerBase(UserSerializerBase):
         fields = UserRoFullSerializer.Meta.fields + ['email', 'password',]
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
+    # FIXME: move to to_native()?
     @property
     def data(self):
 
@@ -133,6 +140,7 @@ class UserCreateSerializer(UserAlterSerializerBase):
 
     def validate(self, attrs):
 
+        # FIXME: move to view's pre_save()?
         attrs['creator'] = self.context['request'].user \
             if self.context['request'].user.is_authenticated() else None
 

@@ -6,6 +6,7 @@ from django.db import models
 from django_extensions.db.fields import UUIDField
 
 from traceparent import settings
+from traceparent.fields import SlugBlankToNoneField
 
 from tp_auth.models import User
 
@@ -20,6 +21,10 @@ class Unit(models.Model):
     symbol         = models.CharField(max_length=8)
     decimal_places = models.PositiveIntegerField(default=2) # FIXME: non-null.
     #datetime       = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+
+        ordering = ['-name',] # '-datetime']
 
     def __unicode__(self):
         return u'%s (%s) <%s> %s' % \
@@ -48,8 +53,13 @@ class Quantity(models.Model):
     datetime          = models.DateTimeField(auto_now_add=True)
     prev              = models.ManyToManyField('self', null=True,
                             symmetrical=False, related_name='next')
-    status            = models.SlugField(null=True, blank=True, default=None, max_length=64,
-                            choices=value_status_choices)
+    status            = SlugBlankToNoneField(null=True, blank=True, default=None,
+                            max_length=64, choices=value_status_choices)
+
+    class Meta:
+
+        verbose_name_plural = "Quantities"
+        ordering            = ['-datetime']
 
     def __unicode__(self):
 
@@ -66,8 +76,3 @@ class Quantity(models.Model):
         if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
 
         super(Quantity, self).save(*args, **kwargs)
-
-    class Meta:
-
-        verbose_name_plural = "Quantities"
-        ordering            = ['-datetime']
