@@ -47,6 +47,6 @@ class Snippet(models.Model):
         ordering = ['-slug', '-datetime',]
 
     def __unicode__(self):
-        return u'%s | %s | %s <%s> %s' % \
-            (self.slug, self.mimetype, self.type, self.pk, self.user)
+        return u'%s | %s | %s | %s <%s> %s' % \
+            (self.slug, self.mimetype, self.type, self.visibility, self.pk, self.user)
 

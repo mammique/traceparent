@@ -4,6 +4,13 @@ from rest_framework import permissions
 from .models import User
 
 
+class ObjectIsPublic(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, o):
+
+        return o.visibility == 'public'
+
+
 class IsCreatorOrUser(permissions.BasePermission):
 
     def has_object_permission(self, request, view, o):

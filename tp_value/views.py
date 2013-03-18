@@ -15,7 +15,6 @@ from traceparent.fields import HyperlinkedFilterField
 from traceparent.widgets import MultipleLockedInput
 
 from tp_auth.permissions import IsCreatorOrUser
-#from tp_auth.views import UserRoLightSerializer
 
 from .models import Unit, Quantity
 

@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from traceparent.utils import ordered_dict
 
 from .views import SnippetFilterView, SnippetCreateView, \
-                       SnippetUpdateView, SnippetRetrieveView, SnippetRetrieveContentView
+                       SnippetUpdateView, SnippetRetrieveView
 
 
 class MetadataView(APIView):
@@ -35,5 +35,6 @@ urlpatterns = patterns('django.contrib.auth.views',
     url(r'^(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
         SnippetUpdateView.as_view(), name='tp_metadata_snippet_update'),
     url(r'^(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/content$',
-        SnippetRetrieveContentView.as_view(), name='tp_metadata_snippet_content'),
+        SnippetRetrieveView.as_view(), {'serve_content': True},
+        name='tp_metadata_snippet_content',),
 )

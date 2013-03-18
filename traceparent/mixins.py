@@ -17,7 +17,6 @@ class DescActionMixin(object):
         if kwargs['html']:
 
             lis = []
-#            actions = [] + map(lambda x: list(x), self.description_actions)
 
             for a in  self.description_actions:
 
@@ -25,8 +24,6 @@ class DescActionMixin(object):
                 else: href = a[1]
 
                 lis.append('<li><a href="%s">%s</a></li>' % (href, a[0],))
-
-#                print a, callable(a[1])
 
             desc += """<div class="btn-group">""" \
                     """<a class="btn btn-primary dropdown-toggle" """ \

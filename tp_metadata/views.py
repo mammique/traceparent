@@ -1,25 +1,44 @@
 # -*- coding: utf-8 -*-
-import django_filters
+import django_filters, urllib
 
 from django.http import HttpResponse
 from django.forms import widgets
+from django.db.models import Q
 
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, \
-    RetrieveDestroyAPIView, RetrieveAPIView
-#from rest_framework.response import Response
+from rest_framework.generics import ListAPIView, CreateAPIView, \
+        RetrieveUpdateAPIView, RetrieveAPIView
 from rest_framework import serializers
 from rest_framework.fields import CharField
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import relations
 from rest_framework.reverse import reverse
+from rest_framework import status
 
 from traceparent.fields import HyperlinkedFilterField
 from traceparent.widgets import MultipleLockedInput
+from traceparent.mixins import DescActionMixin
 
-from tp_auth.permissions import IsCreatorOrUser
+from tp_auth.permissions import IsCreatorOrUser # ObjectIsPublic
 
 from .models import Snippet
+
+
+class SnippetRoMixin(object):
+
+    def get_queryset(self):
+
+        queryset = super(SnippetRoMixin, self).get_queryset()
+        public   = queryset.filter(visibility='public')
+        
+        if self.request.user.is_authenticated():
+
+            queryset = public | \
+                queryset.filter(Q(creator=self.request.user) | Q(user=self.request.user))
+
+        else: queryset = public
+
+        return queryset
 
 
 class SnippetFilter(django_filters.FilterSet):
@@ -134,7 +153,7 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
         return ret
 
 
-class SnippetFilterView(ListAPIView):
+class SnippetFilterView(SnippetRoMixin, ListAPIView):
 
     serializer_class = SnippetRoLightSerializer
     filter_class     = SnippetFilter
@@ -145,7 +164,7 @@ class SnippetFilterView(ListAPIView):
 from tp_value.models import Unit, Quantity
 from tp_auth.models import User
 
-class SnippetCreateSerializer(serializers.ModelSerializer):
+class SnippetAlterSerializer(serializers.ModelSerializer):
 
     content             = CharField(widget=widgets.Textarea)
     assigned_users      = relations.ManyPrimaryKeyRelatedField(required=False,
@@ -157,9 +176,16 @@ class SnippetCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
 
-        model = Snippet
-        fields = ('user', 'visibility', 'mimetype', 'slug', 'type', 'content',
-                  'assigned_users', 'assigned_units', 'assigned_quantities',)
+        model  = Snippet
+        fields = ['visibility', 'mimetype', 'slug', 'type', 'content',
+                  'assigned_users', 'assigned_units', 'assigned_quantities',]
+
+class SnippetCreateSerializer(SnippetAlterSerializer):
+
+    class Meta:
+
+        model  = SnippetAlterSerializer.Meta.model
+        fields = ['user',] + SnippetAlterSerializer.Meta.fields
 
     # FIXME: at least one assigned object.
     def validate(self, attrs):
@@ -227,7 +253,7 @@ class SnippetUpdateView(RetrieveUpdateAPIView):
 
     permission_classes = (IsAuthenticated, IsCreatorOrUser,)
     model              = Snippet
-    serializer_class   = SnippetCreateSerializer
+    serializer_class   = SnippetAlterSerializer
 
     def get(self, request, format=None, *args, **kwargs):
 
@@ -236,36 +262,42 @@ class SnippetUpdateView(RetrieveUpdateAPIView):
         return Response({'FIXME':
             'https://github.com/tomchristie/django-rest-framework/issues/731'})
 
+    def update(self, request, *args, **kwargs):
 
-class SnippetRetrieveView(RetrieveDestroyAPIView):
+        r = super(SnippetUpdateView, self).update(request, *args, **kwargs)
 
-    model            = Snippet
-    serializer_class = SnippetRoFullSerializer
-# FIXME: permissions
-    #content_object   = None
-    #pk_url_kwarg     = 'snippet_pk'
+        if r.status_code == status.HTTP_200_OK:
 
-    #def get(self, request, model=None, content_obj_pk=None, *args, **kwargs):
+            return Response(
+                       SnippetRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format': self.format_kwarg,
+                               'view': self}).data,
+                       status=status.HTTP_200_OK)
 
-    #    self.content_object = get_object_or_404(model, pk=content_obj_pk)
-
-    #    return super(SnippetRetrieveView, self).get(request, *args, **kwargs)
-
-    #def get_queryset(self):
-
-    #    o_type = ContentType.objects.get_for_model(self.content_object)
-
-    #    return Snippet.objects.filter(content_type__pk=o_type.pk,
-    #                                  object_pk=self.content_object.pk)
+        return r
 
 
-class SnippetRetrieveContentView(RetrieveAPIView):
+class SnippetRetrieveView(DescActionMixin, SnippetRoMixin, RetrieveAPIView):
 
-    model = Snippet
-# FIXME: permissions
+    model              = Snippet
+    serializer_class   = SnippetRoFullSerializer
 
-    def get(self, request, *args, **kwargs):
+    description_actions = (('Update', lambda x: reverse('tp_metadata_snippet_update',
+                                (x.pk,))),)
 
-        super(SnippetRetrieveContentView, self).get(request, *args, **kwargs)
+    def get(self, request, serve_content=False, *args, **kwargs):
 
-        return HttpResponse(self.object.content, content_type=self.object.mimetype)
+        r = super(SnippetRetrieveView, self).get(request, *args, **kwargs)
+
+        if not serve_content: return r
+
+        r = HttpResponse(self.object.content, content_type=self.object.mimetype)
+
+        if 'download' in request.GET:
+            r['Content-Disposition'] = u"attachment; filename*=UTF-8''%s." % \
+                                           urllib.quote(self.object.slug)
+
+        return r
