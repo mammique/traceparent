@@ -47,9 +47,11 @@ class UserRoLightSerializer(UserSerializerBase):
 
 class UserRoFullSerializer(UserRoLightSerializer):
 
-    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+    assigned_metadata_snippets = \
+        HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_users': 'pk'},
-                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
+                  querystring_params={'assigned_intersect': ''},)
 
     class Meta:
 
@@ -65,10 +67,13 @@ class UserFilter(django_filters.FilterSet):
     email   = django_filters.CharFilter(lookup_type='iexact')
     creator = django_filters.CharFilter(lookup_type='exact')
 
+    # Metadata
+    assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
+
     class Meta:
 
         model = User
-        fields = ('uuid', 'name', 'email', 'creator',)
+        fields = ('uuid', 'name', 'email', 'creator', 'assigned_metadata_snippets',)
 
 
 class UserFilterView(ListAPIView):

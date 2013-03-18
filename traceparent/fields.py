@@ -10,10 +10,11 @@ class HyperlinkedFilterField(serializers.Field):
 
     def __init__(self, *args, **kwargs):
 
-        self.view_name     = kwargs.pop('view_name')
-        self.format        = kwargs.pop('format', None)
-        self.lookup_params = kwargs.pop('lookup_params')
-        self.lookup_test   = kwargs.pop('lookup_test', None)
+        self.view_name          = kwargs.pop('view_name')
+        self.format             = kwargs.pop('format', None)
+        self.lookup_params      = kwargs.pop('lookup_params')
+        self.lookup_test        = kwargs.pop('lookup_test', None)
+        self.querystring_params = kwargs.pop('querystring_params', {})
 
         return super(HyperlinkedFilterField, self).__init__(*args, **kwargs)
 
@@ -28,6 +29,8 @@ class HyperlinkedFilterField(serializers.Field):
         query = QueryDict('', mutable=True)
         for key, field in self.lookup_params.items():
             query[key] = getattr(o, field)
+
+        query.update(self.querystring_params)
 
         return '%s?%s' % (reverse(view_name, request=request, format=format),
                     query.urlencode())

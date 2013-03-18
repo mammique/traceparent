@@ -25,10 +25,13 @@ class UnitFilter(django_filters.FilterSet):
     name    = django_filters.CharFilter(lookup_type='icontains')
     creator = django_filters.CharFilter(lookup_type='exact')
 
+    # Metadata
+    assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
+
     class Meta:
 
         model = Unit
-        fields = ('name', 'creator',)
+        fields = ('name', 'creator', 'assigned_metadata_snippets',)
 
 
 class UnitSerializer(serializers.ModelSerializer):
@@ -37,9 +40,11 @@ class UnitSerializer(serializers.ModelSerializer):
     creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
 
     # FIXME: remove from ListView
-    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+    assigned_metadata_snippets = \
+        HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_units': 'pk'},
-                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
+                  querystring_params={'assigned_intersect': ''},)
 
     class Meta:
 
@@ -99,10 +104,13 @@ class QuantityFilter(django_filters.FilterSet):
     prev     = django_filters.CharFilter(lookup_type='exact')
     next     = django_filters.CharFilter(lookup_type='exact')
 
+    # Metadata
+    assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
+
     class Meta:
 
         model = Quantity
-        fields = ('name', 'user', 'unit', 'prev', 'next',)
+        fields = ('name', 'user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
 
 
 class QuantitySerializer(serializers.ModelSerializer):
@@ -119,9 +127,11 @@ class QuantitySerializer(serializers.ModelSerializer):
                   lookup_test=lambda o: o.next.all().count() != 0)
 
     # FIXME: remove from ListView
-    assigned_metadata_snippets = HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+    assigned_metadata_snippets = \
+        HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_quantities': 'pk'},
-                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0)
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
+                  querystring_params={'assigned_intersect': ''},)
 
     class Meta:
 

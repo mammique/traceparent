@@ -34,6 +34,8 @@ class SnippetFilter(django_filters.FilterSet):
     assigned_users      = django_filters.CharFilter(lookup_type='exact')
     assigned_units      = django_filters.CharFilter(lookup_type='exact')
     assigned_quantities = django_filters.CharFilter(lookup_type='exact')
+    #assigned_quantities = django_filters.ModelMultipleChoiceFilter()
+
 
     class Meta:
 
@@ -93,7 +95,7 @@ class SnippetSerializer(serializers.ModelSerializer):
                 del ret[k]
                 continue
 
-            if 'query_intersect' in request.GET:
+            if 'assigned_intersect' in request.GET:
 
                 uuids = request.GET.getlist(k)
 
