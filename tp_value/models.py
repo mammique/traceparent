@@ -9,12 +9,13 @@ from traceparent import settings
 from traceparent.fields import SlugBlankToNoneField
 
 from tp_auth.models import User
+from tp_auth import VISIBILITY_CHOICES
 
 
 class Unit(models.Model):
 
     uuid           = UUIDField(auto=True, primary_key=True)
-    creator        = models.ForeignKey(User)
+    creator        = models.ForeignKey(User, related_name='units_created')
     # FIXME: user
     name           = models.CharField(max_length=128)
     slug           = models.SlugField(max_length=128)
@@ -47,6 +48,8 @@ class Quantity(models.Model):
                             related_name="quantities_created")
     user              = models.ForeignKey(User, # null=True, blank=True,
                             related_name='quantities')
+    user_visibility   = models.SlugField(default='public', max_length=64,
+                            choices=VISIBILITY_CHOICES)
     unit              = models.ForeignKey(Unit)
     quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     #creation_datetime = models.DateTimeField(auto_now_add=True)

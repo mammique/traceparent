@@ -6,13 +6,9 @@ from django_extensions.db.fields import UUIDField
 from traceparent.fields import SlugBlankToNoneField
 
 from tp_auth.models import User
+from tp_auth import VISIBILITY_CHOICES
 from tp_value.models import Unit, Quantity
 
-
-visibility_choices = [
-                      ('public',  u'public'),
-                      ('private', u'private'),
-                     ]
 
 mimetype_choices   = [
                       ('text/plain', u'text/plain'),
@@ -26,7 +22,7 @@ class Snippet(models.Model):
     creator    = models.ForeignKey(User, related_name='metadata_snippets_created')
     user       = models.ForeignKey(User, related_name='metadata_snippets')
     visibility = models.SlugField(default='public', max_length=64,
-                     choices=visibility_choices)
+                     choices=VISIBILITY_CHOICES)
     mimetype   = models.SlugField(default='text/plain', max_length=64,
                      choices=mimetype_choices)
     slug       = models.SlugField(max_length=128)

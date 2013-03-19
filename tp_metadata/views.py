@@ -6,7 +6,7 @@ from django.forms import widgets
 from django.db.models import Q
 
 from rest_framework.generics import ListAPIView, CreateAPIView, \
-        RetrieveUpdateAPIView, RetrieveAPIView
+        RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework import serializers
 from rest_framework.fields import CharField
 from rest_framework.permissions import IsAuthenticated
@@ -30,7 +30,8 @@ class SnippetRoMixin(object):
 
         queryset = super(SnippetRoMixin, self).get_queryset()
         public   = queryset.filter(visibility='public')
-        
+
+        # FIXME: non-auth users will get a 404 instead of 401 or 403.
         if self.request.user.is_authenticated():
 
             queryset = public | \
@@ -249,7 +250,7 @@ class SnippetCreateView(CreateAPIView):
         return c
 
 
-class SnippetUpdateView(RetrieveUpdateAPIView):
+class SnippetUpdateView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (IsAuthenticated, IsCreatorOrUser,)
     model              = Snippet

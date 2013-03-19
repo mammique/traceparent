@@ -1,6 +1,6 @@
--e git+https://github.com/django/django.git@3a002db6f1ef98d04634911808f9cf1b8e9dceff#egg=Django-dev
+-e git+git@github.com:mammique/django.git@3a002db6f1ef98d04634911808f9cf1b8e9dceff#egg=Django-dev
 Markdown==2.1.1
-MySQL-python==1.2.3
+# MySQL-python==1.2.3
 South==0.7.5
 URLObject==2.0.2
 distribute==0.6.27
@@ -8,7 +8,7 @@ django-extensions==1.0.3
 -e git+git@github.com:mammique/django-filter.git@ca664711a067548f0fba200099df82ab8c6e4821#egg=django_filter-dev
 django-oauth2-provider==0.2.2
 docutils==0.9.1
-#psycopg2==2.4.4
+# psycopg2==2.4.4
 uuid==1.30
 wsgiref==0.1.2
 # Django 1.5

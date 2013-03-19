@@ -100,6 +100,8 @@ class UnitFilterView(ListAPIView):
 
 class QuantityFilter(django_filters.FilterSet):
 
+    # FIXME: exclude null statuses by default?
+    # https://django-filter.readthedocs.org/en/latest/ref/filters.html#action
     name     = django_filters.CharFilter(lookup_type='icontains')
     user     = django_filters.CharFilter(lookup_type='exact')
     unit     = django_filters.CharFilter(lookup_type='exact')
@@ -128,6 +130,22 @@ class QuantityRoLightSerializer(serializers.ModelSerializer):
     next    = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
                   lookup_params={'prev': 'pk'},
                   lookup_test=lambda o: o.next.all().count() != 0)
+
+    def to_native(self, obj):
+
+        ret     = super(QuantityRoLightSerializer, self).to_native(obj)
+        request = self.context.get('request')
+
+        if obj.user_visibility == 'public': return ret
+
+        elif obj.user_visibility == 'private' and \
+            (not request.user.is_authenticated() or not \
+             request.user in (obj.creator, obj.user,)):
+            
+            del ret['user']
+
+            return ret
+        
 
     class Meta:
 
@@ -184,7 +202,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
         model = Quantity
         exclude = ('creator',)
-        fields = ('unit', 'quantity', 'user', 'prev', 'status',)
+        fields = ('unit', 'quantity', 'user', 'user_visibility', 'prev', 'status',)
 
     def validate_status(self, attrs, source):
 
@@ -274,21 +292,15 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
 
         model = Quantity
         exclude = ('creator',)
-        fields = ('unit', 'quantity', 'prev', 'status',)
+        fields = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
         read_only_fields = ('user',)
 
 
 class QuantityUpdateView(RetrieveUpdateAPIView):
-# class QuantityUpdateView(DescActionMixin, RetrieveUpdateAPIView):
 
     serializer_class    = QuantityUpdateSerializer
     model               = Quantity
     permission_classes  = (IsAuthenticated, IsCreatorOrUser,)
-    #description_actions = (('Add next', lambda x: '%s?prev=%s' % \
-    #                           (reverse('tp_value_quantity_create'), x.pk)),
-    #                       ('Add metadata', lambda x: '%s?assigned_quantities=%s' % \
-    #                           (reverse('tp_metadata_snippet_create'), x.pk)),
-    #                       )
 
     def get(self, request, format=None, *args, **kwargs):
 
@@ -313,9 +325,3 @@ class QuantityUpdateView(RetrieveUpdateAPIView):
                        status=status.HTTP_200_OK)
 
         return r
-
-    
-    #def get_serializer(self, *args, **kwargs):
-
-    #    print args, kwargs
-    #    return super(QuantityUpdateView, self).get_serializer(*args, **kwargs)
