@@ -2,6 +2,9 @@
 from django.http import QueryDict
 from django.db import models
 
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^traceparent\.fields\.SlugBlankToNoneField"])
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 

@@ -8,7 +8,7 @@ from traceparent.fields import SlugBlankToNoneField
 from tp_auth.models import User
 from tp_auth import VISIBILITY_CHOICES
 from tp_value.models import Unit, Quantity
-
+from tp_monitor.models import Counter
 
 mimetype_choices   = [
                       ('text/plain', u'text/plain'),
@@ -36,6 +36,8 @@ class Snippet(models.Model):
     assigned_units      = models.ManyToManyField(Unit, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
     assigned_quantities = models.ManyToManyField(Quantity, null=True, blank=True,
+                              related_name='assigned_metadata_snippets')
+    assigned_quantities = models.ManyToManyField(Counter, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
 
     class Meta():

@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'tp_auth',
     'tp_value',
     'tp_metadata',
+    'tp_monitor',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -75,6 +75,4 @@ urlpatterns = patterns('',
         QuantityRetrieveView.as_view(), name='tp_value_quantity_retrieve'),
     url(r'^quantity/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
         QuantityUpdateView.as_view(), name='tp_value_quantity_update'),
-    #url(r'^quantity/(?P<content_obj_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/metadata/',
-    #    include('tp_metadata.urls'), {'model': Quantity},),
 )
