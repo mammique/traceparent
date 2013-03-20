@@ -191,16 +191,6 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
                   'assigned_users', 'assigned_units',
                   'assigned_quantities', 'assigned_counters',]
 
-    def validate(self, attrs):
-
-        print attrs
-        ## fixme: move to view's pre_save()?
-        #attrs['creator'] = self.context['request'].user
-        ##raise serializers.validationerror("symbolic users cannot have a password.")
-
-        return attrs
-
-
 
 class SnippetCreateSerializer(SnippetAlterSerializer):
 
