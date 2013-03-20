@@ -60,7 +60,7 @@ class UnitCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
 
-        model = Unit
+        model  = Unit
         fields = ('uuid', 'name', 'slug', 'symbol', 'decimal_places',)
 
     def validate(self, attrs):
@@ -76,17 +76,17 @@ class UnitCreateView(CreateAPIView):
     def get(self, request, format=None): return Response(None)
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = UnitCreateSerializer
-    model = Unit
+    serializer_class   = UnitCreateSerializer
+    model              = Unit
 
 
 class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
 
     #def get(self, request, format=None): return Response(None)
 
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UnitRoFullSerializer
-    model = Unit
+    permission_classes  = (IsAuthenticated,)
+    serializer_class    = UnitRoFullSerializer
+    model               = Unit
     description_actions = (('Add metadata', lambda x: '%s?assigned_units=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),)
 
@@ -113,7 +113,7 @@ class QuantityFilter(django_filters.FilterSet):
 
     class Meta:
 
-        model = Quantity
+        model  = Quantity
         fields = ('user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
 
 
@@ -199,9 +199,9 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
     class Meta:
 
-        model = Quantity
+        model   = Quantity
         exclude = ('creator',)
-        fields = ('unit', 'quantity', 'user', 'user_visibility', 'prev', 'status',)
+        fields  = ('unit', 'quantity', 'user', 'user_visibility', 'prev', 'status',)
 
     def validate_status(self, attrs, source):
 
@@ -278,8 +278,8 @@ class QuantityCreateView(CreateAPIView):
                            self.object,
                            context={
                                'request': self.request,
-                               'format': self.format_kwarg,
-                               'view': self}).data,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
                        status=status.HTTP_201_CREATED)
             
         return r
@@ -289,17 +289,17 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
 
     class Meta:
 
-        model = Quantity
-        exclude = ('creator',)
-        fields = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
+        model            = Quantity
+        exclude          = ('creator',)
+        fields           = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
         read_only_fields = ('user',)
 
 
 class QuantityUpdateView(RetrieveUpdateAPIView):
 
-    serializer_class    = QuantityUpdateSerializer
-    model               = Quantity
-    permission_classes  = (IsAuthenticated, IsCreatorOrUser,)
+    serializer_class   = QuantityUpdateSerializer
+    model              = Quantity
+    permission_classes = (IsAuthenticated, IsCreatorOrUser,)
 
     def get(self, request, format=None, *args, **kwargs):
 
@@ -319,8 +319,8 @@ class QuantityUpdateView(RetrieveUpdateAPIView):
                            self.object,
                            context={
                                'request': self.request,
-                               'format': self.format_kwarg,
-                               'view': self}).data,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
                        status=status.HTTP_200_OK)
 
         return r

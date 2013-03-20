@@ -49,3 +49,9 @@ class Snippet(models.Model):
         return u'%s | %s | %s | %s <%s> %s' % \
             (self.slug, self.mimetype, self.type, self.visibility, self.pk, self.user)
 
+    def save(self, *args, **kwargs):
+
+        # Needs an primary key prior to saving the 'ManyToManyField' field.
+        if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
+
+        super(Snippet, self).save(*args, **kwargs)

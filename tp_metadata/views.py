@@ -191,14 +191,14 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
                   'assigned_users', 'assigned_units',
                   'assigned_quantities', 'assigned_counters',]
 
-    #def validate(self, attrs):
+    def validate(self, attrs):
 
-    #    print attrs
-    #    ## FIXME: move to view's pre_save()?
-    #    #attrs['creator'] = self.context['request'].user
-    #    ##raise serializers.ValidationError("Symbolic users cannot have a password.")
+        print attrs
+        ## fixme: move to view's pre_save()?
+        #attrs['creator'] = self.context['request'].user
+        ##raise serializers.validationerror("symbolic users cannot have a password.")
 
-    #    return attrs
+        return attrs
 
 
 
@@ -281,6 +281,23 @@ class SnippetCreateView(CreateAPIView):
 
         return c
 
+    def create(self, request, *args, **kwargs):
+
+        r = super(SnippetCreateView, self).create(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_201_CREATED:
+
+            return Response(
+                       SnippetRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format': self.format_kwarg,
+                               'view': self}).data,
+                       status=status.HTTP_201_CREATED)
+            
+        return r
+
 
 class SnippetUpdateView(RetrieveUpdateDestroyAPIView):
 
@@ -315,9 +332,8 @@ class SnippetUpdateView(RetrieveUpdateDestroyAPIView):
 
 class SnippetRetrieveView(DescActionMixin, SnippetRoMixin, RetrieveAPIView):
 
-    model              = Snippet
-    serializer_class   = SnippetRoFullSerializer
-
+    model               = Snippet
+    serializer_class    = SnippetRoFullSerializer
     description_actions = (('Update', lambda x: reverse('tp_metadata_snippet_update',
                                 (x.pk,))),)
 
