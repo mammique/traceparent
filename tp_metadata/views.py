@@ -55,13 +55,15 @@ class SnippetFilter(django_filters.FilterSet):
     assigned_units      = django_filters.CharFilter(lookup_type='exact')
     assigned_quantities = django_filters.CharFilter(lookup_type='exact')
     #assigned_quantities = django_filters.ModelMultipleChoiceFilter()
+    assigned_counters   = django_filters.CharFilter(lookup_type='exact')
 
 
     class Meta:
 
         model = Snippet
         fields = ('creator', 'user', 'mimetype', 'slug', 'type',
-                  'assigned_users', 'assigned_units', 'assigned_quantities',)
+                  'assigned_users', 'assigned_units',
+                  'assigned_quantities', 'assigned_counters',)
 
 
 class SnippetContentField(serializers.HyperlinkedIdentityField):
@@ -97,6 +99,9 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
     assigned_quantities = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
                   lookup_params={'assigned_metadata_snippets': 'pk'},
                   lookup_test=lambda o: o.assigned_quantities.all().count() != 0)
+    assigned_counters = HyperlinkedFilterField(view_name='tp_monitor_counter_filter',
+                  lookup_params={'assigned_metadata_snippets': 'pk'},
+                  lookup_test=lambda o: o.assigned_counters.all().count() != 0)
 
     #assigned_retrieve = {
     #                     'assigned_users': 'tp_auth_user_retrieve',
@@ -108,7 +113,8 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
 
         model  = SnippetRoLightSerializer.Meta.model
         fields = SnippetRoLightSerializer.Meta.fields + \
-                     ['assigned_users', 'assigned_units', 'assigned_quantities',]
+                     ['assigned_users', 'assigned_units',
+                      'assigned_quantities', 'assigned_counters',]
 
     def to_native(self, obj):
 
@@ -164,6 +170,7 @@ class SnippetFilterView(SnippetRoMixin, ListAPIView):
 # FIXME: not DRY at all, merge with MultipleLockedInput.
 from tp_value.models import Unit, Quantity
 from tp_auth.models import User
+from tp_monitor.models import Counter
 
 class SnippetAlterSerializer(serializers.ModelSerializer):
 
@@ -174,12 +181,26 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
                               widget=MultipleLockedInput(model=Unit))
     assigned_quantities = relations.ManyPrimaryKeyRelatedField(required=False,
                               widget=MultipleLockedInput(model=Quantity))
+    assigned_counters   = relations.ManyPrimaryKeyRelatedField(required=False,
+                              widget=MultipleLockedInput(model=Counter))
 
     class Meta:
 
         model  = Snippet
         fields = ['visibility', 'mimetype', 'slug', 'type', 'content',
-                  'assigned_users', 'assigned_units', 'assigned_quantities',]
+                  'assigned_users', 'assigned_units',
+                  'assigned_quantities', 'assigned_counters',]
+
+    #def validate(self, attrs):
+
+    #    print attrs
+    #    ## FIXME: move to view's pre_save()?
+    #    #attrs['creator'] = self.context['request'].user
+    #    ##raise serializers.ValidationError("Symbolic users cannot have a password.")
+
+    #    return attrs
+
+
 
 class SnippetCreateSerializer(SnippetAlterSerializer):
 
@@ -243,6 +264,17 @@ class SnippetCreateView(CreateAPIView):
                 form_initial.update({'assigned_quantities': (assigned_quantity.pk,),})
 
             except Quantity.DoesNotExist: pass
+
+        # FIXME: not DRY at all, merge with MultipleLockedInput.
+        assigned_counter = self.request.GET.get('assigned_counters')
+        if assigned_counter:
+
+            try:
+
+                assigned_counter = Counter.objects.get(pk=assigned_counter)
+                form_initial.update({'assigned_counters': (assigned_counter.pk,),})
+
+            except Counter.DoesNotExist: pass
 
         c = super(SnippetCreateView, self).get_serializer_context(*args, **kwargs)
         c.update({'form_initial': form_initial})

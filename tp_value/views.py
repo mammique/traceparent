@@ -102,7 +102,6 @@ class QuantityFilter(django_filters.FilterSet):
 
     # FIXME: exclude null statuses by default?
     # https://django-filter.readthedocs.org/en/latest/ref/filters.html#action
-    name     = django_filters.CharFilter(lookup_type='icontains')
     user     = django_filters.CharFilter(lookup_type='exact')
     unit     = django_filters.CharFilter(lookup_type='exact')
 #    creator  = django_filters.CharFilter(lookup_type='exact')
@@ -115,7 +114,7 @@ class QuantityFilter(django_filters.FilterSet):
     class Meta:
 
         model = Quantity
-        fields = ('name', 'user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
+        fields = ('user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
 
 
 class QuantityRoLightSerializer(serializers.ModelSerializer):
@@ -231,7 +230,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         # FIXME: move to view's pre_save()?
-        if not self.object: attrs['creator'] = self.context['request'].user
+        if not self.object: attrs['creator'] = request.user
 
         # FIXME: move this to the permission level?
         elif self.object.creator == request.user and \
@@ -251,7 +250,7 @@ class QuantityCreateView(CreateAPIView):
 
     def get_serializer_context(self, *args, **kwargs):
 
-        c    = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
+        c = super(QuantityCreateView, self).get_serializer_context(*args, **kwargs)
 
         # FIXME: not DRY at all, merge with MultipleLockedInput.        
         prev = self.request.GET.get('prev')

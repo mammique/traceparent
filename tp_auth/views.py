@@ -51,7 +51,8 @@ class UserRoFullSerializer(UserRoLightSerializer):
         HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
                   lookup_params={'assigned_users': 'pk'},
                   lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
-                  querystring_params={'assigned_intersect': ''},)
+                  # querystring_params={'assigned_intersect': ''},
+        )
 
     class Meta:
 
@@ -66,6 +67,7 @@ class UserFilter(django_filters.FilterSet):
     name    = django_filters.CharFilter(lookup_type='icontains')
     email   = django_filters.CharFilter(lookup_type='iexact')
     creator = django_filters.CharFilter(lookup_type='exact')
+    # TODO: prevent private quantities from being fetched.
 
     # Metadata
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
@@ -102,7 +104,8 @@ class UserAlterSerializerBase(UserSerializerBase):
     class Meta:
 
         model = User
-        fields = UserRoFullSerializer.Meta.fields + ['email', 'password',]
+        fields = UserRoLightSerializer.Meta.fields + \
+                     ['date_joined', 'is_active', 'email', 'password',]
         read_only_fields = ('uuid', 'date_joined', 'is_active',)
 
     # FIXME: move to to_native()?

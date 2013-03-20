@@ -24,6 +24,7 @@ class RootAPIView(APIView):
              'auth':     reverse('tp_auth', request=request),
              'value':    reverse('tp_value', request=request),
              'metadata': reverse('tp_metadata_snippet', request=request),
+             'monitor':  reverse('tp_monitor', request=request),
             }
         )
         
@@ -38,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^auth/', include('tp_auth.urls')),
     url(r'^value/', include('tp_value.urls')),
     url(r'^metadata/', include('tp_metadata.urls')),
+    url(r'^monitor/', include('tp_monitor.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

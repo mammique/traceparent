@@ -10,6 +10,7 @@ from tp_auth import VISIBILITY_CHOICES
 from tp_value.models import Unit, Quantity
 from tp_monitor.models import Counter
 
+
 mimetype_choices   = [
                       ('text/plain', u'text/plain'),
                       ('application/json', u'application/json'),
@@ -37,12 +38,12 @@ class Snippet(models.Model):
                               related_name='assigned_metadata_snippets')
     assigned_quantities = models.ManyToManyField(Quantity, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_quantities = models.ManyToManyField(Counter, null=True, blank=True,
+    assigned_counters   = models.ManyToManyField(Counter, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
 
     class Meta():
 
-        ordering = ['-slug', '-datetime',]
+        ordering = ['-datetime',]
 
     def __unicode__(self):
         return u'%s | %s | %s | %s <%s> %s' % \
