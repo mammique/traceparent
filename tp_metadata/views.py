@@ -124,8 +124,8 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
 
         model  = SnippetRoLightSerializer.Meta.model
         fields = SnippetRoLightSerializer.Meta.fields + \
-                     ['assigned_users', 'assigned_units',
-                      'assigned_quantities', 'assigned_scopes', 'assigned_counters',]
+                     ['assigned_users', 'assigned_units', 'assigned_quantities',
+                      'assigned_scopes', 'assigned_counters', 'assigned_marks']
 
     def to_native(self, obj):
 
@@ -204,7 +204,8 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
         model  = Snippet
         fields = ['visibility', 'mimetype', 'slug', 'type', 'content',
                   'assigned_users', 'assigned_units',
-                  'assigned_quantities', 'assigned_counters',]
+                  'assigned_quantities',
+                  'assigned_scopes', 'assigned_counters', 'assigned_marks',]
 
 
 class SnippetCreateSerializer(SnippetAlterSerializer):
