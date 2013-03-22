@@ -107,14 +107,18 @@ class QuantityFilter(django_filters.FilterSet):
 #    creator  = django_filters.CharFilter(lookup_type='exact')
     prev     = django_filters.CharFilter(lookup_type='exact')
     next     = django_filters.CharFilter(lookup_type='exact')
-    
+ 
     # Metadata
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
+
+    # Monitor
+    counters = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:
 
         model  = Quantity
-        fields = ('user', 'unit', 'prev', 'next', 'assigned_metadata_snippets',)
+        fields = ('user', 'unit', 'prev', 'next',
+                  'assigned_metadata_snippets', 'counters',)
 
 
 class QuantityRoLightSerializer(serializers.ModelSerializer):
@@ -161,13 +165,21 @@ class QuantityRoFullSerializer(QuantityRoLightSerializer):
                   lookup_params={'assigned_quantities': 'pk'},
                   lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
                   # querystring_params={'assigned_intersect': ''},
-        )
+    )
+
+    counters = HyperlinkedFilterField(view_name='tp_monitor_counter_filter',
+                  lookup_params={'quantities': 'pk'},
+                  lookup_test=lambda o: o.counters.all().count() != 0,
+                  # querystring_params={'assigned_intersect': ''},
+    )
+
 
     class Meta:
 
         model   = QuantityRoLightSerializer.Meta.model
         exclude = QuantityRoLightSerializer.Meta.exclude
-        fields  = QuantityRoLightSerializer.Meta.fields + ['assigned_metadata_snippets']
+        fields  = QuantityRoLightSerializer.Meta.fields + \
+                      ['assigned_metadata_snippets', 'counters',]
 
 
 class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):

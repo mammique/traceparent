@@ -3,18 +3,16 @@ import decimal
 
 from django.db import models
 
-from django_extensions.db.fields import UUIDField
-
 from traceparent import settings
 from traceparent.fields import SlugBlankToNoneField
+from traceparent.models import UUIDModel
 
 from tp_auth.models import User
 from tp_auth import VISIBILITY_CHOICES
 
 
-class Unit(models.Model):
+class Unit(UUIDModel):
 
-    uuid           = UUIDField(auto=True, primary_key=True)
     creator        = models.ForeignKey(User, related_name='units_created')
     # FIXME: user
     name           = models.CharField(max_length=128)
@@ -38,12 +36,13 @@ value_status_choices = models.fields.BLANK_CHOICE_DASH + [
                         ('passed',    u'passed'),
                         ('rejected',  u'rejected'),
                         ('cancelled', u'cancelled'),
+                        # ('locked',    u'locked'),
+                        # ('frozen',    u'frozen'),
                        ]
 
 
-class Quantity(models.Model):
+class Quantity(UUIDModel):
 
-    uuid              = UUIDField(auto=True, primary_key=True)
     creator           = models.ForeignKey(User, # null=True, blank=True,
                             related_name="quantities_created")
     user              = models.ForeignKey(User, # null=True, blank=True,
@@ -72,10 +71,3 @@ class Quantity(models.Model):
         return u'%s%s %s %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
                              -self.unit.decimal_places),
                              self.unit.symbol, pk, self.user)
-
-    def save(self, *args, **kwargs):
-
-        # Needs an primary key prior to saving the 'ManyToManyField' field.
-        if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
-
-        super(Quantity, self).save(*args, **kwargs)

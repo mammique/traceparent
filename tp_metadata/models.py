@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-from django_extensions.db.fields import UUIDField
-
 from traceparent.fields import SlugBlankToNoneField
+from traceparent.models import UUIDModel
 
 from tp_auth.models import User
 from tp_auth import VISIBILITY_CHOICES
 from tp_value.models import Unit, Quantity
-from tp_monitor.models import Counter
+from tp_monitor.models import Scope, Counter, Mark
 
 
 mimetype_choices   = [
@@ -17,9 +16,8 @@ mimetype_choices   = [
                      ]
 
 
-class Snippet(models.Model):
+class Snippet(UUIDModel):
 
-    uuid       = UUIDField(auto=True, primary_key=True)
     creator    = models.ForeignKey(User, related_name='metadata_snippets_created')
     user       = models.ForeignKey(User, related_name='metadata_snippets')
     visibility = models.SlugField(default='public', max_length=64,
@@ -38,7 +36,11 @@ class Snippet(models.Model):
                               related_name='assigned_metadata_snippets')
     assigned_quantities = models.ManyToManyField(Quantity, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
+    assigned_scopes     = models.ManyToManyField(Scope, null=True, blank=True,
+                              related_name='assigned_metadata_snippets')
     assigned_counters   = models.ManyToManyField(Counter, null=True, blank=True,
+                              related_name='assigned_metadata_snippets')
+    assigned_marks      = models.ManyToManyField(Mark, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
 
     class Meta():
@@ -48,10 +50,3 @@ class Snippet(models.Model):
     def __unicode__(self):
         return u'%s | %s | %s | %s <%s> %s' % \
             (self.slug, self.mimetype, self.type, self.visibility, self.pk, self.user)
-
-    def save(self, *args, **kwargs):
-
-        # Needs an primary key prior to saving the 'ManyToManyField' field.
-        if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
-
-        super(Snippet, self).save(*args, **kwargs)
