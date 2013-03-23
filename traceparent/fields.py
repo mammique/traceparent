@@ -40,6 +40,7 @@ class HyperlinkedFilterField(serializers.Field):
 
 
 # http://stackoverflow.com/a/7059464
+# TODO: Perform the same conversion at DFR's serializer level.
 class SlugBlankToNoneField(models.SlugField):
     def get_prep_value(self, value):
         if value == '':

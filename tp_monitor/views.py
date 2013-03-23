@@ -15,7 +15,7 @@ from traceparent.mixins import DescActionMixin
 from traceparent.fields import HyperlinkedFilterField
 from traceparent.widgets import MultipleLockedInput
 
-#from tp_auth.permissions import IsCreatorOrUser
+from tp_auth.permissions import IsCreatorOrUser
 
 from .models import Scope, Counter, Mark
 
@@ -118,7 +118,11 @@ class ScopeCreateView(CreateAPIView):
     model              = Scope
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None): return Response(None)
+    def get(self, request, format=None):
+        
+        super(ScopeCreateView, self).get(request, format=None)
+
+        return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -229,8 +233,8 @@ class CounterRetrieveView(DescActionMixin, RetrieveAPIView):
                                (reverse('tp_monitor_mark_create'), x.pk)),
                            ('Add new metadata', lambda x: '%s?assigned_counters=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
-    #                       ('Update', lambda x: reverse('tp_monitor_counter_update',
-    #                           (x.pk,))),
+                           ('Update', lambda x: reverse('tp_monitor_counter_update',
+                               (x.pk,))),
                           )
 
 
@@ -264,7 +268,11 @@ class CounterCreateView(CreateAPIView):
     model              = Counter
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None): return Response(None)
+    def get(self, request, format=None):
+        
+        super(CounterCreateView, self).get(request, format=None)
+        
+        return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -298,6 +306,47 @@ class CounterCreateView(CreateAPIView):
                                'view': self}).data,
                        status=status.HTTP_201_CREATED)
             
+        return r
+
+
+class CounterUpdateSerializer(CounterAlterSerializer):
+
+    class Meta:
+
+        model            = Counter
+        exclude          = ('creator',)
+        fields           = ['scopes', 'datetime_start', 'datetime_stop',]
+        read_only_fields = ('user',)
+
+
+class CounterUpdateView(RetrieveUpdateAPIView):
+
+    serializer_class   = CounterUpdateSerializer
+    model              = Counter
+    permission_classes = (IsAuthenticated, IsCreatorOrUser,)
+
+    def get(self, request, format=None, *args, **kwargs):
+
+        super(CounterUpdateView, self).get(request, format=None, *args, **kwargs)
+
+        return Response({'FIXME':
+            'https://github.com/tomchristie/django-rest-framework/issues/731'})
+
+    def update(self, request, *args, **kwargs):
+
+        r = super(CounterUpdateView, self).update(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_200_OK:
+
+            return Response(
+                       CounterRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
+                       status=status.HTTP_200_OK)
+
         return r
 
 
@@ -360,8 +409,8 @@ class MarkRetrieveView(DescActionMixin, RetrieveAPIView):
     description_actions = (
                            ('Add new metadata', lambda x: '%s?assigned_marks=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
-    #                       ('Update', lambda x: reverse('tp_monitor_mark_update',
-    #                           (x.pk,))),
+                           ('Update', lambda x: reverse('tp_monitor_mark_update',
+                               (x.pk,))),
                           )
 
 
@@ -395,7 +444,11 @@ class MarkCreateView(CreateAPIView):
     model              = Mark
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None): return Response(None)
+    def get(self, request, format=None):
+
+        super(MarkCreateView, self).get(request, format=None)
+
+        return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -430,3 +483,45 @@ class MarkCreateView(CreateAPIView):
                        status=status.HTTP_201_CREATED)
             
         return r
+
+
+class MarkUpdateSerializer(MarkAlterSerializer):
+
+    class Meta:
+
+        model            = Mark
+        exclude          = ('creator',)
+        fields           = ['counters', 'unit', 'quantity', 'status',]
+        read_only_fields = ('user',)
+
+
+class MarkUpdateView(RetrieveUpdateAPIView):
+
+    serializer_class   = MarkUpdateSerializer
+    model              = Mark
+    permission_classes = (IsAuthenticated, IsCreatorOrUser,)
+
+    def get(self, request, format=None, *args, **kwargs):
+
+        super(MarkUpdateView, self).get(request, format=None, *args, **kwargs)
+
+        return Response({'FIXME':
+            'https://github.com/tomchristie/django-rest-framework/issues/731'})
+
+    def update(self, request, *args, **kwargs):
+
+        r = super(MarkUpdateView, self).update(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_200_OK:
+
+            return Response(
+                       MarkRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
+                       status=status.HTTP_200_OK)
+
+        return r
+
