@@ -63,11 +63,13 @@ class Quantity(UUIDModel):
         verbose_name_plural = "Quantities"
         ordering            = ['-datetime']
 
-    def __unicode__(self):
+    def __unicode__(self): return quantity__unicode__(self)
 
-        pk = "<%s>" if self.status != None else "*%s*"
-        pk = pk % self.pk
 
-        return u'%s%s %s %s' % (self.quantity.quantize(decimal.Decimal(10) ** \
-                             -self.unit.decimal_places),
-                             self.unit.symbol, pk, self.user)
+def quantity__unicode__(q):
+
+    pk = "<%s>" if q.status != None else "*%s*"
+    pk = pk % q.pk
+
+    return u'%s%s %s %s' % (q.quantity.quantize(decimal.Decimal(10) ** \
+                                -q.unit.decimal_places), q.unit.symbol, pk, q.user)

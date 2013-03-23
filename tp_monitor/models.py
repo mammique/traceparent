@@ -8,18 +8,7 @@ from traceparent.fields import SlugBlankToNoneField
 from traceparent.models import UUIDModel
 
 from tp_auth.models import User
-from tp_value.models import Unit, Quantity, value_status_choices
-
-
-#class Countity(models.Model):
-
-#    uuid            = UUIDField(auto=True, primary_key=True)
-#    creator         = models.ForeignKey(User, related_name='countities_created')
-#    user            = models.ForeignKey(User, related_name='countities')
-#    quantity        = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
-#    unit            = models.ForeignKey(Unit)
-#    datetime        = models.DateTimeField(auto_now_add=True)
-#    datetime_update = models.DateTimeField(auto_now=True)
+from tp_value.models import Unit, Quantity, quantity__unicode__, value_status_choices
 
 
 class Scope(UUIDModel):
@@ -78,7 +67,7 @@ class QuantityResult(UUIDModel):
     datetime    = models.DateTimeField(auto_now=True)
     counter_sum = models.ForeignKey(User, related_name='sums')
 
-    #def __unicode__(self): return Quantity.__unicode__(self)
+    def __unicode__(self): return quantity__unicode__(self)
 
 
 class Mark(UUIDModel):
@@ -92,4 +81,4 @@ class Mark(UUIDModel):
     datetime = models.DateTimeField(auto_now_add=True)
     counters = models.ManyToManyField(Counter, related_name='marks')
 
-    #def __unicode__(self): return Quantity.__unicode__(self)
+    def __unicode__(self): return quantity__unicode__(self)

@@ -14,7 +14,7 @@ class UUIDModel(models.Model):
 
     def save(self, *args, **kwargs):
 
-        # Needs an primary key prior to saving the 'ManyToManyField' field.
+        # Needs an primary key prior to saving the 'ManyToManyField' fields.
         if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
 
         # FIXME: Or ._meta.model?

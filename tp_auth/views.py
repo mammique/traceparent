@@ -90,7 +90,7 @@ class UserRetrieveView(DescActionMixin, RetrieveAPIView):
     serializer_class = UserRoFullSerializer
     model            = User
     description_actions = (
-                           ('Add metadata', lambda x: '%s?assigned_users=%s' % \
+                           ('Add new metadata', lambda x: '%s?assigned_users=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
                            ('Update', lambda x: reverse('tp_auth_user_update', (x.pk,))),
                            )

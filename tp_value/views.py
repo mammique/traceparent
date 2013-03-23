@@ -87,7 +87,7 @@ class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
     permission_classes  = (IsAuthenticated,)
     serializer_class    = UnitRoFullSerializer
     model               = Unit
-    description_actions = (('Add metadata', lambda x: '%s?assigned_units=%s' % \
+    description_actions = (('Add new metadata', lambda x: '%s?assigned_units=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),)
 
 
@@ -112,13 +112,14 @@ class QuantityFilter(django_filters.FilterSet):
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
 
     # Monitor
+    scopes   = django_filters.CharFilter(lookup_type='exact')
     counters = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:
 
         model  = Quantity
         fields = ('user', 'unit', 'prev', 'next',
-                  'assigned_metadata_snippets', 'counters',)
+                  'assigned_metadata_snippets', 'scopes', 'counters',)
 
 
 class QuantityRoLightSerializer(serializers.ModelSerializer):
@@ -167,6 +168,12 @@ class QuantityRoFullSerializer(QuantityRoLightSerializer):
                   # querystring_params={'assigned_intersect': ''},
     )
 
+    scopes = HyperlinkedFilterField(view_name='tp_monitor_scope_filter',
+                  lookup_params={'quantities': 'pk'},
+                  lookup_test=lambda o: o.scopes.all().count() != 0,
+                  # querystring_params={'assigned_intersect': ''},
+    )
+
     counters = HyperlinkedFilterField(view_name='tp_monitor_counter_filter',
                   lookup_params={'quantities': 'pk'},
                   lookup_test=lambda o: o.counters.all().count() != 0,
@@ -179,7 +186,7 @@ class QuantityRoFullSerializer(QuantityRoLightSerializer):
         model   = QuantityRoLightSerializer.Meta.model
         exclude = QuantityRoLightSerializer.Meta.exclude
         fields  = QuantityRoLightSerializer.Meta.fields + \
-                      ['assigned_metadata_snippets', 'counters',]
+                      ['assigned_metadata_snippets', 'scopes', 'counters',]
 
 
 class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
@@ -187,9 +194,9 @@ class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
     serializer_class    = QuantityRoFullSerializer
     model               = Quantity
     description_actions = (
-                           ('Add next', lambda x: '%s?prev=%s' % \
+                           ('Add new next', lambda x: '%s?prev=%s' % \
                                (reverse('tp_value_quantity_create'), x.pk)),
-                           ('Add metadata', lambda x: '%s?assigned_quantities=%s' % \
+                           ('Add new metadata', lambda x: '%s?assigned_quantities=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
                            ('Update', lambda x: reverse('tp_value_quantity_update',
                                (x.pk,))),

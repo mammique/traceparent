@@ -22,7 +22,7 @@ from .models import Scope, Counter, Mark
 
 class ScopeRoLightSerializer(serializers.ModelSerializer):
 
-    url  = serializers.HyperlinkedIdentityField(view_name='tp_monitor_scope_retrieve') 
+    url  = serializers.HyperlinkedIdentityField(view_name='tp_monitor_scope_retrieve')
     user = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
 
     class Meta:
@@ -82,14 +82,15 @@ class ScopeRetrieveView(DescActionMixin, RetrieveAPIView):
     serializer_class    = ScopeRoFullSerializer
     model               = Scope
     description_actions = (
-                           ('Add counter', lambda x: '%s?scopes=%s' % \
+                           ('Add new counter', lambda x: '%s?scopes=%s' % \
                                (reverse('tp_monitor_counter_create'), x.pk)),
-                           ('Add metadata', lambda x: '%s?assigned_scopes=%s' % \
+                           ('Add new metadata', lambda x: '%s?assigned_scopes=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
+                           ('Add/remove quantities', lambda x: \
+                               (reverse('tp_monitor_scope_update_quantities', (x.pk,)))),
     #                       ('Update', lambda x: reverse('tp_monitor_scope_update',
     #                           (x.pk,))),
                           )
-
 
 
 class ScopeAlterSerializer(serializers.ModelSerializer):
@@ -224,9 +225,9 @@ class CounterRetrieveView(DescActionMixin, RetrieveAPIView):
     serializer_class    = CounterRoFullSerializer
     model               = Counter
     description_actions = (
-                           ('Add mark', lambda x: '%s?counters=%s' % \
+                           ('Add new mark', lambda x: '%s?counters=%s' % \
                                (reverse('tp_monitor_mark_create'), x.pk)),
-                           ('Add metadata', lambda x: '%s?assigned_counters=%s' % \
+                           ('Add new metadata', lambda x: '%s?assigned_counters=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
     #                       ('Update', lambda x: reverse('tp_monitor_counter_update',
     #                           (x.pk,))),
@@ -357,7 +358,7 @@ class MarkRetrieveView(DescActionMixin, RetrieveAPIView):
     serializer_class    = MarkRoFullSerializer
     model               = Mark
     description_actions = (
-                           ('Add metadata', lambda x: '%s?assigned_marks=%s' % \
+                           ('Add new metadata', lambda x: '%s?assigned_marks=%s' % \
                                (reverse('tp_metadata_snippet_create'), x.pk)),
     #                       ('Update', lambda x: reverse('tp_monitor_mark_update',
     #                           (x.pk,))),
