@@ -17,7 +17,7 @@ from traceparent.widgets import MultipleLockedInput
 
 from tp_auth.permissions import IsCreatorOrUser
 
-from .models import Scope, Counter, Mark
+from .models import Scope, Counter, QuantityResult, Mark
 
 
 class ScopeRoLightSerializer(serializers.ModelSerializer):
@@ -170,6 +170,16 @@ class CounterRoLightSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'url', 'user', 'datetime',]
 
 
+class QuantityResultSerializer(serializers.ModelSerializer):
+
+    unit = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
+
+    class Meta:
+
+        model  = QuantityResult
+        fields = ['unit', 'quantity', 'status',]
+
+
 class CounterRoFullSerializer(CounterRoLightSerializer):
 
     scopes     = HyperlinkedFilterField(view_name='tp_monitor_scope_filter',
@@ -184,6 +194,8 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
                      lookup_params={'counters': 'pk'},
                      lookup_test=lambda o: o.marks.all().count() != 0)
 
+    sums       = QuantityResultSerializer(many=True)
+
     # Metadata
     assigned_metadata_snippets = \
         HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
@@ -196,7 +208,7 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
 
         model  = CounterRoLightSerializer.Meta.model
         fields = CounterRoLightSerializer.Meta.fields + \
-                     ['scopes', 'quantities', 'marks', # 'sums',
+                     ['scopes', 'quantities', 'sums', 'marks',
                       'datetime_start', 'datetime_stop',
                       'assigned_metadata_snippets',]
 
@@ -354,6 +366,7 @@ class MarkRoLightSerializer(serializers.ModelSerializer):
 
     url  = serializers.HyperlinkedIdentityField(view_name='tp_monitor_mark_retrieve') 
     user = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    unit = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
 
     class Meta:
 
@@ -446,8 +459,6 @@ class MarkCreateView(CreateAPIView):
 
     def get(self, request, format=None):
 
-        super(MarkCreateView, self).get(request, format=None)
-
         return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
@@ -524,4 +535,3 @@ class MarkUpdateView(RetrieveUpdateAPIView):
                        status=status.HTTP_200_OK)
 
         return r
-

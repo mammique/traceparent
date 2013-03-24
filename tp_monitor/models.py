@@ -65,9 +65,13 @@ class QuantityResult(UUIDModel):
     status      = SlugBlankToNoneField(null=True, blank=True, default=None,
                       max_length=64, choices=value_status_choices)
     datetime    = models.DateTimeField(auto_now=True)
-    counter_sum = models.ForeignKey(User, related_name='sums')
+    counter_sum = models.ForeignKey(Counter, related_name='sums')
 
-    def __unicode__(self): return quantity__unicode__(self)
+    class Meta:
+
+        ordering = ['-datetime']
+
+    #def __unicode__(self): return quantity__unicode__(self)
 
 
 class Mark(UUIDModel):
@@ -81,4 +85,94 @@ class Mark(UUIDModel):
     datetime = models.DateTimeField(auto_now_add=True)
     counters = models.ManyToManyField(Counter, related_name='marks')
 
+    class Meta:
+
+        ordering = ['-datetime']
+
     def __unicode__(self): return quantity__unicode__(self)
+
+
+def counter_update(counter):
+
+    filter_kwargs = counter.marks.all().values('unit', 'status')
+
+    queryset = Quantity.objects.none()
+
+    for s in counter.scopes.all():
+
+        date_range = {}
+        if counter.datetime_start: date_range['datetime__gte'] = counter.datetime_start
+        if counter.datetime_stop:  date_range['datetime__lte'] = counter.datetime_stop
+        if date_range: quantities = s.quantities.filter(**date_range)
+        else: quantities = s.quantities.all()
+
+        for f in filter_kwargs: queryset = queryset | quantities.filter(models.Q(**f))
+
+    counter.quantities = queryset.distinct()
+
+    for f in filter_kwargs:
+
+        f_get = f.copy()
+        f_get['unit'] = Unit.objects.get(pk=f_get['unit'])
+
+        try: s = counter.sums.get(**f_get)
+
+        except QuantityResult.DoesNotExist:
+
+            f_get['counter_sum'] = counter
+            s = QuantityResult(**f_get)
+        
+        q = counter.quantities.filter(**f).aggregate(models.Sum('quantity'))['quantity__sum']
+        if q == None: q = decimal.Decimal('0')
+        s.quantity = q
+        s.save()
+
+    queryset = counter.sums.all()
+    for f in filter_kwargs: queryset = queryset.exclude(models.Q(**f))
+    queryset.all().delete()
+
+
+def monitor_post_save(instance=None, *args, **kwargs):
+
+    if not instance: return
+
+    # Quantity
+    if isinstance(instance, Quantity):
+
+        map(lambda c: counter_update(c),
+            Counter.objects.filter(scopes__in=instance.scopes.all()))
+        return
+
+    # Scope
+    if isinstance(instance, Scope):
+
+        map(lambda c: counter_update(c), instance.counters.all())
+        return
+
+    # Counter
+    if isinstance(instance, Counter):
+
+        counter_update(instance)
+        return
+
+    # Mark
+    if isinstance(instance, Mark):
+
+        map(lambda c: counter_update(c), instance.counters.all())
+        return
+
+models.signals.post_save.connect(monitor_post_save)
+
+
+# Newly created `Mark` cannot list its counters until m2m_changed is called.
+def monitor_m2m_changed(instance=None, *args, **kwargs):
+
+    if not instance: return
+
+    # Mark
+    if isinstance(instance, Mark) and kwargs.get('action', None) == 'post_add':
+
+        map(lambda c: counter_update(c), instance.counters.all())
+        return
+
+models.signals.m2m_changed.connect(monitor_m2m_changed)
