@@ -37,18 +37,6 @@ class Counter(UUIDModel):
     scopes         = models.ManyToManyField(Scope, related_name='counters')
     quantities     = models.ManyToManyField(Quantity, null=True, blank=True,
                          related_name='counters')
-
-    #@property
-    #def quantities(self):
-
-    #    kwargs = {}
-
-    #    # TODO: change 'datetime' to 'datetime_created' after migration.
-    #    if self.datetime_start: kwargs['datetime__gte'] = self.datetime_start
-    #    if self.datetime_stop:  kwargs['datetime__lte'] = self.datetime_stop
-
-    #    return Quantity.objects.filter(scopes__in=self.scopes.all(), **kwargs)
-
     class Meta:
 
         ordering = ['-datetime']
