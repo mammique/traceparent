@@ -16,6 +16,19 @@ class MetadataView(APIView):
 
         data = ordered_dict(
             {
+             'snippet': reverse('tp_metadata_snippet', request=self.request),
+            }
+        )
+
+        return Response(data)
+
+
+class SnippetView(APIView):
+
+    def get(self, request):
+
+        data = ordered_dict(
+            {
              'create': reverse('tp_metadata_snippet_create', request=self.request),
              'filter': reverse('tp_metadata_snippet_filter', request=self.request),
             }
@@ -23,18 +36,22 @@ class MetadataView(APIView):
 
         return Response(data)
 
+
 urlpatterns = patterns('django.contrib.auth.views',
 
-    url(r'^$', MetadataView.as_view(), name='tp_metadata_snippet'),
+    url(r'^$', MetadataView.as_view(), name='tp_metadata'),
 
-    url(r'^filter/$', SnippetFilterView.as_view(), name='tp_metadata_snippet_filter'),
-    url(r'^create/$', SnippetCreateView.as_view(), name='tp_metadata_snippet_create'),
+    # Snippet
+    url(r'^snippet/$', SnippetView.as_view(), name='tp_metadata_snippet'),
 
-    url(r'^(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+    url(r'^snippet/filter/$', SnippetFilterView.as_view(), name='tp_metadata_snippet_filter'),
+    url(r'^snippet/create/$', SnippetCreateView.as_view(), name='tp_metadata_snippet_create'),
+
+    url(r'^snippet/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
         SnippetRetrieveView.as_view(), name='tp_metadata_snippet_retrieve'),
-    url(r'^(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
+    url(r'^snippet/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
         SnippetUpdateView.as_view(), name='tp_metadata_snippet_update'),
-    url(r'^(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/content$',
+    url(r'^snippet/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/content$',
         SnippetRetrieveView.as_view(), {'serve_content': True},
         name='tp_metadata_snippet_content',),
 )
