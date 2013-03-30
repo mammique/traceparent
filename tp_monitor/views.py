@@ -118,11 +118,7 @@ class ScopeCreateView(CreateAPIView):
     model              = Scope
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None):
-        
-        super(ScopeCreateView, self).get(request, format=None)
-
-        return Response(None)
+    def get(self, request, format=None): return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -280,11 +276,7 @@ class CounterCreateView(CreateAPIView):
     model              = Counter
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None):
-        
-        super(CounterCreateView, self).get(request, format=None)
-        
-        return Response(None)
+    def get(self, request, format=None): return Response(None)
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -371,7 +363,7 @@ class MarkRoLightSerializer(serializers.ModelSerializer):
     class Meta:
 
         model  = Mark
-        fields = ['uuid', 'url', 'user', 'unit', 'quantity', 'status', 'datetime',]
+        fields = ['uuid', 'url', 'user', 'unit', 'quantity', 'statuses', 'datetime',]
 
 
 class MarkRoFullSerializer(MarkRoLightSerializer):
@@ -438,7 +430,7 @@ class MarkAlterSerializer(serializers.ModelSerializer):
 
         model   = Mark
         exclude = ('creator',)
-        fields  = ['user', 'counters', 'unit', 'quantity', 'status',]
+        fields  = ['user', 'counters', 'unit', 'quantity', 'statuses',]
 
 
     def validate(self, attrs):
@@ -502,7 +494,7 @@ class MarkUpdateSerializer(MarkAlterSerializer):
 
         model            = Mark
         exclude          = ('creator',)
-        fields           = ['counters', 'unit', 'quantity', 'status',]
+        fields           = ['counters', 'unit', 'quantity', 'statuses',]
         read_only_fields = ('user',)
 
 

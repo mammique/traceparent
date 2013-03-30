@@ -8,7 +8,7 @@ from traceparent.fields import SlugBlankToNoneField
 from traceparent.models import UUIDModel
 
 from tp_auth.models import User
-from tp_value.models import Unit, Quantity, quantity__unicode__, value_status_choices
+from tp_value.models import Unit, QuantityStatus, Quantity, quantity__unicode__
 
 
 class Scope(UUIDModel):
@@ -50,8 +50,7 @@ class QuantityResult(UUIDModel):
 
     quantity    = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     unit        = models.ForeignKey(Unit)
-    status      = SlugBlankToNoneField(null=True, blank=True, default=None,
-                      max_length=64, choices=value_status_choices)
+    status      = models.ForeignKey(QuantityStatus)
     datetime    = models.DateTimeField(auto_now=True)
     counter_sum = models.ForeignKey(Counter, related_name='sums')
 
@@ -66,10 +65,9 @@ class Mark(UUIDModel):
 
     quantity = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     unit     = models.ForeignKey(Unit)
-    status   = SlugBlankToNoneField(null=True, blank=True, default=None,
-                   max_length=64, choices=value_status_choices)
-    creator  = models.ForeignKey(User, related_name='countities_created')
-    user     = models.ForeignKey(User, related_name='countities')
+    statuses = models.ManyToManyField(QuantityStatus, related_name='marks')
+    creator  = models.ForeignKey(User, related_name='marks_created')
+    user     = models.ForeignKey(User, related_name='marks')
     datetime = models.DateTimeField(auto_now_add=True)
     counters = models.ManyToManyField(Counter, related_name='marks')
 
@@ -77,12 +75,13 @@ class Mark(UUIDModel):
 
         ordering = ['-datetime']
 
-    def __unicode__(self): return quantity__unicode__(self)
+#    def __unicode__(self): return quantity__unicode__(self)
 
 
 def counter_update(counter):
 
-    filter_kwargs = counter.marks.all().values('unit', 'status')
+    filter_kwargs = counter.marks.all().values('unit', 'statuses')
+    for v in filter_kwargs: v['status'] = v.pop('statuses')
 
     queryset = Quantity.objects.none()
 
@@ -100,11 +99,12 @@ def counter_update(counter):
 
     for f in filter_kwargs:
 
-        f_get = f.copy()
-        f_get['unit'] = Unit.objects.get(pk=f_get['unit'])
+        f_get = {'unit': Unit.objects.get(pk=f['unit']),
+                 'status': QuantityStatus.objects.get(pk=f['status'])}
 
         try: s = counter.sums.get(**f_get)
 
+        # FIXME: use get_or_create()?
         except QuantityResult.DoesNotExist:
 
             f_get['counter_sum'] = counter

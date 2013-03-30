@@ -107,6 +107,7 @@ class QuantityFilter(django_filters.FilterSet):
 #    creator  = django_filters.CharFilter(lookup_type='exact')
     prev     = django_filters.CharFilter(lookup_type='exact')
     next     = django_filters.CharFilter(lookup_type='exact')
+    status   = django_filters.CharFilter(lookup_type='exact')
  
     # Metadata
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
@@ -118,7 +119,7 @@ class QuantityFilter(django_filters.FilterSet):
     class Meta:
 
         model  = Quantity
-        fields = ('user', 'unit', 'prev', 'next',
+        fields = ('user', 'unit', 'prev', 'next', 'status',
                   'assigned_metadata_snippets', 'scopes', 'counters',)
 
 
@@ -224,22 +225,21 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
     def validate_status(self, attrs, source):
 
-        if attrs[source] == '': attrs[source] = None
-
         stat    = attrs[source]
         prev    = attrs['prev']
         request = self.context.get('request')
 
-        # FIXME: forbid non-null statuses to become null?
-        if stat != None and (not self.object or self.object.status == None):
+        # FIXME: forbid non-symbolic statuses to become symbolic?
+        if stat.slug != 'symbolic' and \
+            (not self.object or self.object.status.slug == 'symbolic'):
 
             for q in prev:
 
                 # FIXME: call `IsCreatorOrUser` instead?
                 if not request.user in (q.creator, q.user,):
 
-                    raise serializers.ValidationError("You cannot set a status as you """ \
-                               """are not owner nor user of the previous quantity <%s>.""" % \
+                    raise serializers.ValidationError("You cannot define a non-symbolic status as you """ \
+                               """are not the owner nor user of the previous quantity <%s>.""" % \
                                    q.pk)
 
         return attrs
@@ -253,7 +253,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
         # FIXME: move this to the permission level?
         elif self.object.creator == request.user and \
-               self.object.user != request.user and self.object.status in ('rejected',):
+                 self.object.user != request.user and self.object.status.slug in ('rejected',):
 
             raise serializers.ValidationError("""The creator of a quantity """ \
                       """cannot modify it if its status is set to 'rejected'.""")

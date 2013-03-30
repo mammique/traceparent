@@ -1,0 +1,54 @@
+[
+{
+    "pk": "122cc224-7572-11e2-adfe-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20ac", 
+        "slug": "EUR", 
+        "name": "Euro", 
+        "decimal_places": 2, 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e"
+    }
+},
+{
+    "pk": "c5398114-85f7-11e2-b22d-e81132d4342f", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0e3f", 
+        "slug": "BTC", 
+        "name": "Bitcoin", 
+        "decimal_places": 4, 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e"
+    }
+},
+{
+    "pk": "symbolic", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+},
+{
+    "pk": "cancelled", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+},
+{
+    "pk": "passed", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+},
+{
+    "pk": "pending", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+},
+{
+    "pk": "present", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+},
+{
+    "pk": "rejected", 
+    "model": "tp_value.quantitystatus", 
+    "fields": {}
+}
+]

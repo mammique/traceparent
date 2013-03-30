@@ -30,15 +30,15 @@ class Unit(UUIDModel):
             (self.name, self.symbol, self.pk, self.creator) # FIXME: creator/user
 
 
-value_status_choices = models.fields.BLANK_CHOICE_DASH + [
-                        ('pending',   u'pending'),
-                        ('present',   u'present'),
-                        ('passed',    u'passed'),
-                        ('rejected',  u'rejected'),
-                        ('cancelled', u'cancelled'),
-                        # ('locked',    u'locked'),
-                        # ('frozen',    u'frozen'),
-                       ]
+class QuantityStatus(models.Model):
+	
+    slug = models.SlugField(primary_key=True, max_length=64)
+
+    class Meta:
+
+        verbose_name_plural = "quantity statuses"
+
+    def __unicode__(self): return self.slug
 
 
 class Quantity(UUIDModel):
@@ -55,12 +55,11 @@ class Quantity(UUIDModel):
     datetime          = models.DateTimeField(auto_now_add=True)
     prev              = models.ManyToManyField('self', null=True,
                             symmetrical=False, related_name='next')
-    status            = SlugBlankToNoneField(null=True, blank=True, default=None,
-                            max_length=64, choices=value_status_choices)
+    status            = models.ForeignKey(QuantityStatus, related_name='quantities')
 
     class Meta:
 
-        verbose_name_plural = "Quantities"
+        verbose_name_plural = "quantities"
         ordering            = ['-datetime']
 
     def __unicode__(self): return quantity__unicode__(self)
@@ -68,7 +67,7 @@ class Quantity(UUIDModel):
 
 def quantity__unicode__(q):
 
-    pk = "<%s>" if q.status != None else "*%s*"
+    pk = "<%s>" if q.status.slug != 'symbolic' else "*%s*"
     pk = pk % q.pk
 
     return u'%s%s %s %s' % (q.quantity.quantize(decimal.Decimal(10) ** \
