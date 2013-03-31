@@ -31,3 +31,7 @@ ul.breadcrumb { margin: 75px 0 0 0 !important; }
 #object-form .uneditable-input {
     cursor: pointer !important;
 }
+
+#action {
+    margin-left: 13px;
+}

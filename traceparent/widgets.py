@@ -7,11 +7,14 @@ from rest_framework.reverse import reverse
 
 class MultipleLockedInput(widgets.MultipleHiddenInput):
 
-    model = None
+    model     = None
+    view_name = None
 
     def __init__(self, *args, **kwargs):
 
-        self.model = kwargs.pop('model')
+        print kwargs
+        self.model     = kwargs.pop('model')
+        self.view_name = kwargs.pop('view_name')
 
         return super(MultipleLockedInput, self).__init__(*args, **kwargs)
 
@@ -24,4 +27,4 @@ class MultipleLockedInput(widgets.MultipleHiddenInput):
         q = self.model.objects.get(pk=value[0])
 
         return mark_safe('%s<a href="%s" class="uneditable-input">%s</a>' % \
-                   (r, reverse('tp_value_quantity_retrieve', (q.pk,)), q))
+                   (r, reverse(self.view_name, (q.pk,)), q))

@@ -187,17 +187,29 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
 
     content             = CharField(widget=widgets.Textarea)
     assigned_users      = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=User))
+                              widget=MultipleLockedInput(
+                                         model=User,
+                                         view_name='tp_auth_user_retrieve'))
     assigned_units      = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=Unit))
+                              widget=MultipleLockedInput(
+                                         model=Unit,
+                                         view_name='tp_value_unit_retrieve'))
     assigned_quantities = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=Quantity))
+                              widget=MultipleLockedInput(
+                                         model=Quantity,
+                                         view_name='tp_value_quantity_retrieve'))
     assigned_scopes     = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=Scope))
+                              widget=MultipleLockedInput(
+                                         model=Scope,
+                                         view_name='tp_monitor_scope_retrieve'))
     assigned_counters   = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=Counter))
+                              widget=MultipleLockedInput(
+                                         model=Counter,
+                                         view_name='tp_monitor_counter_retrieve'))
     assigned_marks      = relations.ManyPrimaryKeyRelatedField(required=False,
-                              widget=MultipleLockedInput(model=Mark))
+                              widget=MultipleLockedInput(
+                                         model=Mark,
+                                         view_name='tp_monitor_mark_retrieve'))
 
     class Meta:
 

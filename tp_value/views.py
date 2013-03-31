@@ -215,7 +215,9 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 #class QuantityAlterSerializer(QuantityRoFullSerializer):#serializers.ModelSerializer):
 
     prev = relations.ManyPrimaryKeyRelatedField(required=False,
-               widget=MultipleLockedInput(model=Quantity))
+               widget=MultipleLockedInput(
+                          model=Quantity,
+                          view_name='tp_value_quantity_retrieve'))
 
     class Meta:
 

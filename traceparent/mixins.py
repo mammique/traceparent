@@ -25,11 +25,14 @@ class DescActionMixin(object):
 
                 lis.append('<li><a href="%s">%s</a></li>' % (href, a[0],))
 
-            desc += """<div class="btn-group">""" \
+            desc += """<div id="action" class="pull-right btn-group">""" \
                     """<a class="btn btn-primary dropdown-toggle" """ \
                     """data-toggle="dropdown" href="#">""" \
                     """Action <span class="caret"></span></a><ul class="dropdown-menu">""" \
-                    """%s</ul></div>""" % ''.join(lis)
+                    """%s</ul></div>""" \
+                    """<script id="action-move" type="text/javascript">""" \
+                    """window.onload = function() { $('#action').prependTo('#content'); $('#action-move').remove()}""" \
+                    """</script>""" % ''.join(lis)
             desc = mark_safe(desc)
 
         return desc

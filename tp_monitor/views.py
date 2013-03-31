@@ -251,7 +251,9 @@ class CounterAlterSerializer(serializers.ModelSerializer):
 #class CounterAlterSerializer(CounterRoFullSerializer):#serializers.ModelSerializer):
 
     scopes = relations.ManyPrimaryKeyRelatedField(required=False,
-                 widget=MultipleLockedInput(model=Scope))
+                 widget=MultipleLockedInput(
+                            model=Scope,
+                            view_name='tp_monitor_scope_retrieve'))
 
     class Meta:
 
@@ -424,7 +426,9 @@ class MarkAlterSerializer(serializers.ModelSerializer):
 #class MarkAlterSerializer(MarkRoFullSerializer):#serializers.ModelSerializer):
 
     counters = relations.ManyPrimaryKeyRelatedField(
-                   widget=MultipleLockedInput(model=Counter))
+                   widget=MultipleLockedInput(
+                              model=Counter,
+                              view_name='tp_monitor_counter_retrieve'))
 
     class Meta:
 
