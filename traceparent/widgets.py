@@ -12,7 +12,6 @@ class MultipleLockedInput(widgets.MultipleHiddenInput):
 
     def __init__(self, *args, **kwargs):
 
-        print kwargs
         self.model     = kwargs.pop('model')
         self.view_name = kwargs.pop('view_name')
 

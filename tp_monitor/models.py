@@ -46,13 +46,27 @@ class Counter(UUIDModel):
                    (self.datetime_start, self.datetime_stop, self.pk, self.user)
 
 
-class QuantityResult(UUIDModel):
+#class QuantityResult(UUIDModel):
+#
+    #quantity    = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    #unit        = models.ForeignKey(Unit)
+    #status      = models.ForeignKey(QuantityStatus)
+    #datetime    = models.DateTimeField(auto_now=True)
+#
+    #class Meta:
+#
+        #ordering = ['-datetime']
+#
+    #def __unicode__(self): return quantity__unicode__(self)
 
-    quantity    = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
-    unit        = models.ForeignKey(Unit)
-    status      = models.ForeignKey(QuantityStatus)
-    datetime    = models.DateTimeField(auto_now=True)
-    counter_sum = models.ForeignKey(Counter, related_name='sums')
+
+class ResultSum(UUIDModel):
+
+    quantity  = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    unit      = models.ForeignKey(Unit)
+    status    = models.ForeignKey(QuantityStatus)
+    datetime  = models.DateTimeField(auto_now=True)
+    counter   = models.ForeignKey(Counter, related_name='sums')
 
     class Meta:
 
@@ -105,10 +119,10 @@ def counter_update(counter):
         try: s = counter.sums.get(**f_get)
 
         # FIXME: use get_or_create()?
-        except QuantityResult.DoesNotExist:
+        except ResultSum.DoesNotExist:
 
-            f_get['counter_sum'] = counter
-            s = QuantityResult(**f_get)
+            f_get['counter'] = counter
+            s = ResultSum(**f_get)
         
         q = counter.quantities.filter(**f).aggregate(models.Sum('quantity'))['quantity__sum']
         if q == None: q = decimal.Decimal('0')

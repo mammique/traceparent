@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import django_filters
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, \
          RetrieveUpdateAPIView, ListAPIView
 from rest_framework import serializers
@@ -17,7 +19,7 @@ from traceparent.widgets import MultipleLockedInput
 
 from tp_auth.permissions import IsCreatorOrUser
 
-from .models import Scope, Counter, QuantityResult, Mark
+from .models import Scope, Counter, ResultSum, Mark
 
 
 class ScopeRoLightSerializer(serializers.ModelSerializer):
@@ -88,8 +90,6 @@ class ScopeRetrieveView(DescActionMixin, RetrieveAPIView):
                                (reverse('tp_metadata_snippet_create'), x.pk)),
                            ('Add/remove quantities', lambda x: \
                                (reverse('tp_monitor_scope_update_quantities', (x.pk,)))),
-    #                       ('Update', lambda x: reverse('tp_monitor_scope_update',
-    #                           (x.pk,))),
                           )
 
 
@@ -166,14 +166,15 @@ class CounterRoLightSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'url', 'user', 'datetime',]
 
 
-class QuantityResultSerializer(serializers.ModelSerializer):
+class ResultSumSerializer(serializers.ModelSerializer):
 
-    unit = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
+    unit    = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
+    counter = serializers.HyperlinkedRelatedField(view_name='tp_monitor_counter_retrieve')
 
     class Meta:
 
-        model  = QuantityResult
-        fields = ['unit', 'quantity', 'status',]
+        model  = ResultSum
+        fields = ['unit', 'quantity', 'status', 'datetime', 'counter',] # TODO: remove counter on-the-fly if no present.
 
 
 class CounterRoFullSerializer(CounterRoLightSerializer):
@@ -190,7 +191,11 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
                      lookup_params={'counters': 'pk'},
                      lookup_test=lambda o: o.marks.all().count() != 0)
 
-    sums       = QuantityResultSerializer(many=True)
+    #sums       = ResultSumSerializer(many=True)
+    #sums       = serializers.HyperlinkedIdentityField(view_name='tp_monitor_counter_sums')
+    sums       = HyperlinkedFilterField(view_name='tp_monitor_result_sum_filter',
+                     lookup_params={'counter': 'pk'},
+                     lookup_test=lambda o: o.sums.all().count() != 0)
 
     # Metadata
     assigned_metadata_snippets = \
@@ -354,6 +359,25 @@ class CounterUpdateView(RetrieveUpdateAPIView):
                        status=status.HTTP_200_OK)
 
         return r
+
+
+class ResultSumFilter(django_filters.FilterSet):
+
+    unit    = django_filters.CharFilter(lookup_type='exact')
+    status  = django_filters.CharFilter(lookup_type='exact')
+    counter = django_filters.CharFilter(lookup_type='exact')
+
+    class Meta:
+
+        model  = ResultSum
+        fields = ('unit', 'status', 'counter',)
+
+
+class ResultSumFilterView(ListAPIView):
+
+    serializer_class = ResultSumSerializer
+    filter_class     = ResultSumFilter
+    model            = ResultSum
 
 
 class MarkRoLightSerializer(serializers.ModelSerializer):
