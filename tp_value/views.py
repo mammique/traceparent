@@ -84,7 +84,7 @@ class UnitRetrieveView(DescActionMixin, RetrieveAPIView):
 
     #def get(self, request, format=None): return Response(None)
 
-    permission_classes  = (IsAuthenticated,)
+    #permission_classes  = (IsAuthenticated,)
     serializer_class    = UnitRoFullSerializer
     model               = Unit
     description_actions = (('Add new metadata', lambda x: '%s?assigned_units=%s' % \

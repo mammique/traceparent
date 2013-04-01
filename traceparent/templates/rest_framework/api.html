@@ -26,7 +26,7 @@
             </ul>
         </li>
     {% else %}
-    <li><a href="{% url 'tp_auth_login' %}?next={{ request.META.PATH_INFO }}{% if request.META.QUERY_STRING %}?{{ request.META.QUERY_STRING}}{% endif %}">Log in</a></li>
+    <li><a href="{% url 'tp_auth_login' %}?next={{ request.META.SCRIPT_NAME }}{{ request.META.PATH_INFO }}{% if request.META.QUERY_STRING %}?{{ request.META.QUERY_STRING}}{% endif %}">Log in</a></li>
         <li><a href="{% url 'tp_auth_user_create' %}">Create account</a></li>
     {% endif %}
 {% endblock %}
