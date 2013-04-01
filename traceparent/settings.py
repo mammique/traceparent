@@ -5,7 +5,7 @@ import os, commands
 PROJECT_FSPATH           = os.path.dirname(os.path.abspath(__file__))
 PROJECT_NAME             = 'Traceparent'
 PROJECT_URL              = 'http://traceparent.com/'
-PROJECT_VERSION          = '0.1-alpha'
+PROJECT_VERSION          = '0.1-beta'
 PROJECT_VERSION_REVISION = '???'
 
 try: PROJECT_VERSION_REVISION = commands.getstatusoutput('git reflog')[1].split(' ')[0]
