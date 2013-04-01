@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from collections import OrderedDict # FIXME: use django.utils.datastructures.SortedDict?
+from django.utils.datastructures import SortedDict
 
 
 re_blank            = re.compile('[\t\n\r\f\v ]+')
@@ -13,4 +13,4 @@ def blanks_prune(txt):
     return re_blank_endswith.sub('', re_blank_startswith.sub('', re_blank.sub(' ', txt)))
 
 
-def ordered_dict(d): return OrderedDict(sorted(d.items(), key=lambda x: x[0]))
+def ordered_dict(d): return SortedDict(sorted(d.items(), key=lambda x: x[0]))
