@@ -37,6 +37,7 @@ class QuantityStatus(models.Model):
     class Meta:
 
         verbose_name_plural = "quantity statuses"
+        ordering            = ['-slug']
 
     def __unicode__(self): return self.slug
 

@@ -2,6 +2,7 @@
 import django_filters
 
 from django.shortcuts import get_object_or_404
+from django.forms import widgets
 
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, \
          RetrieveUpdateAPIView, ListAPIView
@@ -191,8 +192,6 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
                      lookup_params={'counters': 'pk'},
                      lookup_test=lambda o: o.marks.all().count() != 0)
 
-    #sums       = ResultSumSerializer(many=True)
-    #sums       = serializers.HyperlinkedIdentityField(view_name='tp_monitor_counter_sums')
     sums       = HyperlinkedFilterField(view_name='tp_monitor_result_sum_filter',
                      lookup_params={'counter': 'pk'},
                      lookup_test=lambda o: o.sums.all().count() != 0)
@@ -445,7 +444,6 @@ class MarkRetrieveView(DescActionMixin, RetrieveAPIView):
                           )
 
 
-
 class MarkAlterSerializer(serializers.ModelSerializer):
 #class MarkAlterSerializer(MarkRoFullSerializer):#serializers.ModelSerializer):
 
@@ -453,6 +451,9 @@ class MarkAlterSerializer(serializers.ModelSerializer):
                    widget=MultipleLockedInput(
                               model=Counter,
                               view_name='tp_monitor_counter_retrieve'))
+
+    statuses = relations.ManyPrimaryKeyRelatedField(
+                   widget=widgets.CheckboxSelectMultiple)
 
     class Meta:
 

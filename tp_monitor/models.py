@@ -4,7 +4,7 @@ import decimal
 from django.db import models
 
 from traceparent import settings
-from traceparent.fields import SlugBlankToNoneField
+from traceparent.fields import SlugBlankToNoneField, DecimalBlankToNoneField
 from traceparent.models import UUIDModel
 
 from tp_auth.models import User
@@ -77,7 +77,7 @@ class ResultSum(UUIDModel):
 
 class Mark(UUIDModel):
 
-    quantity = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    quantity = DecimalBlankToNoneField(null=True, blank=True, **settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     unit     = models.ForeignKey(Unit)
     statuses = models.ManyToManyField(QuantityStatus, related_name='marks')
     creator  = models.ForeignKey(User, related_name='marks_created')
@@ -94,8 +94,19 @@ class Mark(UUIDModel):
 
 def counter_update(counter):
 
-    filter_kwargs = counter.marks.all().values('unit', 'statuses')
-    for v in filter_kwargs: v['status'] = v.pop('statuses')
+    filter_kwargs      = []
+    filter_kwargs_dict = {}
+
+    for v in counter.marks.all().values('unit', 'statuses'):
+
+        v['status'] = v.pop('status')
+
+        if not v['unit'] in filter_kwargs_dict: filter_kwargs_dict[v['unit']] = []
+
+        if not v['status'] in filter_kwargs_dict[v['unit']]:
+
+            filter_kwargs_dict[v['unit']].append(v['status'])
+            filter_kwargs.append(v)
 
     queryset = Quantity.objects.none()
 
@@ -111,6 +122,8 @@ def counter_update(counter):
 
     counter.quantities = queryset.distinct()
 
+    filter_kwargs_new = []
+
     for f in filter_kwargs:
 
         f_get = {'unit': Unit.objects.get(pk=f['unit']),
@@ -125,12 +138,15 @@ def counter_update(counter):
             s = ResultSum(**f_get)
         
         q = counter.quantities.filter(**f).aggregate(models.Sum('quantity'))['quantity__sum']
-        if q == None: q = decimal.Decimal('0')
+
+        if q == None: continue
+
         s.quantity = q
         s.save()
+        filter_kwargs_new.append(f)
 
     queryset = counter.sums.all()
-    for f in filter_kwargs: queryset = queryset.exclude(models.Q(**f))
+    for f in filter_kwargs_new: queryset = queryset.exclude(models.Q(**f))
     queryset.all().delete()
 
 

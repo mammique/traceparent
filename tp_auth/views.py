@@ -253,7 +253,7 @@ class UserLoginView(CreateAPIView):
                 token.delete()
 
                 redirect = request.REQUEST.get(redirect_field_name, None)
-                if redirect: return HttpResponseRedirect(redirect)
+                if redirect and redirect != request.META['PATH_INFO']: return HttpResponseRedirect(redirect)
 
             except:
 
@@ -274,7 +274,7 @@ class UserLoginView(CreateAPIView):
             login(self.request, serializer.object)
 
             redirect = request.REQUEST.get(redirect_field_name, None)
-            if redirect: return HttpResponseRedirect(redirect)
+            if redirect and redirect != request.META['PATH_INFO']: return HttpResponseRedirect(redirect)
 
             return Response({'detail': 'Log in successful'})
 
@@ -288,7 +288,7 @@ class UserLogoutView(APIView):
         logout(request)
 
         redirect = request.REQUEST.get(redirect_field_name, None)
-        if redirect: return HttpResponseRedirect(redirect)
+        if redirect and redirect != request.META['PATH_INFO']: return HttpResponseRedirect(redirect)
 
         return Response({'detail': 'Log out successful'})
 

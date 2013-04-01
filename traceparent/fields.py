@@ -39,10 +39,15 @@ class HyperlinkedFilterField(serializers.Field):
                     query.urlencode())
 
 
-# http://stackoverflow.com/a/7059464
-# TODO: Perform the same conversion at DFR's serializer level.
-class SlugBlankToNoneField(models.SlugField):
-    def get_prep_value(self, value):
-        if value == '':
-            return None  
-        return value
+
+class BlankToNoneField(object):
+
+    def to_python(self, value):
+
+        if value == '': value = None
+
+        return super(BlankToNoneField, self).to_python(value)
+
+
+class SlugBlankToNoneField(BlankToNoneField, models.SlugField): pass
+class DecimalBlankToNoneField(BlankToNoneField, models.DecimalField): pass

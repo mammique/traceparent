@@ -1,3 +1,5 @@
+input[type="checkbox"] { vertical-align: -15%; }
+
 .container,
 .navbar-static-top .container,
 .navbar-fixed-top .container,
@@ -35,3 +37,6 @@ ul.breadcrumb { margin: 75px 0 0 0 !important; }
 #action {
     margin-left: 13px;
 }
+
+.control-group .controls ul { margin-left: 0; }
+.control-group .controls li { list-style: none; }
