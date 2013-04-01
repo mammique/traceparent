@@ -1,4 +1,4 @@
-t+https://github.com/mammique/django.git@3a002db6f1ef98d04634911808f9cf1b8e9dceff#egg=Django-dev
+-e git+https://github.com/mammique/django.git@3a002db6f1ef98d04634911808f9cf1b8e9dceff#egg=Django-dev
 Markdown==2.1.1
 # MySQL-python==1.2.3
 South==0.7.5
