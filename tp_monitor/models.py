@@ -99,7 +99,7 @@ def counter_update(counter):
 
     for v in counter.marks.all().values('unit', 'statuses'):
 
-        v['status'] = v.pop('status')
+        v['status'] = v.pop('statuses')
 
         if not v['unit'] in filter_kwargs_dict: filter_kwargs_dict[v['unit']] = []
 

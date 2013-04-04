@@ -195,7 +195,8 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
-    'FILTER_BACKEND': 'traceparent.filters.NoneDjangoFilterBackend',
+    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
+    #'FILTER_BACKEND': 'traceparent.filters.NoneDjangoFilterBackend',
     'PAGINATE_BY': 20,
     'DEFAULT_AUTHENTICATION_CLASSES': (
 #        'rest_framework.authentication.BasicAuthentication',

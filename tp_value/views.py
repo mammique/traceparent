@@ -100,7 +100,7 @@ class UnitFilterView(ListAPIView):
 
 class QuantityFilter(django_filters.FilterSet):
 
-    # FIXME: exclude null statuses by default?
+    # TODO: exclude null statuses by default?
     # https://django-filter.readthedocs.org/en/latest/ref/filters.html#action
     user     = django_filters.CharFilter(lookup_type='exact')
     unit     = django_filters.CharFilter(lookup_type='exact')
@@ -143,14 +143,12 @@ class QuantityRoLightSerializer(serializers.ModelSerializer):
 
         if obj.user_visibility == 'public': return ret
 
-        elif obj.user_visibility == 'private' and \
-            (not request.user.is_authenticated() or not \
-             request.user in (obj.creator, obj.user,)):
-            
-            del ret['user']
+        elif obj.user_visibility == 'private':
+
+            if not request.user.is_authenticated() or not \
+                request.user in (obj.creator, obj.user,): del ret['user']
 
             return ret
-        
 
     class Meta:
 
@@ -204,6 +202,7 @@ class QuantityRetrieveView(DescActionMixin, RetrieveAPIView):
                           )
 
 
+# TODO: prevent private quantities from being fetched by anonymous or other users.
 class QuantityFilterView(ListAPIView):
 
     serializer_class = QuantityRoLightSerializer
