@@ -414,6 +414,7 @@ class MarkRoFullSerializer(MarkRoLightSerializer):
 class MarkFilter(django_filters.FilterSet):
 
     user       = django_filters.CharFilter(lookup_type='exact')
+    unit       = django_filters.CharFilter(lookup_type='exact')
     counters   = django_filters.CharFilter(lookup_type='exact')
     
     # Metadata
@@ -422,7 +423,7 @@ class MarkFilter(django_filters.FilterSet):
     class Meta:
 
         model = Mark
-        fields = ('user', 'counters', 'assigned_metadata_snippets',)
+        fields = ('user', 'unit', 'counters', 'assigned_metadata_snippets',)
 
 
 class MarkFilterView(ListAPIView):
