@@ -461,7 +461,6 @@ class MarkAlterSerializer(serializers.ModelSerializer):
         exclude = ('creator',)
         fields  = ['user', 'counters', 'unit', 'quantity', 'statuses',]
 
-
     def validate(self, attrs):
 
         request = self.context.get('request')

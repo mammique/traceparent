@@ -4,8 +4,9 @@ Markdown==2.1.1
 South==0.7.5
 URLObject==2.0.2
 distribute==0.6.27
+django-cors-headers==0.06
 django-extensions==1.0.3
--e git+https://github.com/mammique/django-filter.git@ca664711a067548f0fba200099df82ab8c6e4821#egg=django_filter-dev
+-e git+https://github.com/alex/django-filter.git@dec9a60ea6eac61e2b8a386104f0f6e4a5c29ca0#egg=django_filter-dev
 django-oauth2-provider==0.2.2
 docutils==0.9.1
 # psycopg2==2.4.4

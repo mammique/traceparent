@@ -47,7 +47,7 @@ class SnippetFilter(django_filters.FilterSet):
     creator  = django_filters.CharFilter(lookup_type='exact')
     user     = django_filters.CharFilter(lookup_type='exact')
     mimetype = django_filters.CharFilter(lookup_type='exact')
-    slug     = django_filters.CharFilter()#lookup_type='iexact')
+    slug     = django_filters.CharFilter(lookup_type=None)
     type     = django_filters.CharFilter(lookup_type='iexact')
 
     # Models

@@ -16,6 +16,8 @@ class NoneDjangoFilterBackend(DjangoFilterBackend):
 
             if not len(dic): return queryset.none()
 
-            return filter_class(dic, queryset=queryset)
+            view.filter_instance = filter_class(dic, queryset=queryset)
+
+            return view.filter_instance.qs
 
         return queryset

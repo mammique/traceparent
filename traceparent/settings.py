@@ -109,6 +109,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'traceparent.urls'
@@ -134,7 +135,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
 #    'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-
 )
 
 AUTH_USER_MODEL = 'tp_auth.User'
@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'django_extensions',
     'south',
+    'corsheaders',
 
     # Traceparent apps:
     'tp_auth',
@@ -208,6 +209,16 @@ REST_FRAMEWORK = {
         'traceparent.renderers.BrowsableAPIRenderer',
     ),
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = (
+    'GET',
+#    'POST',
+#    'PUT',
+#    'PATCH',
+#    'DELETE',
+    'OPTIONS'
+)
 
 TP_VALUE_QUANTITY_MAX_DIGITS              = 64 # 128
 TP_VALUE_QUANTITY_DECIMAL_PLACES          = 30 # 64
