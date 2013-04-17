@@ -164,6 +164,9 @@ INSTALLED_APPS = (
     'tp_value',
     'tp_metadata',
     'tp_monitor',
+
+    # Extra apps:
+    'drf_serve',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -227,6 +230,8 @@ TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS     = {
     'max_digits': TP_VALUE_QUANTITY_MAX_DIGITS,
     'decimal_places': TP_VALUE_QUANTITY_DECIMAL_PLACES
 }
+
+DRF_SERVE_NGINX_INTERNAL_URL = '/internal/extra/serve'
 
 try:
     from settings_local import *

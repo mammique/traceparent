@@ -58,7 +58,7 @@ class UserRoFullSerializer(UserRoLightSerializer):
 
         model  = UserRoLightSerializer.Meta.model
         fields = UserRoLightSerializer.Meta.fields + \
-                     ['date_joined', 'is_active', 'assigned_metadata_snippets',]
+                     ['email_md5', 'date_joined', 'is_active', 'assigned_metadata_snippets',]
 
 
 class UserFilter(django_filters.FilterSet):
@@ -105,8 +105,8 @@ class UserAlterSerializerBase(UserSerializerBase):
 
         model = User
         fields = UserRoLightSerializer.Meta.fields + \
-                     ['date_joined', 'is_active', 'email', 'password',]
-        read_only_fields = ('uuid', 'date_joined', 'is_active',)
+                     ['email_md5', 'date_joined', 'is_active', 'email', 'password',]
+        read_only_fields = ('email_md5', 'uuid', 'date_joined', 'is_active',)
 
     # FIXME: move to to_native()?
     @property

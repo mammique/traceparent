@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import hashlib
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 
@@ -35,6 +37,7 @@ class User(AbstractUser):
     id              = UUIDField() # It appears that Django needs an 'id' on the `User` model.
     creator         = models.ForeignKey('self', null=True)
     name            = models.CharField(max_length=64, blank=True)
+    email_md5       = models.SlugField(max_length=32, null=True, blank=True)
 
     USERNAME_FIELD  = 'email'
     REQUIRED_FIELDS = []
@@ -49,6 +52,14 @@ class User(AbstractUser):
         if not self.uuid: self.uuid = self._meta.get_field("uuid").create_uuid()
         if self.username != self.uuid: self.username = self.uuid
         if self.id != self.uuid: self.id = self.uuid
+
+        if self.email:
+
+            m = hashlib.md5()
+            m.update(self.email.lower().encode('utf-8'))
+            self.email_md5 = m.hexdigest()
+
+        else: self.email_md5 = None
 
         return super(User, self).save(*args, **kwargs)
 

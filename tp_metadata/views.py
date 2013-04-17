@@ -243,7 +243,7 @@ class SnippetCreateView(CreateAPIView):
     model              = Snippet
     serializer_class   = SnippetCreateSerializer
 
-    def get(self, request, format=None): return Response(None)
+    def get(self, request, format=None): return Response(None) # FIXME: status.HTTP_204_NO_CONTENT?
 
     def get_serializer_context(self, *args, **kwargs):
 
@@ -332,8 +332,8 @@ class SnippetCreateView(CreateAPIView):
                            self.object,
                            context={
                                'request': self.request,
-                               'format': self.format_kwarg,
-                               'view': self}).data,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
                        status=status.HTTP_201_CREATED)
             
         return r
@@ -363,8 +363,8 @@ class SnippetUpdateView(RetrieveUpdateDestroyAPIView):
                            self.object,
                            context={
                                'request': self.request,
-                               'format': self.format_kwarg,
-                               'view': self}).data,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
                        status=status.HTTP_200_OK)
 
         return r

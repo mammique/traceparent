@@ -37,7 +37,7 @@ class SnippetView(APIView):
         return Response(data)
 
 
-urlpatterns = patterns('django.contrib.auth.views',
+urlpatterns = patterns('',
 
     url(r'^$', MetadataView.as_view(), name='tp_metadata'),
 
