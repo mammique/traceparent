@@ -23,7 +23,7 @@ class Unit(UUIDModel):
 
     class Meta:
 
-        ordering = ['-name',] # '-datetime']
+        ordering = ['name',] # '-datetime']
 
     def __unicode__(self):
         return u'%s (%s) <%s> %s' % \

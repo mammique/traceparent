@@ -22,6 +22,1799 @@
     }
 },
 {
+    "pk": "07018288-ace8-11e2-b1e8-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0141", 
+        "slug": "LTC", 
+        "name": "Litecoin", 
+        "decimal_places": 4, 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e"
+    }
+},
+{
+    "pk": "483e2890-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f.\u062c", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "DZD", 
+        "decimal_places": "2", 
+        "name": "Algerian dinar"
+    }
+}, 
+{
+    "pk": "483df992-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NAD", 
+        "decimal_places": "2", 
+        "name": "Namibian dollar"
+    }
+}, 
+{
+    "pk": "483d560e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KMF", 
+        "decimal_places": "2", 
+        "name": "Comorian franc"
+    }
+}, 
+{
+    "pk": "483d71d4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062c.\u0645", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "EGP", 
+        "decimal_places": "2", 
+        "name": "Egyptian pound"
+    }
+}, 
+{
+    "pk": "483d3f52-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u043b\u0432", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BGN", 
+        "decimal_places": "2", 
+        "name": "Bulgarian lev"
+    }
+}, 
+{
+    "pk": "483e13aa-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "B/.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PAB", 
+        "decimal_places": "2", 
+        "name": "Panamanian balboa"
+    }
+}, 
+{
+    "pk": "483d2882-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Bs.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BOB", 
+        "decimal_places": "2", 
+        "name": "Bolivian boliviano"
+    }
+}, 
+{
+    "pk": "483d7e68-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "kr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "DKK", 
+        "decimal_places": "2", 
+        "name": "Danish krone"
+    }
+}, 
+{
+    "pk": "483e8d76-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "P", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BWP", 
+        "decimal_places": "2", 
+        "name": "Botswana pula"
+    }
+}, 
+{
+    "pk": "483dc6f2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0644.\u0644", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LBP", 
+        "decimal_places": "2", 
+        "name": "Lebanese pound"
+    }
+}, 
+{
+    "pk": "483e6148-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Sh", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TZS", 
+        "decimal_places": "2", 
+        "name": "Tanzanian shilling"
+    }
+}, 
+{
+    "pk": "483e874a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20ab", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "VND", 
+        "decimal_places": "1", 
+        "name": "Vietnamese \u0111\u1ed3ng"
+    }
+}, 
+{
+    "pk": "483d0618-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Kz", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AOA", 
+        "decimal_places": "2", 
+        "name": "Angolan kwanza"
+    }
+}, 
+{
+    "pk": "483e6760-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0440.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PRB", 
+        "decimal_places": "2", 
+        "name": "Transnistrian ruble"
+    }
+}, 
+{
+    "pk": "483d4588-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u17db", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KHR", 
+        "decimal_places": "2", 
+        "name": "Cambodian riel"
+    }
+}, 
+{
+    "pk": "483d8c32-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20b5", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GHS", 
+        "decimal_places": "2", 
+        "name": "Ghana cedi"
+    }
+}, 
+{
+    "pk": "483d4b78-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KYD", 
+        "decimal_places": "2", 
+        "name": "Cayman Islands dollar"
+    }
+}, 
+{
+    "pk": "483dcce2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0644.\u062f", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LYD", 
+        "decimal_places": "3", 
+        "name": "Libyan dinar"
+    }
+}, 
+{
+    "pk": "483e74c6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20b4", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "UAH", 
+        "decimal_places": "2", 
+        "name": "Ukrainian hryvnia"
+    }
+}, 
+{
+    "pk": "483e1224-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f.\u0627", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "JOD", 
+        "decimal_places": "2", 
+        "name": "Jordanian dinar"
+    }
+}, 
+{
+    "pk": "483d0e9c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0192", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AWG", 
+        "decimal_places": "2", 
+        "name": "Aruban florin"
+    }
+}, 
+{
+    "pk": "483e3786-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0631.\u0633", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SAR", 
+        "decimal_places": "2", 
+        "name": "Saudi riyal"
+    }
+}, 
+{
+    "pk": "483dcfee-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Lt", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LTL", 
+        "decimal_places": "2", 
+        "name": "Lithuanian litas"
+    }
+}, 
+{
+    "pk": "483d9d26-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "HKD", 
+        "decimal_places": "2", 
+        "name": "Hong Kong dollar"
+    }
+}, 
+{
+    "pk": "483e5b58-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CHF", 
+        "decimal_places": "2", 
+        "name": "Swiss franc"
+    }
+}, 
+{
+    "pk": "483d8db8-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GIP", 
+        "decimal_places": "2", 
+        "name": "Gibraltar pound"
+    }
+}, 
+{
+    "pk": "483d1d7e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Br", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BYR", 
+        "decimal_places": "2", 
+        "name": "Belarusian ruble"
+    }
+}, 
+{
+    "pk": "483cdd8c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ALL", 
+        "decimal_places": "2", 
+        "name": "Albanian lek"
+    }
+}, 
+{
+    "pk": "483e2a16-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "UM", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MRO", 
+        "decimal_places": "1", 
+        "name": "Mauritanian ouguiya"
+    }
+}, 
+{
+    "pk": "483d5f6e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "kn", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "HRK", 
+        "decimal_places": "2", 
+        "name": "Croatian kuna"
+    }
+}, 
+{
+    "pk": "483d69fa-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "DJF", 
+        "decimal_places": "2", 
+        "name": "Djiboutian franc"
+    }
+}, 
+{
+    "pk": "483e5860-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SZL", 
+        "decimal_places": "2", 
+        "name": "Swazi lilangeni"
+    }
+}, 
+{
+    "pk": "483e62ec-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0e3f", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "THB", 
+        "decimal_places": "2", 
+        "name": "Thai baht"
+    }
+}, 
+{
+    "pk": "483d85fc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "XAF", 
+        "decimal_places": "2", 
+        "name": "Central African CFA franc"
+    }
+}, 
+{
+    "pk": "483e3f38-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BND", 
+        "decimal_places": "2", 
+        "name": "Brunei dollar"
+    }
+}, 
+{
+    "pk": "483da050-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "kr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ISK", 
+        "decimal_places": "2", 
+        "name": "Icelandic kr\u00f3na"
+    }
+}, 
+{
+    "pk": "483e7fa2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "UYU", 
+        "decimal_places": "2", 
+        "name": "Uruguayan peso"
+    }
+}, 
+{
+    "pk": "483e041e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "C$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NIO", 
+        "decimal_places": "2", 
+        "name": "Nicaraguan c\u00f3rdoba"
+    }
+}, 
+{
+    "pk": "483dc3e6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20ad", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LAK", 
+        "decimal_places": "2", 
+        "name": "Lao kip"
+    }
+}, 
+{
+    "pk": "483e5cd4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0644.\u0633", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SYP", 
+        "decimal_places": "2", 
+        "name": "Syrian pound"
+    }
+}, 
+{
+    "pk": "483e2b92-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f. \u0645.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MAD", 
+        "decimal_places": "2", 
+        "name": "Moroccan dirham"
+    }
+}, 
+{
+    "pk": "483df65e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "MT", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MZN", 
+        "decimal_places": "2", 
+        "name": "Mozambican metical"
+    }
+}, 
+{
+    "pk": "483e1c9c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20b1", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PHP", 
+        "decimal_places": "2", 
+        "name": "Philippine peso"
+    }
+}, 
+{
+    "pk": "483e921c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "R", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ZAR", 
+        "decimal_places": "2", 
+        "name": "South African rand"
+    }
+}, 
+{
+    "pk": "483dfe10-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a8", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NPR", 
+        "decimal_places": "2", 
+        "name": "Nepalese rupee"
+    }
+}, 
+{
+    "pk": "483e951e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ZWL", 
+        "decimal_places": "2", 
+        "name": "Zimbabwean dollar"
+    }
+}, 
+{
+    "pk": "483e072a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a6", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NGN", 
+        "decimal_places": "2", 
+        "name": "Nigerian naira"
+    }
+}, 
+{
+    "pk": "483d5c58-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a1", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CRC", 
+        "decimal_places": "2", 
+        "name": "Costa Rican col\u00f3n"
+    }
+}, 
+{
+    "pk": "483e7642-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f.\u0625", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AED", 
+        "decimal_places": "2", 
+        "name": "United Arab Emirates dirham"
+    }
+}, 
+{
+    "pk": "483e8f1a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GBP", 
+        "decimal_places": "2", 
+        "name": "British pound"
+    }
+}, 
+{
+    "pk": "483dd75a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "MK", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MWK", 
+        "decimal_places": "2", 
+        "name": "Malawian kwacha"
+    }
+}, 
+{
+    "pk": "483e52ca-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Rs", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LKR", 
+        "decimal_places": "2", 
+        "name": "Sri Lankan rupee"
+    }
+}, 
+{
+    "pk": "483e0f04-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a8", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PKR", 
+        "decimal_places": "2", 
+        "name": "Pakistani rupee"
+    }
+}, 
+{
+    "pk": "483d9eac-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Ft", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "HUF", 
+        "decimal_places": "2", 
+        "name": "Hungarian forint"
+    }
+}, 
+{
+    "pk": "483d23d2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BMD", 
+        "decimal_places": "2", 
+        "name": "Bermudian dollar"
+    }
+}, 
+{
+    "pk": "483dc86e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LSL", 
+        "decimal_places": "2", 
+        "name": "Lesotho loti"
+    }
+}, 
+{
+    "pk": "483df014-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20ae", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MNT", 
+        "decimal_places": "2", 
+        "name": "Mongolian t\u00f6gr\u00f6g"
+    }
+}, 
+{
+    "pk": "483df802-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0564\u0580.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AMD", 
+        "decimal_places": "2", 
+        "name": "Armenian dram"
+    }
+}, 
+{
+    "pk": "483e734a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Sh", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "UGX", 
+        "decimal_places": "2", 
+        "name": "Ugandan shilling"
+    }
+}, 
+{
+    "pk": "483e211a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0631.\u0642", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "QAR", 
+        "decimal_places": "2", 
+        "name": "Qatari riyal"
+    }
+}, 
+{
+    "pk": "483dafc8-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "JMD", 
+        "decimal_places": "2", 
+        "name": "Jamaican dollar"
+    }
+}, 
+{
+    "pk": "483d88fe-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u10da", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GEL", 
+        "decimal_places": "2", 
+        "name": "Georgian lari"
+    }
+}, 
+{
+    "pk": "483e6a58-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SHP", 
+        "decimal_places": "2", 
+        "name": "Saint Helena pound"
+    }
+}, 
+{
+    "pk": "483c9f34-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u060b", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AFN", 
+        "decimal_places": "2", 
+        "name": "Afghan afghani"
+    }
+}, 
+{
+    "pk": "483e4834-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SBD", 
+        "decimal_places": "2", 
+        "name": "Solomon Islands dollar"
+    }
+}, 
+{
+    "pk": "483dbbda-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a9", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KPW", 
+        "decimal_places": "2", 
+        "name": "North Korean won"
+    }
+}, 
+{
+    "pk": "483dd46c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0434\u0435\u043d", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MKD", 
+        "decimal_places": "2", 
+        "name": "Macedonian denar"
+    }
+}, 
+{
+    "pk": "483e6d50-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": " ", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TRY", 
+        "decimal_places": "2", 
+        "name": "Turkish lira"
+    }
+}, 
+{
+    "pk": "483d1a22-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u09f3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BDT", 
+        "decimal_places": "2", 
+        "name": "Bangladeshi taka"
+    }
+}, 
+{
+    "pk": "483e8a7e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\ufdfc", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "YER", 
+        "decimal_places": "2", 
+        "name": "Yemeni rial"
+    }
+}, 
+{
+    "pk": "483d9a24-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "G", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "HTG", 
+        "decimal_places": "2", 
+        "name": "Haitian gourde"
+    }
+}, 
+{
+    "pk": "483e3dbc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Le", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SLL", 
+        "decimal_places": "2", 
+        "name": "Sierra Leonean leone"
+    }
+}, 
+{
+    "pk": "483dd5de-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Ar", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MGA", 
+        "decimal_places": "1", 
+        "name": "Malagasy ariary"
+    }
+}, 
+{
+    "pk": "483e43b6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0192", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ANG", 
+        "decimal_places": "2", 
+        "name": "Netherlands Antillean guilder"
+    }
+}, 
+{
+    "pk": "483dcb66-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LRD", 
+        "decimal_places": "2", 
+        "name": "Liberian dollar"
+    }
+}, 
+{
+    "pk": "483e318c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "XCD", 
+        "decimal_places": "2", 
+        "name": "East Caribbean dollar"
+    }
+}, 
+{
+    "pk": "483e0ba8-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "kr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NOK", 
+        "decimal_places": "2", 
+        "name": "Norwegian krone"
+    }
+}, 
+{
+    "pk": "483dd2f0-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "P", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MOP", 
+        "decimal_places": "2", 
+        "name": "Macanese pataca"
+    }
+}, 
+{
+    "pk": "483e5130-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SSP", 
+        "decimal_places": "2", 
+        "name": "South Sudanese pound"
+    }
+}, 
+{
+    "pk": "483da1d6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "INR", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "INR", 
+        "decimal_places": "2", 
+        "name": "Indian rupee"
+    }
+}, 
+{
+    "pk": "483de9d4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MXN", 
+        "decimal_places": "2", 
+        "name": "Mexican peso"
+    }
+}, 
+{
+    "pk": "483d6702-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "K\u010d", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CZK", 
+        "decimal_places": "2", 
+        "name": "Czech koruna"
+    }
+}, 
+{
+    "pk": "483e5fcc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0405\u041c", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TJS", 
+        "decimal_places": "2", 
+        "name": "Tajikistani somoni"
+    }
+}, 
+{
+    "pk": "483e5e50-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TWD", 
+        "decimal_places": "2", 
+        "name": "New Taiwan dollar"
+    }
+}, 
+{
+    "pk": "483d2562-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Nu.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BTN", 
+        "decimal_places": "2", 
+        "name": "Bhutanese ngultrum"
+    }
+}, 
+{
+    "pk": "483d5492-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "COP", 
+        "decimal_places": "2", 
+        "name": "Colombian peso"
+    }
+}, 
+{
+    "pk": "483dd8fe-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "RM", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MYR", 
+        "decimal_places": "2", 
+        "name": "Malaysian ringgit"
+    }
+}, 
+{
+    "pk": "483e6ecc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "m", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TMT", 
+        "decimal_places": "2", 
+        "name": "Turkmenistan manat"
+    }
+}, 
+{
+    "pk": "483de844-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a8", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MUR", 
+        "decimal_places": "2", 
+        "name": "Mauritian rupee"
+    }
+}, 
+{
+    "pk": "483da370-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Rp", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "IDR", 
+        "decimal_places": "2", 
+        "name": "Indonesian rupiah"
+    }
+}, 
+{
+    "pk": "483d9baa-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "HNL", 
+        "decimal_places": "2", 
+        "name": "Honduran lempira"
+    }
+}, 
+{
+    "pk": "483e88f8-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "XPF", 
+        "decimal_places": "2", 
+        "name": "CFP franc"
+    }
+}, 
+{
+    "pk": "483d7fe4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "FJD", 
+        "decimal_places": "2", 
+        "name": "Fijian dollar"
+    }
+}, 
+{
+    "pk": "483d7b52-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Br", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ETB", 
+        "decimal_places": "2", 
+        "name": "Ethiopian birr"
+    }
+}, 
+{
+    "pk": "483e1b20-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "S/.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PEN", 
+        "decimal_places": "2", 
+        "name": "Peruvian nuevo sol"
+    }
+}, 
+{
+    "pk": "483d2094-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BZD", 
+        "decimal_places": "2", 
+        "name": "Belize dollar"
+    }
+}, 
+{
+    "pk": "483e109e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20aa", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ILS", 
+        "decimal_places": "2", 
+        "name": "Israeli new shekel"
+    }
+}, 
+{
+    "pk": "483d6d1a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "DOP", 
+        "decimal_places": "2", 
+        "name": "Dominican peso"
+    }
+}, 
+{
+    "pk": "483d00a0-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GGP", 
+        "decimal_places": "2", 
+        "name": "Guernsey pound"
+    }
+}, 
+{
+    "pk": "483decd6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MDL", 
+        "decimal_places": "2", 
+        "name": "Moldovan leu"
+    }
+}, 
+{
+    "pk": "483d16c6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BSD", 
+        "decimal_places": "2", 
+        "name": "Bahamian dollar"
+    }
+}, 
+{
+    "pk": "483e59dc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "kr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SEK", 
+        "decimal_places": "2", 
+        "name": "Swedish krona"
+    }
+}, 
+{
+    "pk": "483db45a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "JEP", 
+        "decimal_places": "2", 
+        "name": "Jersey pound"
+    }
+}, 
+{
+    "pk": "483e71c4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AUD", 
+        "decimal_places": "2", 
+        "name": "Australian dollar"
+    }
+}, 
+{
+    "pk": "483e55cc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SRD", 
+        "decimal_places": "2", 
+        "name": "Surinamese dollar"
+    }
+}, 
+{
+    "pk": "483d6266-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CUP", 
+        "decimal_places": "2", 
+        "name": "Cuban peso"
+    }
+}, 
+{
+    "pk": "483d1bd0-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BBD", 
+        "decimal_places": "2", 
+        "name": "Barbadian dollar"
+    }
+}, 
+{
+    "pk": "483dbda6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a9", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KRW", 
+        "decimal_places": "2", 
+        "name": "South Korean won"
+    }
+}, 
+{
+    "pk": "483d8782-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "D", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GMD", 
+        "decimal_places": "2", 
+        "name": "Gambian dalasi"
+    }
+}, 
+{
+    "pk": "483e85ce-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Bs F", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "VEF", 
+        "decimal_places": "2", 
+        "name": "Venezuelan bol\u00edvar"
+    }
+}, 
+{
+    "pk": "483d925e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Q", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GTQ", 
+        "decimal_places": "2", 
+        "name": "Guatemalan quetzal"
+    }
+}, 
+{
+    "pk": "483d60f4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CUC", 
+        "decimal_places": "2", 
+        "name": "Cuban convertible peso"
+    }
+}, 
+{
+    "pk": "483d4ff6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CLP", 
+        "decimal_places": "2", 
+        "name": "Chilean peso"
+    }
+}, 
+{
+    "pk": "483e8bfa-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "ZK", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ZMW", 
+        "decimal_places": "2", 
+        "name": "Zambian kwacha"
+    }
+}, 
+{
+    "pk": "483d57da-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CDF", 
+        "decimal_places": "2", 
+        "name": "Congolese franc"
+    }
+}, 
+{
+    "pk": "483e2598-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "RWF", 
+        "decimal_places": "2", 
+        "name": "Rwandan franc"
+    }
+}, 
+{
+    "pk": "483db75c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20b8", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KZT", 
+        "decimal_places": "2", 
+        "name": "Kazakhstani tenge"
+    }
+}, 
+{
+    "pk": "483e4e2e-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0440.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "RUB", 
+        "decimal_places": "2", 
+        "name": "Russian ruble"
+    }
+}, 
+{
+    "pk": "483e68dc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TTD", 
+        "decimal_places": "2", 
+        "name": "Trinidad and Tobago dollar"
+    }
+}, 
+{
+    "pk": "483e0d4c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0631.\u0639.", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "OMR", 
+        "decimal_places": "1", 
+        "name": "Omani rial"
+    }
+}, 
+{
+    "pk": "483d2ed6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "R$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BRL", 
+        "decimal_places": "2", 
+        "name": "Brazilian real"
+    }
+}, 
+{
+    "pk": "483d427c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Ks", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MMK", 
+        "decimal_places": "2", 
+        "name": "Burmese kyat"
+    }
+}, 
+{
+    "pk": "483e1e18-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "z\u0142", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PLN", 
+        "decimal_places": "2", 
+        "name": "Polish z\u0142oty"
+    }
+}, 
+{
+    "pk": "483e199a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20b2", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PYG", 
+        "decimal_places": "2", 
+        "name": "Paraguayan guaran\u00ed"
+    }
+}, 
+{
+    "pk": "483db8d8-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Sh", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KES", 
+        "decimal_places": "2", 
+        "name": "Kenyan shilling"
+    }
+}, 
+{
+    "pk": "483d7364-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a1", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SVC", 
+        "decimal_places": "2", 
+        "name": "Salvadoran col\u00f3n"
+    }
+}, 
+{
+    "pk": "483e93a2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "USD", 
+        "decimal_places": "2", 
+        "name": "United States dollar"
+    }
+}, 
+{
+    "pk": "483d1518-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": " ", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "AZN", 
+        "decimal_places": "2", 
+        "name": "Azerbaijani manat"
+    }
+}, 
+{
+    "pk": "483e65ee-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "T$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TOP", 
+        "decimal_places": "2", 
+        "name": "Tongan pa\u02bbanga"
+    }
+}, 
+{
+    "pk": "483de0ba-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": ".\u0783", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "MVR", 
+        "decimal_places": "2", 
+        "name": "Maldivian rufiyaa"
+    }
+}, 
+{
+    "pk": "483e82d6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Vt", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "VUV", 
+        "decimal_places": "0", 
+        "name": "Vanuatu vatu"
+    }
+}, 
+{
+    "pk": "483d956a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GNF", 
+        "decimal_places": "2", 
+        "name": "Guinean franc"
+    }
+}, 
+{
+    "pk": "483e3312-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "T", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "WST", 
+        "decimal_places": "2", 
+        "name": "Samoan t\u0101l\u0101"
+    }
+}, 
+{
+    "pk": "483da690-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0639.\u062f", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "IQD", 
+        "decimal_places": "3", 
+        "name": "Iraqi dinar"
+    }
+}, 
+{
+    "pk": "483d77ec-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Nfk", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ERN", 
+        "decimal_places": "2", 
+        "name": "Eritrean nakfa"
+    }
+}, 
+{
+    "pk": "483d2bb6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "KM", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BAM", 
+        "decimal_places": "2", 
+        "name": "Bosnia and Herzegovina convertible mark"
+    }
+}, 
+{
+    "pk": "483e3c40-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u20a8", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SCR", 
+        "decimal_places": "2", 
+        "name": "Seychellois rupee"
+    }
+}, 
+{
+    "pk": "483d4880-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CAD", 
+        "decimal_places": "2", 
+        "name": "Canadian dollar"
+    }
+}, 
+{
+    "pk": "483d49fc-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Esc", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CVE", 
+        "decimal_places": "2", 
+        "name": "Cape Verdean escudo"
+    }
+}, 
+{
+    "pk": "483dc0da-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f.\u0643", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KWD", 
+        "decimal_places": "3", 
+        "name": "Kuwaiti dinar"
+    }
+}, 
+{
+    "pk": "483d440c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BIF", 
+        "decimal_places": "2", 
+        "name": "Burundian franc"
+    }
+}, 
+{
+    "pk": "483e16a2-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "K", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "PGK", 
+        "decimal_places": "2", 
+        "name": "Papua New Guinean kina"
+    }
+}, 
+{
+    "pk": "483e49b0-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Sh", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SOS", 
+        "decimal_places": "2", 
+        "name": "Somali shilling"
+    }
+}, 
+{
+    "pk": "483e40b4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SGD", 
+        "decimal_places": "2", 
+        "name": "Singapore dollar"
+    }
+}, 
+{
+    "pk": "483e8150-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u043b\u0432", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "UZS", 
+        "decimal_places": "2", 
+        "name": "Uzbekistani som"
+    }
+}, 
+{
+    "pk": "483e360a-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Db", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "STD", 
+        "decimal_places": "2", 
+        "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe dobra"
+    }
+}, 
+{
+    "pk": "483da4ec-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\ufdfc", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "IRR", 
+        "decimal_places": "2", 
+        "name": "Iranian rial"
+    }
+}, 
+{
+    "pk": "483d517c-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u5143", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "CNY", 
+        "decimal_places": "2", 
+        "name": "Chinese yuan"
+    }
+}, 
+{
+    "pk": "483e6468-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Fr", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "XOF", 
+        "decimal_places": "2", 
+        "name": "West African CFA franc"
+    }
+}, 
+{
+    "pk": "483e6bd4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u062f.\u062a", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "TND", 
+        "decimal_places": "3", 
+        "name": "Tunisian dinar"
+    }
+}, 
+{
+    "pk": "483d9894-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "GYD", 
+        "decimal_places": "2", 
+        "name": "Guyanese dollar"
+    }
+}, 
+{
+    "pk": "483e08a6-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "NZD", 
+        "decimal_places": "2", 
+        "name": "New Zealand dollar"
+    }
+}, 
+{
+    "pk": "483d7cec-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "FKP", 
+        "decimal_places": "2", 
+        "name": "Falkland Islands pound"
+    }
+}, 
+{
+    "pk": "483dc576-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "Ls", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "LVL", 
+        "decimal_places": "2", 
+        "name": "Latvian lats"
+    }
+}, 
+{
+    "pk": "483dc260-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u043b\u0432", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "KGS", 
+        "decimal_places": "2", 
+        "name": "Kyrgyzstani som"
+    }
+}, 
+{
+    "pk": "483d0b36-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "$", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "ARS", 
+        "decimal_places": "2", 
+        "name": "Argentine peso"
+    }
+}, 
+{
+    "pk": "483e22a0-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "L", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "RON", 
+        "decimal_places": "2", 
+        "name": "Romanian leu"
+    }
+}, 
+{
+    "pk": "483dab22-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "IMP", 
+        "decimal_places": "2", 
+        "name": "Manx pound"
+    }
+}, 
+{
+    "pk": "483e3ac4-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u0434\u0438\u043d", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "RSD", 
+        "decimal_places": "2", 
+        "name": "Serbian dinar"
+    }
+}, 
+{
+    "pk": "483d1888-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": ".\u062f.\u0628", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "BHD", 
+        "decimal_places": "3", 
+        "name": "Bahraini dinar"
+    }
+}, 
+{
+    "pk": "483db162-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a5", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "JPY", 
+        "decimal_places": "2", 
+        "name": "Japanese yen"
+    }
+}, 
+{
+    "pk": "483e5450-acee-11e2-8160-78929c525f0e", 
+    "model": "tp_value.unit", 
+    "fields": {
+        "symbol": "\u00a3", 
+        "creator": "249fad6e-749f-11e2-bcab-78929c525f0e", 
+        "slug": "SDG", 
+        "decimal_places": "2", 
+        "name": "Sudanese pound"
+    }
+},
+{
     "pk": "symbolic", 
     "model": "tp_value.quantitystatus", 
     "fields": {}

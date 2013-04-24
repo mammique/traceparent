@@ -339,11 +339,28 @@ class SnippetCreateView(CreateAPIView):
         return r
 
 
+class SnippetUpdateSerializer(SnippetAlterSerializer):
+
+    class Meta:
+
+        model  = SnippetAlterSerializer.Meta.model
+        fields = filter(lambda x: not x.startswith('assigned_'), SnippetAlterSerializer.Meta.fields)
+
+    # FIXME: at least one assigned object.
+    def validate(self, attrs):
+
+        # FIXME: move to view's pre_save()?
+        attrs['creator'] = self.context['request'].user
+        #raise serializers.ValidationError("Symbolic users cannot have a password.")
+
+        return attrs
+
+
 class SnippetUpdateView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (IsAuthenticated, IsCreatorOrUser,)
     model              = Snippet
-    serializer_class   = SnippetAlterSerializer
+    serializer_class   = SnippetUpdateSerializer
 
     def get(self, request, format=None, *args, **kwargs):
 
@@ -374,8 +391,21 @@ class SnippetRetrieveView(DescActionMixin, SnippetRoMixin, RetrieveAPIView):
 
     model               = Snippet
     serializer_class    = SnippetRoFullSerializer
-    description_actions = (('Update', lambda x: reverse('tp_metadata_snippet_update',
-                                (x.pk,))),)
+    description_actions = (('Update', lambda x:
+                                reverse('tp_metadata_snippet_update', (x.pk,))),
+                           ('Add/remove assigned users', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_users', (x.pk,)))),
+                           ('Add/remove assigned units', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_units', (x.pk,)))),
+                           ('Add/remove assigned quantities', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_quantities', (x.pk,)))),
+                           ('Add/remove assigned scopes', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_scopes', (x.pk,)))),
+                           ('Add/remove assigned counters', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_counters', (x.pk,)))),
+                           ('Add/remove assigned marks', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_marks', (x.pk,)))),
+                          )
 
     def get(self, request, serve_content=False, *args, **kwargs):
 

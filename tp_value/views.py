@@ -23,6 +23,7 @@ class UnitFilter(django_filters.FilterSet):
 
     name    = django_filters.CharFilter(lookup_type='icontains')
     creator = django_filters.CharFilter(lookup_type='exact')
+    slug    = django_filters.CharFilter(lookup_type='icontains')
 
     class Meta:
 
