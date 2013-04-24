@@ -202,6 +202,7 @@ REST_FRAMEWORK = {
     'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
     #'FILTER_BACKEND': 'traceparent.filters.NoneDjangoFilterBackend',
     'PAGINATE_BY': 20,
+    'PAGINATE_BY_PARAM': 'page_size',
     'DEFAULT_AUTHENTICATION_CLASSES': (
 #        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
