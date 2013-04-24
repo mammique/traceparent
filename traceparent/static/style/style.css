@@ -40,3 +40,18 @@ ul.breadcrumb { margin: 75px 0 0 0 !important; }
 
 .control-group .controls ul { margin-left: 0; }
 .control-group .controls li { list-style: none; }
+
+#footer {
+    background-color: #2C2C2C;
+    position: fixed;
+    width: 99%;
+    left: 0;
+    bottom: 0;
+    padding: 0.5%;
+    height: auto !important;
+}
+
+#footer span {
+    padding-left: 50px;
+    color: white;
+}

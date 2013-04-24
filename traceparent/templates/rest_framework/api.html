@@ -30,3 +30,14 @@
         <li><a href="{% url 'tp_auth_user_create' %}">Create account</a></li>
     {% endif %}
 {% endblock %}
+
+{% block footer %}
+<div id="footer">
+    <span>Hosting partners:
+        <a href='http://tetaneutral.net/'>tetaneutral.net</a>
+        &amp;
+        <a href='http://www.gandi.net/'>gandi.net</a>
+    </span>
+    <span>Powered by: <a href='http://django-rest-framework.org'>Django REST framework</a></span>
+</div>
+{% endblock %}
