@@ -233,7 +233,7 @@ TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS     = {
 }
 
 DRF_SERVE_NGINX_INTERNAL_URL = '/internal/extra/serve'
-DRF_SERVE_NGINX_ROOT         = os.path.abspath(os.path.join(PROJECT_FSPATH, '../../../var/serve'))
+DRF_SERVE_NGINX_ROOT         = os.path.abspath(os.path.join(PROJECT_FSPATH, '../../../var/extra/serve'))
 
 try:
     from settings_local import *
