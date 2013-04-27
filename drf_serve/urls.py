@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from traceparent.utils import ordered_dict
 
-from .views import bucket_file_nginx #, BucketUpdateView
+from .views import bucket_content_nginx #, BucketUpdateView
 
 
 #class ServeView(APIView):
@@ -40,8 +40,15 @@ urlpatterns = patterns('django.contrib.auth.views',
 
     #url(r'^$', ServeView.as_view(), name=''),
 
-    url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/(?P<filename>.*)$',
-        bucket_file_nginx, name='drf_serve_bucket_update'),
-    #url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/$',
-        #ServeBucketUpdateView.as_view(), name='drf_serve_bucket_update'),
+    url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/content/(?P<content_path>.*)$',
+        bucket_content_nginx, name='drf_serve_bucket_content'),
+    #url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/$',
+        #ScopeUpdateQuantitiesView.as_view(), name='drf_serve_bucket_update_users_ro'),
+    #url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/add/$',
+        #M2MAddView.as_view(model=Scope), {'m2m_field': 'users_ro'},
+        #name='drf_serve_bucket_update_users_ro_add'),
+    #url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/remove/$',
+        #M2MRemoveView.as_view(model=Scope), {'m2m_field': 'users_ro'},
+        #name='drf_serve_bucket_update_users_ro_remove'),
+
 )

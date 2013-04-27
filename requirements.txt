@@ -10,6 +10,7 @@ django-extensions==1.0.3
 django-oauth2-provider==0.2.2
 docutils==0.9.1
 # psycopg2==2.4.4
+python-magic==0.4.3
 uuid==1.30
 wsgiref==0.1.2
 # Django REST Framework 2
