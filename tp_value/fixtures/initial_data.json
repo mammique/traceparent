@@ -14,7 +14,7 @@
     "pk": "c5398114-85f7-11e2-b22d-e81132d4342f", 
     "model": "tp_value.unit", 
     "fields": {
-        "symbol": "\u0e3f", 
+        "symbol": "\u0243", 
         "slug": "BTC", 
         "name": "Bitcoin", 
         "decimal_places": 4, 
