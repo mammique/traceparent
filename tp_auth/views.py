@@ -96,6 +96,16 @@ class UserRetrieveView(DescActionMixin, RetrieveAPIView):
                            )
 
 
+class UserWhoAmIView(UserRetrieveView):
+
+    def get(self, request, *args, **kwargs):
+
+        if request.user.is_authenticated(): data = self.get_serializer(request.user).data
+        else: data = None
+
+        return Response(data)
+
+
 class UserAlterSerializerBase(UserSerializerBase):
 
     password = CharField(required=False, blank=True, widget=widgets.PasswordInput)

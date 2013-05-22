@@ -166,7 +166,7 @@ INSTALLED_APPS = (
     'tp_monitor',
 
     # Extra apps:
-    'drf_serve',
+    'extra_serve',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -211,6 +211,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'traceparent.renderers.BrowsableAPIRenderer',
+        'traceparent.renderers.FormRenderer',
     ),
 }
 

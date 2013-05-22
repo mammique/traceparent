@@ -24,6 +24,14 @@ class BrowsableAPIRenderer(BrowsableAPIRendererBase):
 
         return fields
 
+
+class FormRenderer(BrowsableAPIRendererBase):
+
+    media_type = 'text/html'
+    format = 'form'
+    template = 'rest_framework/api_form.html'
+
+
     ## https://github.com/tomchristie/django-rest-framework/blob/3357a36e37f83c04d161662def9cc5221761986c/rest_framework/renderers.py#L374
     #def get_form(self, view, method, request):
     #    from django import forms

@@ -44,7 +44,7 @@ def bucket_content_nginx(request, user_pk, bucket_slug, content_path):
                       'name': entry,
                       'mimetype': magic.from_file(entry_path, mime=True),
                       'size': os.stat(entry_path).st_size,
-                      'url': reverse('drf_serve_bucket_content',
+                      'url': reverse('extra_serve_bucket_content',
                                      (user_pk, bucket_slug, content_path + entry if not os.path.isdir(entry_path) else '%s/' % entry),
                                      request=request)
                      })

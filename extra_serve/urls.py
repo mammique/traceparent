@@ -16,7 +16,7 @@ from .models import Bucket
 #
         #data = ordered_dict(
             #{
-             #'bucket': reverse('drf_serve_bucket', request=self.request),
+             #'bucket': reverse('extra_serve_bucket', request=self.request),
             #}
         #)
 #
@@ -29,8 +29,8 @@ from .models import Bucket
 #
         #data = ordered_dict(
             #{
-             #'create': reverse('drf_serve_bucket_create', request=self.request),
-             #'filter': reverse('drf_serve_bucket_filter', request=self.request),
+             #'create': reverse('extra_serve_bucket_create', request=self.request),
+             #'filter': reverse('extra_serve_bucket_filter', request=self.request),
             #}
         #)
 #
@@ -46,9 +46,9 @@ class BucketUpdateUsersRoView(APIView):
 
         data = ordered_dict(
             {
-             'add':    reverse('drf_serve_bucket_update_users_ro_add', args,
+             'add':    reverse('extra_serve_bucket_update_users_ro_add', args,
                                request=self.request),
-             'remove': reverse('drf_serve_bucket_update_users_ro_remove', args,
+             'remove': reverse('extra_serve_bucket_update_users_ro_remove', args,
                                request=self.request),
             }
         )
@@ -77,14 +77,14 @@ urlpatterns = patterns('django.contrib.auth.views',
     #url(r'^$', ServeView.as_view(), name=''),
 
     url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/content/(?P<content_path>.*)$',
-        bucket_content_nginx, name='drf_serve_bucket_content'),
+        bucket_content_nginx, name='extra_serve_bucket_content'),
     url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/$',
-        BucketUpdateUsersRoView.as_view(), name='drf_serve_bucket_update_users_ro'),
+        BucketUpdateUsersRoView.as_view(), name='extra_serve_bucket_update_users_ro'),
     url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/add/$',
         BucketM2MAddView.as_view(model=Bucket), {'m2m_field': 'users_ro'},
-        name='drf_serve_bucket_update_users_ro_add'),
+        name='extra_serve_bucket_update_users_ro_add'),
     url(r'^bucket/(?P<user_pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/(?P<bucket_slug>[\w]+)/update/users_ro/remove/$',
         BucketM2MRemoveView.as_view(model=Bucket), {'m2m_field': 'users_ro'},
-        name='drf_serve_bucket_update_users_ro_remove'),
+        name='extra_serve_bucket_update_users_ro_remove'),
 
 )
