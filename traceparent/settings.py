@@ -167,6 +167,7 @@ INSTALLED_APPS = (
 
     # Extra apps:
     'extra_serve',
+    'extra_misc',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -55,7 +55,8 @@ urlpatterns = patterns('',
     url(r'^monitor/',  include('tp_monitor.urls')),
 
     # url(r'^extra/', ExtraAPIView.as_view()),
-    url(r'^extra/serve/',  include('extra_serve.urls')),
+    url(r'^extra/serve/', include('extra_serve.urls')),
+    url(r'^extra/misc/',  include('extra_misc.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
