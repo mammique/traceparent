@@ -25,7 +25,7 @@ def bucket_content_nginx(request, user_pk, bucket_slug, content_path):
         b.users_ro.filter(pk=request.user.pk).count(): raise PermissionDenied
 
     path = '%(root)s/bucket/%(user_pk)s/%(bucket_slug)s/%(content_path)s' % \
-               {'root': settings.DRF_SERVE_NGINX_ROOT,
+               {'root': settings.EXTRA_SERVE_NGINX_ROOT,
                 'user_pk': user_pk, 'bucket_slug': bucket_slug, 'content_path': content_path}
 
     if not os.path.exists(path): raise Http404
@@ -55,7 +55,7 @@ def bucket_content_nginx(request, user_pk, bucket_slug, content_path):
     r = HttpResponse()
     del r['Content-Type']
     r['X-Accel-Redirect'] = '%(root)s/bucket/%(user_pk)s/%(bucket_slug)s/%(content_path)s' % \
-                               {'root': settings.DRF_SERVE_NGINX_INTERNAL_URL,
+                               {'root': settings.EXTRA_SERVE_NGINX_INTERNAL_URL,
                                 'user_pk': user_pk, 'bucket_slug': bucket_slug, 'content_path': content_path}
     return r
 
