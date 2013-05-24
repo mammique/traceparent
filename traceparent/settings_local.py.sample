@@ -27,3 +27,5 @@ SECRET_KEY = ''
 PROJECT_NAME = 'Traceparent Sandbox'
 
 STATIC_URL = '/0.1-beta/static/'
+
+TP_EXTERNAL_UI_URI = 'https://api.traceparent.com/0.1-beta/extra/ui/#'

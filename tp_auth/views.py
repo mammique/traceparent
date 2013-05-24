@@ -360,13 +360,14 @@ class PasswordResetView(CreateAPIView):
                 LoginToken.objects.filter(user=request.user).delete()
                 token, created = LoginToken.objects.get_or_create(user=user)
 
+                ui_uri = '%s%s' % (settings.TP_EXTERNAL_UI_URI, reverse('tp_auth_user_update', (user.pk,)))
+
                 body = """You have requested to reset your password on %s.\n\n""" \
                        """To do so, please visit the following address: """ \
                        """%s?login_token=%s&next=%s\n\n--\n%s""" % \
                            (settings.PROJECT_NAME,
                             reverse('tp_auth_login', request=self.request),
-                            token.pk, urllib.quote(reverse('tp_auth_user_update',
-                                                           (user.pk,))),
+                            token.pk, urllib.quote(ui_uri),
                             settings.PROJECT_URL)
 
                 user.email_user("[%s] Password reset" % settings.PROJECT_NAME, body)
