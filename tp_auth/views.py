@@ -366,13 +366,13 @@ class PasswordResetView(CreateAPIView):
                        """To do so, please visit the following address: """ \
                        """%s?login_token=%s&next=%s\n\n--\n%s""" % \
                            (settings.PROJECT_NAME,
-                            reverse('tp_auth_login', request=self.request),
+                            reverse('tp_auth_login', request=self.request)[len(request.META['SCRIPT_NAME']):],
                             token.pk, urllib.quote(ui_uri),
                             settings.PROJECT_URL)
 
                 user.email_user("[%s] Password reset" % settings.PROJECT_NAME, body)
 
-            except 1: pass
+            except User.DoesNotExist: pass
 
         #token, created = Token.objects.get_or_create(user=request.user)
 
