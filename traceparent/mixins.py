@@ -14,7 +14,7 @@ class DescActionMixin(object):
 
         desc = super(DescActionMixin, self).get_description(*args, **kwargs)
 
-        if kwargs['html']:
+        if kwargs.get('html'):
 
             lis = []
 
