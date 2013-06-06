@@ -16,6 +16,7 @@ from rest_framework.fields import CharField, EmailField, BooleanField
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.reverse import reverse
+from rest_framework.renderers import JSONPRenderer
 
 from traceparent.utils import blanks_prune
 from traceparent.mixins import DescActionMixin
@@ -94,6 +95,18 @@ class UserRetrieveView(DescActionMixin, RetrieveAPIView):
                                (reverse('tp_metadata_snippet_create'), x.pk)),
                            ('Update', lambda x: reverse('tp_auth_user_update', (x.pk,))),
                            )
+
+
+class UserIsAuthenticated(APIView):
+
+    def __init__(self, *args, **kwargs):
+
+        r = super(UserIsAuthenticated, self).__init__(*args, **kwargs)
+        self.renderer_classes = self.renderer_classes + [JSONPRenderer]
+
+        return r
+
+    def get(self, request, *args, **kwargs): return Response(request.user.is_authenticated())
 
 
 class UserWhoAmIView(UserRetrieveView):
@@ -355,9 +368,9 @@ class PasswordResetView(CreateAPIView):
 
             try:
 
-                user = User.objects.get(email=email)
+                user = User.objects.get(email__iexact=email)
 
-                LoginToken.objects.filter(user=request.user).delete()
+                LoginToken.objects.filter(user=user).delete()
                 token, created = LoginToken.objects.get_or_create(user=user)
 
                 ui_uri = '%s%s' % (settings.TP_EXTERNAL_UI_URI,
@@ -376,7 +389,7 @@ class PasswordResetView(CreateAPIView):
 
             except User.DoesNotExist: pass
 
-        #token, created = Token.objects.get_or_create(user=request.user)
+        #token, created = Token.objects.get_or_create(user=user)
 
             return Response({'detail': 'Password reset information has been sent to %s.' % \
                 email})
