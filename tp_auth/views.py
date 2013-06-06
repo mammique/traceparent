@@ -281,10 +281,10 @@ class UserLoginView(CreateAPIView):
 
             except:
 
-                # FIXME: Don't assume that the user got its token from password reset.
                 return Response(
-                    {'detail': "Invalid token, please reset your password again at: %s" % \
-                        reverse('tp_auth_password_reset', request=self.request)},
+                    #{'detail': "Invalid token, please reset your password again at: %s" % \
+                        #reverse('tp_auth_password_reset', request=self.request)},
+                    {'detail': "Invalid token."},
                     status=status.HTTP_400_BAD_REQUEST)
 
         return Response(None)
