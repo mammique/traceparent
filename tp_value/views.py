@@ -312,8 +312,9 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
 
         model            = Quantity
         exclude          = ('creator',)
-        fields           = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
-        read_only_fields = ('user',)
+#        fields           = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
+        fields           = ('user_visibility', 'status',)
+        read_only_fields = ('user', 'unit', 'quantity', 'prev',)
 
 
 class QuantityUpdateView(RetrieveUpdateAPIView):
