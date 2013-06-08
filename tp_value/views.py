@@ -228,7 +228,10 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
     def validate_status(self, attrs, source):
 
         stat    = attrs[source]
-        prev    = attrs['prev']
+
+        if not 'prev' in attrs: prev = self.object.prev.all() # Update
+        else : prev = attrs['prev']                           # Create
+
         request = self.context.get('request')
 
         # FIXME: forbid non-symbolic statuses to become symbolic?
@@ -255,7 +258,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
         # FIXME: move this to the permission level?
         elif self.object.creator == request.user and \
-                 self.object.user != request.user and self.object.status.slug in ('rejected',):
+            self.object.user != request.user and self.object.status.slug in ('rejected',):
 
             raise serializers.ValidationError("""The creator of a quantity """ \
                       """cannot modify it if its status is set to 'rejected'.""")
