@@ -227,7 +227,7 @@ class QuantityAlterSerializer(serializers.ModelSerializer):
 
     def validate_status(self, attrs, source):
 
-        stat    = attrs[source]
+        stat = attrs[source]
 
         if not 'prev' in attrs: prev = self.object.prev.all() # Update
         else : prev = attrs['prev']                           # Create
@@ -316,8 +316,8 @@ class QuantityUpdateSerializer(QuantityAlterSerializer):
         model            = Quantity
         exclude          = ('creator',)
 #        fields           = ('unit', 'user_visibility', 'quantity', 'prev', 'status',)
-        fields           = ('user_visibility', 'status',)
-        read_only_fields = ('user', 'unit', 'quantity', 'prev',)
+        fields           = ('user_visibility', 'status', 'prev',)
+        read_only_fields = ('user', 'unit', 'quantity',)
 
 
 class QuantityUpdateView(RetrieveUpdateAPIView):

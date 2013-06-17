@@ -53,6 +53,7 @@ class Quantity(UUIDModel):
     unit              = models.ForeignKey(Unit)
     quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     #creation_datetime = models.DateTimeField(auto_now_add=True)
+    #datetime_legal   = models.DateTimeField()
     datetime          = models.DateTimeField(auto_now_add=True)
     prev              = models.ManyToManyField('self', null=True,
                             symmetrical=False, related_name='next')
