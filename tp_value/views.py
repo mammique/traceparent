@@ -120,7 +120,7 @@ class QuantityFilter(django_filters.FilterSet):
     class Meta:
 
         model  = Quantity
-        fields = ('user', 'unit', 'prev', 'next', 'status',
+        fields = ('creator', 'user', 'unit', 'prev', 'next', 'status', # FIXME: allow creator for other models too?
                   'assigned_metadata_snippets', 'scopes', 'counters',)
 
 
