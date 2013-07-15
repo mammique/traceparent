@@ -15,6 +15,9 @@ class IsCreatorOrUser(permissions.BasePermission):
 
     def has_object_permission(self, request, view, o):
 
+        print 'toto'
+        return False
+
         if hasattr(o, 'creator') and o.creator == request.user: return True
 
         if isinstance(o, User): user = o

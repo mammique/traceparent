@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.http import Http404
+from django.shortcuts import get_object_or_404 as _get_object_or_404
+
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.compat import patterns, url
@@ -58,18 +61,50 @@ class BucketUpdateUsersRoView(APIView):
 
 class BucketM2MAddView(M2MAddView):
 
-    def get_object(self, *args, **kwargs):
+    def get_object(self, queryset=None, *args, **kwargs):
 
-        # Return object or first queryset entry.
-        return args[0] if isinstance(args[0], Bucket) else args[0][0]
+        user_pk     = self.kwargs.get('user_pk')
+        bucket_slug = self.kwargs.get('bucket_slug')
+
+        # https://github.com/tomchristie/django-rest-framework/blob/b1847412b57b4bc7db39739e0c7c0e8469d3bb48/rest_framework/generics.py#L260
+        # Determine the base queryset to use.
+        if queryset is None:
+            queryset = self.filter_queryset(self.get_queryset())
+        else:
+            pass  # Deprecation warning
+
+        filter_kwargs = {'user': user_pk, 'slug': bucket_slug}
+
+        try: obj = _get_object_or_404(queryset, **filter_kwargs)
+        except (TypeError, ValueError): return Http404
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 
 class BucketM2MRemoveView(M2MRemoveView):
 
-    def get_object(self, *args, **kwargs):
+    def get_object(self, queryset=None, *args, **kwargs):
 
-        # Return object or first queryset entry.
-        return args[0] if isinstance(args[0], Bucket) else args[0][0]
+        user_pk     = self.kwargs.get('user_pk')
+        bucket_slug = self.kwargs.get('bucket_slug')
+
+        # https://github.com/tomchristie/django-rest-framework/blob/b1847412b57b4bc7db39739e0c7c0e8469d3bb48/rest_framework/generics.py#L260
+        # Determine the base queryset to use.
+        if queryset is None:
+            queryset = self.filter_queryset(self.get_queryset())
+        else:
+            pass  # Deprecation warning
+
+        filter_kwargs = {'user': user_pk, 'slug': bucket_slug}
+
+        try: obj = _get_object_or_404(queryset, **filter_kwargs)
+        except (TypeError, ValueError): return Http404
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 
 urlpatterns = patterns('django.contrib.auth.views',

@@ -63,7 +63,7 @@ class SnippetFilter(django_filters.FilterSet):
     class Meta:
 
         model = Snippet
-        fields = ('creator', 'user', 'mimetype', 'slug', 'type',
+        fields = ('creator', 'user', 'mimetype', 'slug', 'type',  # FIXME: allow creator for other models too?
                   'assigned_users', 'assigned_units',
                   'assigned_quantities', 'assigned_scopes',
                   'assigned_counters', 'assigned_marks',)
