@@ -3,7 +3,7 @@ Markdown==2.1.1
 # MySQL-python==1.2.3
 South==0.7.5
 URLObject==2.0.2
-distribute==0.6.27
+distribute
 django-cors-headers==0.06
 django-extensions==1.0.3
 -e git+https://github.com/alex/django-filter.git@dec9a60ea6eac61e2b8a386104f0f6e4a5c29ca0#egg=django_filter-dev
@@ -13,4 +13,4 @@ docutils==0.9.1
 python-magic==0.4.3
 uuid==1.30
 wsgiref==0.1.2
-# Django REST Framework 2
+# Django REST Framework 2 https://github.com/mammique/django-rest-framework
