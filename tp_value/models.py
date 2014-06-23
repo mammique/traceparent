@@ -15,9 +15,9 @@ class Unit(UUIDModel):
 
     creator        = models.ForeignKey(User, related_name='units_created')
     # FIXME: user
-    name           = models.CharField(max_length=128)
-    slug           = models.SlugField(max_length=128)
-    symbol         = models.CharField(max_length=8)
+    name           = models.CharField(db_index=True, max_length=128)
+    slug           = models.SlugField(db_index=True, max_length=128)
+    symbol         = models.CharField(db_index=True, max_length=8)
     decimal_places = models.PositiveIntegerField(default=2) # FIXME: non-null.
     #datetime       = models.DateTimeField(auto_now_add=True)
 
@@ -32,7 +32,7 @@ class Unit(UUIDModel):
 
 class QuantityStatus(models.Model):
 	
-    slug = models.SlugField(primary_key=True, max_length=64)
+    slug = models.SlugField(primary_key=True, db_index=True, max_length=64)
 
     class Meta:
 
@@ -46,18 +46,18 @@ class Quantity(UUIDModel):
 
     creator           = models.ForeignKey(User, # null=True, blank=True,
                             related_name="quantities_created")
-    user              = models.ForeignKey(User, # null=True, blank=True,
+    user              = models.ForeignKey(User, db_index=True, # null=True, blank=True,
                             related_name='quantities')
     user_visibility   = models.SlugField(default='public', max_length=64,
                             choices=VISIBILITY_CHOICES)
-    unit              = models.ForeignKey(Unit)
-    quantity          = models.DecimalField(**settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    unit              = models.ForeignKey(Unit, db_index=True)
+    quantity          = models.DecimalField(db_index=True, **settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
     #creation_datetime = models.DateTimeField(auto_now_add=True)
     #datetime_legal   = models.DateTimeField()
-    datetime          = models.DateTimeField(auto_now_add=True)
+    datetime          = models.DateTimeField(db_index=True, auto_now_add=True)
     prev              = models.ManyToManyField('self', null=True,
-                            symmetrical=False, related_name='next')
-    status            = models.ForeignKey(QuantityStatus, related_name='quantities')
+                            db_index=True, symmetrical=False, related_name='next')
+    status            = models.ForeignKey(QuantityStatus, db_index=True, related_name='quantities')
 
     class Meta:
 

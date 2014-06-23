@@ -6,7 +6,7 @@ from django_extensions.db.fields import UUIDField
 
 class UUIDModel(models.Model):
 
-    uuid = UUIDField(auto=True, primary_key=True)
+    uuid = UUIDField(db_index=True, auto=True, primary_key=True)
 
     class Meta:
 

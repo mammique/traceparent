@@ -14,10 +14,10 @@ from tp_value.models import Unit, QuantityStatus, Quantity, quantity__unicode__
 class Scope(UUIDModel):
 
     creator    = models.ForeignKey(User, related_name='scopes_created')
-    user       = models.ForeignKey(User, related_name='scopes')
-    quantities = models.ManyToManyField(Quantity, null=True, blank=True,
+    user       = models.ForeignKey(User, db_index=True, related_name='scopes')
+    quantities = models.ManyToManyField(Quantity, db_index=True, null=True, blank=True,
                      related_name='scopes')
-    datetime   = models.DateTimeField(auto_now_add=True)
+    datetime   = models.DateTimeField(db_index=True, auto_now_add=True)
 
     class Meta:
 
@@ -30,12 +30,12 @@ class Scope(UUIDModel):
 class Counter(UUIDModel):
 
     creator        = models.ForeignKey(User, related_name='counters_created')
-    user           = models.ForeignKey(User, related_name='counters')
-    datetime       = models.DateTimeField(auto_now_add=True)
-    datetime_start = models.DateTimeField(null=True, blank=True, default=None)
-    datetime_stop  = models.DateTimeField(null=True, blank=True, default=None)
-    scopes         = models.ManyToManyField(Scope, related_name='counters')
-    quantities     = models.ManyToManyField(Quantity, null=True, blank=True,
+    user           = models.ForeignKey(User, db_index=True, related_name='counters')
+    datetime       = models.DateTimeField(db_index=True, auto_now_add=True)
+    datetime_start = models.DateTimeField(db_index=True, null=True, blank=True, default=None)
+    datetime_stop  = models.DateTimeField(db_index=True, null=True, blank=True, default=None)
+    scopes         = models.ManyToManyField(Scope, db_index=True, related_name='counters')
+    quantities     = models.ManyToManyField(Quantity, db_index=True, null=True, blank=True,
                          related_name='counters')
     class Meta:
 
@@ -77,13 +77,13 @@ class ResultSum(UUIDModel):
 
 class Mark(UUIDModel):
 
-    quantity = DecimalBlankToNoneField(null=True, blank=True, **settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
-    unit     = models.ForeignKey(Unit)
-    statuses = models.ManyToManyField(QuantityStatus, related_name='marks')
+    quantity = DecimalBlankToNoneField(null=True, blank=True, db_index=True, **settings.TP_VALUE_QUANTITY_DECIMAL_MODEL_ATTRS)
+    unit     = models.ForeignKey(Unit, db_index=True)
+    statuses = models.ManyToManyField(QuantityStatus, db_index=True, related_name='marks')
     creator  = models.ForeignKey(User, related_name='marks_created')
-    user     = models.ForeignKey(User, related_name='marks')
-    datetime = models.DateTimeField(auto_now_add=True)
-    counters = models.ManyToManyField(Counter, related_name='marks')
+    user     = models.ForeignKey(User, db_index=True, related_name='marks')
+    datetime = models.DateTimeField(db_index=True, auto_now_add=True)
+    counters = models.ManyToManyField(Counter, db_index=True, related_name='marks')
 
     class Meta:
 

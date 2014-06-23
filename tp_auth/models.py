@@ -33,11 +33,11 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
 
-    uuid            = UUIDField(auto=True, primary_key=True)
+    uuid            = UUIDField(db_index=True, auto=True, primary_key=True)
     id              = UUIDField() # It appears that Django needs an 'id' on the `User` model.
     creator         = models.ForeignKey('self', null=True)
-    name            = models.CharField(max_length=64, blank=True)
-    email_md5       = models.SlugField(max_length=32, null=True, blank=True)
+    name            = models.CharField(db_index=True, max_length=64, blank=True)
+    email_md5       = models.SlugField(db_index=True, max_length=32, null=True, blank=True)
 
     USERNAME_FIELD  = 'email'
     REQUIRED_FIELDS = []

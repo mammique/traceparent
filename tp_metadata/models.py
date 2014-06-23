@@ -19,28 +19,28 @@ mimetype_choices   = [
 class Snippet(UUIDModel):
 
     creator    = models.ForeignKey(User, related_name='metadata_snippets_created')
-    user       = models.ForeignKey(User, related_name='metadata_snippets')
+    user       = models.ForeignKey(User, db_index=True, related_name='metadata_snippets')
     visibility = models.SlugField(default='public', max_length=64,
                      choices=VISIBILITY_CHOICES)
-    mimetype   = models.SlugField(default='text/plain', max_length=64,
+    mimetype   = models.SlugField(db_index=True, default='text/plain', max_length=64,
                      choices=mimetype_choices)
-    slug       = models.SlugField(max_length=128)
-    type       = SlugBlankToNoneField(max_length=64, null=True, blank=True, default=None)
+    slug       = models.SlugField(db_index=True, max_length=128)
+    type       = SlugBlankToNoneField(db_index=True, max_length=64, null=True, blank=True, default=None)
     content    = models.TextField()
-    datetime   = models.DateTimeField(auto_now_add=True)
+    datetime   = models.DateTimeField(db_index=True, auto_now_add=True)
 
     # Models
-    assigned_users      = models.ManyToManyField(User, null=True, blank=True,
+    assigned_users      = models.ManyToManyField(User, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_units      = models.ManyToManyField(Unit, null=True, blank=True,
+    assigned_units      = models.ManyToManyField(Unit, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_quantities = models.ManyToManyField(Quantity, null=True, blank=True,
+    assigned_quantities = models.ManyToManyField(Quantity, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_scopes     = models.ManyToManyField(Scope, null=True, blank=True,
+    assigned_scopes     = models.ManyToManyField(Scope, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_counters   = models.ManyToManyField(Counter, null=True, blank=True,
+    assigned_counters   = models.ManyToManyField(Counter, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
-    assigned_marks      = models.ManyToManyField(Mark, null=True, blank=True,
+    assigned_marks      = models.ManyToManyField(Mark, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
 
     class Meta():
