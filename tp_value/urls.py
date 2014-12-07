@@ -10,7 +10,8 @@ from traceparent.utils import ordered_dict
 #from .models import Quantity
 
 from .views import UnitFilterView, UnitCreateView, UnitRetrieveView, \
-    QuantityFilterView, QuantityRetrieveView, QuantityCreateView, QuantityUpdateView
+    QuantityFilterView, QuantityRetrieveView, QuantityCreateView, QuantityUpdateView, \
+    ConverterFilterView, ConverterRetrieveView, ConverterCreateView, ConverterUpdateView
 
 
 class ValueView(APIView):
@@ -19,8 +20,9 @@ class ValueView(APIView):
 
         data = ordered_dict(
             {
-             'unit': reverse('tp_value_unit', request=self.request),
-             'quantity': reverse('tp_value_quantity', request=self.request),
+             'unit':      reverse('tp_value_unit', request=self.request),
+             'quantity':  reverse('tp_value_quantity', request=self.request),
+             'converter': reverse('tp_value_converter', request=self.request),
             }
         )
         
@@ -54,6 +56,20 @@ class QuantityView(APIView):
 
         return Response(data)
 
+        
+class ConverterView(APIView):
+
+    def get(self, request):
+
+        data = ordered_dict(
+            {
+             'create': reverse('tp_value_converter_create', request=self.request),
+             'filter': reverse('tp_value_converter_filter', request=self.request),
+            }
+        )
+
+        return Response(data)
+
 
 urlpatterns = patterns('',
 
@@ -75,4 +91,13 @@ urlpatterns = patterns('',
         QuantityRetrieveView.as_view(), name='tp_value_quantity_retrieve'),
     url(r'^quantity/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
         QuantityUpdateView.as_view(), name='tp_value_quantity_update'),
+
+    # Converter
+    url(r'^converter/$', ConverterView.as_view(), name='tp_value_converter'),
+    url(r'^converter/filter/$', ConverterFilterView.as_view(), name='tp_value_converter_filter'),
+    url(r'^converter/create/$', ConverterCreateView.as_view(), name='tp_value_converter_create'),
+    url(r'^converter/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/$',
+        ConverterRetrieveView.as_view(), name='tp_value_converter_retrieve'),
+    url(r'^converter/(?P<pk>[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})/update/$',
+        ConverterUpdateView.as_view(), name='tp_value_converter_update'),
 )

@@ -63,7 +63,7 @@ class ScopeFilter(django_filters.FilterSet):
     user       = django_filters.CharFilter(lookup_type='exact')
     counters   = django_filters.CharFilter(lookup_type='exact')
     quantities = django_filters.CharFilter(lookup_type='exact')
-    
+
     # Metadata
     assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
 
@@ -175,7 +175,7 @@ class ResultSumSerializer(serializers.ModelSerializer):
     class Meta:
 
         model  = ResultSum
-        fields = ['unit', 'quantity', 'status', 'datetime', 'counter',] # TODO: remove counter on-the-fly if no present.
+        fields = ['unit', 'quantity', 'status', 'mode', 'datetime', 'counter',] # TODO: remove counter on-the-fly if no present.
 
 
 class CounterRoFullSerializer(CounterRoLightSerializer):
@@ -187,6 +187,10 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
     quantities = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
                      lookup_params={'counters': 'pk'},
                      lookup_test=lambda o: o.quantities.all().count() != 0)
+
+    converters = HyperlinkedFilterField(view_name='tp_value_converter_filter',
+                     lookup_params={'counters': 'pk'},
+                     lookup_test=lambda o: o.converters.all().count() != 0)
 
     marks      = HyperlinkedFilterField(view_name='tp_monitor_mark_filter',
                      lookup_params={'counters': 'pk'},
@@ -208,7 +212,7 @@ class CounterRoFullSerializer(CounterRoLightSerializer):
 
         model  = CounterRoLightSerializer.Meta.model
         fields = CounterRoLightSerializer.Meta.fields + \
-                     ['scopes', 'quantities', 'sums', 'marks',
+                     ['scopes', 'quantities', 'converters', 'sums', 'marks',
                       'datetime_start', 'datetime_stop',
                       'assigned_metadata_snippets',]
 
@@ -218,6 +222,7 @@ class CounterFilter(django_filters.FilterSet):
     user       = django_filters.CharFilter(lookup_type='exact')
     scopes     = django_filters.CharFilter(lookup_type='exact')
     quantities = django_filters.CharFilter(lookup_type='exact')
+    converters = django_filters.CharFilter(lookup_type='exact')
     marks      = django_filters.CharFilter(lookup_type='exact')
     
     # Metadata
@@ -226,7 +231,7 @@ class CounterFilter(django_filters.FilterSet):
     class Meta:
 
         model = Counter
-        fields = ('user', 'scopes', 'quantities', 'marks', 'assigned_metadata_snippets',)
+        fields = ('user', 'scopes', 'quantities', 'converters', 'marks', 'assigned_metadata_snippets',)
 
 
 class CounterFilterView(ListAPIView):
@@ -250,7 +255,6 @@ class CounterRetrieveView(DescActionMixin, RetrieveAPIView):
                           )
 
 
-
 class CounterAlterSerializer(serializers.ModelSerializer):
 #class CounterAlterSerializer(CounterRoFullSerializer):#serializers.ModelSerializer):
 
@@ -263,8 +267,18 @@ class CounterAlterSerializer(serializers.ModelSerializer):
 
         model   = Counter
         exclude = ('creator',)
-        fields  = ['user', 'scopes', 'datetime_start', 'datetime_stop',]
+        fields  = ['user', 'scopes', 'datetime_start', 'datetime_stop', 'converters',]
 
+    #def validate_converters(self, attrs, source):
+#
+        #units_converted = {}
+#
+        #for x in attrs['converters']:
+#
+            #if not units_converted.has_key(x.unit_out.pk): units_converted[x.unit_out.pk] = True
+            #else: raise serializers.ValidationError('Cannot set multiple Conveters with the same Unit as output: "%s".' % x.unit_out)
+#
+        #return attrs
 
     def validate(self, attrs):
 
@@ -325,7 +339,7 @@ class CounterUpdateSerializer(CounterAlterSerializer):
 
         model            = Counter
         exclude          = ('creator',)
-        fields           = ['scopes', 'datetime_start', 'datetime_stop',]
+        fields           = ['scopes', 'datetime_start', 'datetime_stop', 'converters',]
         read_only_fields = ('user',)
 
 
@@ -364,12 +378,13 @@ class ResultSumFilter(django_filters.FilterSet):
 
     unit    = django_filters.CharFilter(lookup_type='exact')
     status  = django_filters.CharFilter(lookup_type='exact')
+    mode    = django_filters.CharFilter(lookup_type='exact')
     counter = django_filters.CharFilter(lookup_type='exact')
 
     class Meta:
 
         model  = ResultSum
-        fields = ('unit', 'status', 'counter',)
+        fields = ('unit', 'status', 'mode', 'counter',)
 
 
 class ResultSumFilterView(ListAPIView):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import django_filters
+import django_filters, decimal
 
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, \
          RetrieveUpdateAPIView, ListAPIView
@@ -16,7 +16,7 @@ from traceparent.widgets import MultipleLockedInput
 
 from tp_auth.permissions import IsCreatorOrUser
 
-from .models import Unit, Quantity
+from .models import Unit, Quantity, Converter, ConverterScriptError
 
 
 class UnitFilter(django_filters.FilterSet):
@@ -127,7 +127,6 @@ class QuantityFilter(django_filters.FilterSet):
 class QuantityRoLightSerializer(serializers.ModelSerializer):
 
     url     = serializers.HyperlinkedIdentityField(view_name='tp_value_quantity_retrieve') 
-    creator = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
     user    = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
     unit    = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
     prev    = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
@@ -155,7 +154,7 @@ class QuantityRoLightSerializer(serializers.ModelSerializer):
 
         model   = Quantity
         exclude = ('creator',)
-        fields  = ['uuid', 'url', 'unit', 'quantity', 'creator', 'user', \
+        fields  = ['uuid', 'url', 'unit', 'quantity', 'user', \
                    'status', 'datetime', 'prev', 'next',]
 
 
@@ -341,6 +340,180 @@ class QuantityUpdateView(RetrieveUpdateAPIView):
 
             return Response(
                        QuantityRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
+                       status=status.HTTP_200_OK)
+
+        return r
+
+
+class ConverterFilter(django_filters.FilterSet):
+
+    user     = django_filters.CharFilter(lookup_type='exact')
+    unit_in  = django_filters.CharFilter(lookup_type='exact')
+    unit_out = django_filters.CharFilter(lookup_type='exact')
+    type     = django_filters.CharFilter(lookup_type='exact')
+ 
+    # Metadata
+    assigned_metadata_snippets = django_filters.CharFilter(lookup_type='exact')
+
+    # Monitor
+    counters = django_filters.CharFilter(lookup_type='exact')
+
+    class Meta:
+
+        model  = Converter
+        fields = ('user', 'unit_in', 'unit_out', 'type',
+                  'assigned_metadata_snippets', 'counters',)
+
+
+class ConverterRoLightSerializer(serializers.ModelSerializer):
+
+    url      = serializers.HyperlinkedIdentityField(view_name='tp_value_converter_retrieve') 
+    user     = serializers.HyperlinkedRelatedField(view_name='tp_auth_user_retrieve')
+    unit_in  = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
+    unit_out = serializers.HyperlinkedRelatedField(view_name='tp_value_unit_retrieve')
+
+    class Meta:
+
+        model   = Converter
+        exclude = ('creator',)
+        fields  = ['uuid', 'url', 'user', 'unit_in', 'unit_out', 'type',]
+
+
+class ConverterRoFullSerializer(ConverterRoLightSerializer):
+
+    assigned_metadata_snippets = \
+        HyperlinkedFilterField(view_name='tp_metadata_snippet_filter',
+                  lookup_params={'assigned_converters': 'pk'},
+                  lookup_test=lambda o: o.assigned_metadata_snippets.all().count() != 0,
+                  # querystring_params={'assigned_intersect': ''},
+    )
+
+    counters = HyperlinkedFilterField(view_name='tp_monitor_counter_filter',
+                  lookup_params={'converters': 'pk'},
+                  lookup_test=lambda o: o.counters.all().count() != 0,
+                  # querystring_params={'assigned_intersect': ''},
+    )
+
+
+    class Meta:
+
+        model   = ConverterRoLightSerializer.Meta.model
+        exclude = ConverterRoLightSerializer.Meta.exclude
+        fields  = ConverterRoLightSerializer.Meta.fields + \
+                      ['script', 'assigned_metadata_snippets', 'counters',]
+
+
+class ConverterRetrieveView(DescActionMixin, RetrieveAPIView):
+
+    serializer_class    = ConverterRoFullSerializer
+    model               = Converter
+    description_actions = (
+                           ('Add new metadata', lambda x: '%s?assigned_converters=%s' % \
+                               (reverse('tp_metadata_snippet_create'), x.pk)),
+                           ('Update', lambda x: reverse('tp_value_converter_update',
+                               (x.pk,))),
+                          )
+
+
+class ConverterFilterView(ListAPIView):
+
+    serializer_class = ConverterRoLightSerializer
+    filter_class     = ConverterFilter
+    model            = Converter
+
+
+class ConverterAlterSerializer(serializers.ModelSerializer):
+#class ConverterAlterSerializer(ConverterRoFullSerializer):#serializers.ModelSerializer):
+
+    class Meta:
+
+        model   = Converter
+        exclude = ('creator',)
+        fields  = ('unit_in', 'unit_out', 'user', 'type', 'script',)
+
+    def validate_script(self, attrs, source):
+
+        request = self.context.get('request')
+
+        test = Converter()
+
+        try: attrs['script'] = test._script_parse(attrs['script'], attrs['type'])[0]
+        except ConverterScriptError as e: raise serializers.ValidationError(e.detail)
+
+        return attrs
+
+    def validate(self, attrs):
+
+        request = self.context.get('request')
+
+        # FIXME: move to view's pre_save()?
+        if not self.object: attrs['creator'] = request.user
+
+        return attrs
+
+
+class ConverterCreateView(CreateAPIView):
+
+    serializer_class   = ConverterAlterSerializer
+    model              = Converter
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+
+        r = super(ConverterCreateView, self).create(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_201_CREATED:
+
+            return Response(
+                       ConverterRoFullSerializer(
+                           self.object,
+                           context={
+                               'request': self.request,
+                               'format':  self.format_kwarg,
+                               'view':    self}).data,
+                       status=status.HTTP_201_CREATED)
+            
+        return r
+
+    def get(self, request, format=None): return Response(None)
+
+
+class ConverterUpdateSerializer(ConverterAlterSerializer):
+
+    class Meta:
+
+        model            = Converter
+        exclude          = ('creator',)
+        fields           = ('type', 'script',)
+        read_only_fields = ('user', 'unit_in', 'unit_out',)
+
+
+class ConverterUpdateView(RetrieveUpdateAPIView):
+
+    serializer_class   = ConverterUpdateSerializer
+    model              = Converter
+    permission_classes = (IsAuthenticated, IsCreatorOrUser,)
+
+    def get(self, request, format=None, *args, **kwargs):
+
+        super(ConverterUpdateView, self).get(request, format=None, *args, **kwargs)
+
+        return Response({'FIXME':
+            'https://github.com/tomchristie/django-rest-framework/issues/731'})
+
+    def update(self, request, *args, **kwargs):
+
+        r = super(ConverterUpdateView, self).update(request, *args, **kwargs)
+
+        if r.status_code == status.HTTP_200_OK:
+
+            return Response(
+                       ConverterRoFullSerializer(
                            self.object,
                            context={
                                'request': self.request,

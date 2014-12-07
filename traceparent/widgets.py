@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.forms import widgets
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from rest_framework.reverse import reverse
 
@@ -26,4 +27,4 @@ class MultipleLockedInput(widgets.MultipleHiddenInput):
         q = self.model.objects.get(pk=value[0])
 
         return mark_safe('%s<a href="%s" class="uneditable-input">%s</a>' % \
-                   (r, reverse(self.view_name, (q.pk,)), q))
+                   (r, reverse(self.view_name, (q.pk,)), escape(q)))

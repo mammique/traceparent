@@ -55,7 +55,8 @@ class SnippetFilter(django_filters.FilterSet):
     assigned_units      = django_filters.CharFilter(lookup_type='exact')
     assigned_quantities = django_filters.CharFilter(lookup_type='exact')
     #assigned_quantities = django_filters.ModelMultipleChoiceFilter()
-    assigned_scopess    = django_filters.CharFilter(lookup_type='exact')
+    assigned_converters = django_filters.CharFilter(lookup_type='exact')
+    assigned_scopes     = django_filters.CharFilter(lookup_type='exact')
     assigned_counters   = django_filters.CharFilter(lookup_type='exact')
     assigned_marks      = django_filters.CharFilter(lookup_type='exact')
 
@@ -64,9 +65,9 @@ class SnippetFilter(django_filters.FilterSet):
 
         model = Snippet
         fields = ('creator', 'user', 'mimetype', 'slug', 'type',  # FIXME: allow creator for other models too?
-                  'assigned_users', 'assigned_units',
-                  'assigned_quantities', 'assigned_scopes',
-                  'assigned_counters', 'assigned_marks',)
+                  'assigned_users',
+                  'assigned_units', 'assigned_quantities', 'assigned_converters',
+                  'assigned_scopes', 'assigned_counters', 'assigned_marks',)
 
 
 class SnippetContentField(serializers.HyperlinkedIdentityField):
@@ -102,6 +103,9 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
     assigned_quantities = HyperlinkedFilterField(view_name='tp_value_quantity_filter',
                   lookup_params={'assigned_metadata_snippets': 'pk'},
                   lookup_test=lambda o: o.assigned_quantities.all().count() != 0)
+    assigned_converters = HyperlinkedFilterField(view_name='tp_value_converter_filter',
+                  lookup_params={'assigned_metadata_snippets': 'pk'},
+                  lookup_test=lambda o: o.assigned_converters.all().count() != 0)
     assigned_scopes = HyperlinkedFilterField(view_name='tp_monitor_scope_filter',
                   lookup_params={'assigned_metadata_snippets': 'pk'},
                   lookup_test=lambda o: o.assigned_scopes.all().count() != 0)
@@ -111,8 +115,6 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
     assigned_marks = HyperlinkedFilterField(view_name='tp_monitor_mark_filter',
                   lookup_params={'assigned_metadata_snippets': 'pk'},
                   lookup_test=lambda o: o.assigned_marks.all().count() != 0)
-
-
 
     #assigned_retrieve = {
     #                     'assigned_users': 'tp_auth_user_retrieve',
@@ -124,7 +126,8 @@ class SnippetRoFullSerializer(SnippetRoLightSerializer):
 
         model  = SnippetRoLightSerializer.Meta.model
         fields = SnippetRoLightSerializer.Meta.fields + \
-                     ['assigned_users', 'assigned_units', 'assigned_quantities',
+                     ['assigned_users',
+                      'assigned_units', 'assigned_quantities', 'assigned_converters',
                       'assigned_scopes', 'assigned_counters', 'assigned_marks']
 
     def to_native(self, obj):
@@ -179,7 +182,7 @@ class SnippetFilterView(SnippetRoMixin, ListAPIView):
 
 
 # FIXME: not DRY at all, merge with MultipleLockedInput.
-from tp_value.models import Unit, Quantity
+from tp_value.models import Unit, Quantity, Converter
 from tp_auth.models import User
 from tp_monitor.models import Scope, Counter, Mark
 
@@ -198,6 +201,10 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
                               widget=MultipleLockedInput(
                                          model=Quantity,
                                          view_name='tp_value_quantity_retrieve'))
+    assigned_converters = relations.ManyPrimaryKeyRelatedField(required=False,
+                              widget=MultipleLockedInput(
+                                         model=Converter,
+                                         view_name='tp_value_converter_retrieve'))
     assigned_scopes     = relations.ManyPrimaryKeyRelatedField(required=False,
                               widget=MultipleLockedInput(
                                          model=Scope,
@@ -216,7 +223,7 @@ class SnippetAlterSerializer(serializers.ModelSerializer):
         model  = Snippet
         fields = ['visibility', 'mimetype', 'slug', 'type', 'content',
                   'assigned_users', 'assigned_units',
-                  'assigned_quantities',
+                  'assigned_quantities', 'assigned_converters',
                   'assigned_scopes', 'assigned_counters', 'assigned_marks',]
 
 
@@ -282,6 +289,17 @@ class SnippetCreateView(CreateAPIView):
                 form_initial.update({'assigned_quantities': (assigned_quantity.pk,),})
 
             except Quantity.DoesNotExist: pass
+
+        # FIXME: not DRY at all, merge with MultipleLockedInput.
+        assigned_converter = self.request.GET.get('assigned_converters')
+        if assigned_converter:
+
+            try:
+
+                assigned_converter = Converter.objects.get(pk=assigned_converter)
+                form_initial.update({'assigned_converters': (assigned_converter.pk,),})
+
+            except Converter.DoesNotExist: pass
 
         # FIXME: not DRY at all, merge with MultipleLockedInput.
         assigned_scope = self.request.GET.get('assigned_scopes')
@@ -398,6 +416,8 @@ class SnippetRetrieveView(DescActionMixin, SnippetRoMixin, RetrieveAPIView):
                            ('Add/remove assigned units', lambda x: \
                                 (reverse('tp_metadata_snippet_update_assigned_units', (x.pk,)))),
                            ('Add/remove assigned quantities', lambda x: \
+                                (reverse('tp_metadata_snippet_update_assigned_units', (x.pk,)))),
+                           ('Add/remove assigned converters', lambda x: \
                                 (reverse('tp_metadata_snippet_update_assigned_quantities', (x.pk,)))),
                            ('Add/remove assigned scopes', lambda x: \
                                 (reverse('tp_metadata_snippet_update_assigned_scopes', (x.pk,)))),

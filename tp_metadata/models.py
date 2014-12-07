@@ -6,7 +6,7 @@ from traceparent.models import UUIDModel
 
 from tp_auth.models import User
 from tp_auth import VISIBILITY_CHOICES
-from tp_value.models import Unit, Quantity
+from tp_value.models import Unit, Quantity, Converter
 from tp_monitor.models import Scope, Counter, Mark
 
 
@@ -35,6 +35,8 @@ class Snippet(UUIDModel):
     assigned_units      = models.ManyToManyField(Unit, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
     assigned_quantities = models.ManyToManyField(Quantity, db_index=True, null=True, blank=True,
+                              related_name='assigned_metadata_snippets')
+    assigned_converters = models.ManyToManyField(Converter, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
     assigned_scopes     = models.ManyToManyField(Scope, db_index=True, null=True, blank=True,
                               related_name='assigned_metadata_snippets')
